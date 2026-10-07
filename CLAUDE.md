@@ -18,11 +18,16 @@ After each completed implementation:
 `main.js` composes focused modules. `MediaLibrary.floors()` derives seasonal floors
 and month sections from the manifest. `createLayout(floor)` creates one ordinary
 slot per asset, plus a featured duplicate. Uploads may override individual slots.
+The entrance floor (index 0) is the Hall of Fame, a curated list in
+`src/fame/programme.js` registered via `library.add()` and excluded from seasons.
 Only the selected floor's hall and frames exist. Lobby and atmosphere persist across switches. The cinema is its own elevator
 destination; its theatre and YouTube player exist only on that floor. Closing
 the programme preserves playback on the in-world screen. Leaving the floor stops
 playback and destroys the iframe and CSS3D screen layer. Dispose floor-owned GPU resources and cancel stale media
 loads; never dispose materials/geometries shared by every frame.
+
+Background music is visitor-toggled, persists across floors and holds while
+a cinema film plays. The cinema programme opens only from the screen or button.
 
 Curator streams media by distance. `maxVideos` caps active video textures, never
 collection coverage. Rehanging swaps existing works so the full floor remains

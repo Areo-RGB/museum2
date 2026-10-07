@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { ROOM } from './layout.js';
-import { periodLabel } from './signage.js';
+import { canvasPanel, periodLabel } from './signage.js';
 import { createWoodFloorTexture } from './textures.js';
 
 const PALETTE = {
@@ -17,6 +17,16 @@ const PALETTE = {
   cinemaWall: 0x161214,
   brass: 0xb08d57,
   haze: 0xe4e0d8,
+};
+
+/** Hall of Fame: Hertha navy walls, gold trim and a red carpet. */
+const FAME = {
+  wall: 0x12284a,
+  accentWall: 0x0b1a33,
+  ceiling: 0x1a2537,
+  baseboard: 0x8a6a3a,
+  carpet: 0x7a1420,
+  gold: 0xc9a45c,
 };
 
 /**
@@ -45,6 +55,7 @@ export function setupAtmosphere(app) {
  */
 export function buildHall(app, layout) {
   const { hall } = layout;
+  const fame = layout.theme === 'fame';
   const group = new THREE.Group();
   group.name = 'hall';
 
@@ -66,7 +77,7 @@ export function buildHall(app, layout) {
   // Ceiling
   const ceiling = new THREE.Mesh(
     new THREE.PlaneGeometry(width, hall.length),
-    new THREE.MeshStandardMaterial({ color: PALETTE.ceiling, roughness: 0.95 }),
+    new THREE.MeshStandardMaterial({ color: fame ? FAME.ceiling : PALETTE.ceiling, roughness: 0.95 }),
   );
   ceiling.rotation.x = Math.PI / 2;
   ceiling.position.set(0, hall.height, centerZ);
@@ -74,11 +85,11 @@ export function buildHall(app, layout) {
 
   // Walls (+ baseboards on the hall side)
   const materials = {
-    hall: new THREE.MeshStandardMaterial({ color: PALETTE.wall, roughness: 0.88 }),
-    accent: new THREE.MeshStandardMaterial({ color: PALETTE.accentWall, roughness: 0.82 }),
+    hall: new THREE.MeshStandardMaterial({ color: fame ? FAME.wall : PALETTE.wall, roughness: 0.88 }),
+    accent: new THREE.MeshStandardMaterial({ color: fame ? FAME.accentWall : PALETTE.accentWall, roughness: 0.82 }),
     cinema: new THREE.MeshStandardMaterial({ color: PALETTE.cinemaWall, roughness: 0.95 }),
   };
-  const baseMat = new THREE.MeshStandardMaterial({ color: PALETTE.baseboard, roughness: 0.6 });
+  const baseMat = new THREE.MeshStandardMaterial({ color: fame ? FAME.baseboard : PALETTE.baseboard, roughness: 0.6, metalness: fame ? 0.6 : 0 });
   const walls = [];
   for (const wall of layout.walls) {
     const y0 = wall.y0 ?? 0, y1 = wall.y1 ?? ROOM.height;
@@ -105,7 +116,7 @@ export function buildHall(app, layout) {
   const face = ROOM.wall / 2 + 0.01;
   for (const section of layout.sections) {
     for (const side of [-1, 1]) {
-      const label = periodLabel(section.period);
+      const label = periodLabel(section.period, { dark: fame });
       label.position.set(side * (hall.maxX - face), 2.35, section.labelZ);
       label.rotation.y = -side * Math.PI / 2;
       group.add(label);
@@ -115,6 +126,8 @@ export function buildHall(app, layout) {
     group.add(line);
   }
 
+  if (fame) buildFameDecor(group, layout);
+
   // Ceiling wash lights at a steady rhythm along the hall (sections vary a lot in length).
   for (let z = hall.minZ + 13; z < hall.maxZ - 2; z += 12) {
     const wash = new THREE.PointLight(0xfff1dc, 7, 9.5, 1.6);
@@ -123,6 +136,61 @@ export function buildHall(app, layout) {
   }
 
   return { group, walls, dispose: () => disposeTree(group) };
+}
+
+/**
+ * Red carpet down the centre, gold dado and cornice bands, gold pilasters
+ * between the works and a lettered title above the featured piece.
+ */
+function buildFameDecor(group, { hall, slots }) {
+  const gold = new THREE.MeshStandardMaterial({ color: FAME.gold, roughness: 0.28, metalness: 0.9 });
+  const carpetLength = hall.length - 3;
+  const carpetZ = hall.minZ + 1 + carpetLength / 2;
+  const carpet = new THREE.Mesh(new THREE.PlaneGeometry(2.6, carpetLength),
+    new THREE.MeshStandardMaterial({ color: FAME.carpet, roughness: 0.95 }));
+  carpet.rotation.x = -Math.PI / 2;
+  carpet.position.set(0, 0.004, carpetZ);
+  group.add(carpet);
+  for (const side of [-1, 1]) {
+    const edge = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.008, carpetLength), gold);
+    edge.position.set(side * 1.34, 0.004, carpetZ);
+    group.add(edge);
+  }
+
+  const face = ROOM.wall / 2;
+  for (const side of [-1, 1]) {
+    const x = side * (hall.maxX - face - 0.02);
+    for (const [y, h] of [[1.05, 0.05], [hall.height - 0.5, 0.12]]) {
+      const band = new THREE.Mesh(new THREE.BoxGeometry(0.04, h, hall.length), gold);
+      band.position.set(x, y, (hall.minZ + hall.maxZ) / 2);
+      group.add(band);
+    }
+  }
+  // Pilasters either side of every pair of facing works.
+  const sideZs = [...new Set(slots.filter((s) => !s.hero).map((s) => s.position[2]))];
+  for (const z of sideZs.flatMap((z) => [z - 3.1, z + 3.1])) {
+    for (const side of [-1, 1]) {
+      const pilaster = new THREE.Mesh(new THREE.BoxGeometry(0.1, hall.height - 0.6, 0.32), gold);
+      pilaster.position.set(side * (hall.maxX - face - 0.05), (hall.height - 0.6) / 2, z);
+      group.add(pilaster);
+    }
+  }
+
+  const title = canvasPanel(5.2, 0.9, (ctx, w, h) => {
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#d8b56a';
+    ctx.font = `600 ${h * 0.56}px "Cormorant Garamond", Georgia, serif`;
+    ctx.letterSpacing = '0.22em';
+    ctx.fillText('HALL OF FAME', w / 2, h * 0.46);
+    ctx.letterSpacing = '0em';
+    ctx.font = `${h * 0.3}px Georgia, serif`;
+    for (const x of [w * 0.04, w * 0.96]) ctx.fillText('★', x, h * 0.46);
+    ctx.fillRect(w * 0.2, h * 0.88, w * 0.6, h * 0.025);
+  }, { lit: false });
+  title.position.set(0, hall.height - 1.05, hall.maxZ - face - 0.02);
+  title.rotation.y = Math.PI;
+  group.add(title);
 }
 
 /** Free geometries, materials and textures under `root`. */

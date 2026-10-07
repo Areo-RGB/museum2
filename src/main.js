@@ -10,6 +10,7 @@ import { MediaLibrary } from './media/library.js';
 import { Curator } from './media/curator.js';
 import { photoCache } from './media/cache.js';
 import { CINEMA_FLOOR, YOUTUBE_FILMS } from './cinema/programme.js';
+import { BACKGROUND_MUSIC_URL, HALL_OF_FAME_FLOOR, HALL_OF_FAME_ITEMS } from './fame/programme.js';
 import { PlayerController } from './controls/player.js';
 import { TouchControls } from './controls/touch.js';
 import { createCollisionChecker } from './controls/collision.js';
@@ -20,6 +21,7 @@ import { EditorPanel } from './ui/editor.js';
 import { CinemaPanel } from './ui/cinemaPanel.js';
 import { Overlay } from './ui/overlay.js';
 import { FloorPanel } from './ui/floorPanel.js';
+import { BackgroundMusic } from './ui/music.js';
 import { $ } from './ui/dom.js';
 
 // ─── World ───────────────────────────────────────────────────────────────────
@@ -28,7 +30,9 @@ import { $ } from './ui/dom.js';
 const app = new App($('canvas'));
 const library = await MediaLibrary.load(CONFIG.media.manifestUrl);
 const floors = library.floors();
-if (!floors.length) floors.push({ key: 'empty', label: 'The Collection', range: 'Collection offline', count: 0, items: [], months: [] });
+// The entrance floor is the Hall of Fame; its works resolve through the library like any other.
+library.add(HALL_OF_FAME_ITEMS);
+floors.unshift(HALL_OF_FAME_FLOOR);
 floors.push(CINEMA_FLOOR);
 let currentFloor = 0;
 let layout = createLayout(floors[currentFloor]);
@@ -52,6 +56,7 @@ function createCinema() {
 }
 
 const hud = new Hud();
+const music = new BackgroundMusic(BACKGROUND_MUSIC_URL);
 const player = new PlayerController(app.camera, app.canvas, {
   ...CONFIG.player,
   start: layout.start,
@@ -156,9 +161,8 @@ function rideElevator(index) {
   }, () => {
     mode = 'explore';
     player.enabled = true;
-    hud.toast(`Arrived · ${floors[index].label}`);
-    if (cinema) openPanel(cinemaPanel);
-    else if (!player.active) overlay.showPaused();
+    hud.toast(cinema ? 'Arrived · The Little Cinema · click the screen to choose a film' : `Arrived · ${floors[index].label}`, cinema ? 4200 : 2400);
+    if (!player.active) overlay.showPaused();
   });
 }
 
@@ -337,7 +341,11 @@ app.addSystem({
 });
 
 app.addSystem({
-  update(dt, app) { curator.update(dt, app); cinema?.update(dt, app); },
+  update(dt, app) {
+    curator.update(dt, app);
+    cinema?.update(dt, app);
+    music.hold(!!cinema?.isPlaying);
+  },
   onVisibilityChange(visible) { curator.onVisibilityChange(visible); cinema?.onVisibilityChange(visible); },
 });
 switchFloor(0, true);
@@ -345,7 +353,7 @@ app.start();
 
 // Handy for poking at the scene from devtools during development.
 if (import.meta.env.DEV) Object.assign(window, { museum: {
-  app, library, floors, tour, player, lobby, touch, switchFloor, rideElevator,
+  app, library, floors, tour, player, lobby, touch, music, switchFloor, rideElevator,
   get cinema() { return cinema; }, get layout() { return layout; }, get frames() { return frames; },
   get curator() { return curator; }, get currentFloor() { return currentFloor; },
 } });

@@ -176,8 +176,10 @@ export class Lobby {
   }
 }
 
-/** "1", "2", … for dated floors; the undated archive is the basement. */
+/** "G" for the Hall of Fame, "1", "2", … for dated floors; the undated archive is the basement. */
 export function floorName(index, floors) {
   if (floors[index]?.kind === 'cinema') return 'C';
-  return floors[index]?.key === 'undated' ? 'B' : String(index + 1);
+  if (floors[index]?.kind === 'fame') return 'G';
+  if (floors[index]?.key === 'undated') return 'B';
+  return String(floors.slice(0, index).filter((f) => !f.kind).length + 1);
 }

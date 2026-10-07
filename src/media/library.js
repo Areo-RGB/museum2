@@ -143,7 +143,8 @@ export class MediaLibrary {
    */
   floors() {
     const groups = new Map();
-    for (const item of this.items) {
+    // Curated extras (Hall of Fame) have their own floor, not a season.
+    for (const item of this.items.filter((i) => i.source === 'collection')) {
       const p = periodFor(item.date);
       if (!groups.has(p.key)) groups.set(p.key, { ...p, items: [] });
       groups.get(p.key).items.push(item);
@@ -165,6 +166,13 @@ export class MediaLibrary {
           range: formatRange(items.flatMap((i) => i.date ?? [])),
         };
       });
+  }
+
+  /** Register curated items so frames can resolve them by id. */
+  add(items) {
+    this.items.push(...items);
+    this._index = null;
+    this.deck = [];
   }
 
   byId(id) {

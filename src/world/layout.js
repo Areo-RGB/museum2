@@ -102,6 +102,10 @@ function placeBox(box, placement) {
  */
 export function createLayout(floor) {
   const isCinema = floor?.kind === 'cinema';
+  // The Hall of Fame shows few works, so each gets a large frame and more room.
+  const isFame = floor?.kind === 'fame';
+  const frameSize = isFame ? { ...HERO, y: 2.45 } : STANDARD;
+  const pitch = isFame ? 7 : SPACING.pitch;
   const months = isCinema ? [] : floor?.months.length
     ? floor.months
     : [{ key: 'empty', label: 'The Collection', items: [] }];
@@ -112,7 +116,7 @@ export function createLayout(floor) {
     const frames = month.items.length || 2; // an empty floor still shows two placeholders
     const perSide = Math.ceil(frames / 2);
     const label = { label: month.label, range: floor?.label ?? '', count: month.items.length };
-    return { month, label, frames, perSide, length: SPACING.sectionGap + perSide * SPACING.pitch };
+    return { month, label, frames, perSide, length: SPACING.sectionGap + perSide * pitch };
   });
   const length = SPACING.entrance + plan.reduce((sum, s) => sum + s.length, 0) + SPACING.exit;
   const minZ = 0;
@@ -142,10 +146,10 @@ export function createLayout(floor) {
       // Alternate walls so consecutive works face each other across the hall.
       const side = i % 2 === 0 ? 'left' : 'right';
       const index = Math.floor(i / 2);
-      const fz = z + SPACING.sectionGap + SPACING.pitch * (index + 0.5);
+      const fz = z + SPACING.sectionGap + pitch * (index + 0.5);
       slots.push({
-        id: `${floorKey}:${month.key}:${i + 1}`, ...STANDARD, period: floorKey, itemId: month.items[i]?.id ?? null,
-        position: [side === 'left' ? HX - FACE : -HX + FACE, STANDARD.y, fz],
+        id: `${floorKey}:${month.key}:${i + 1}`, ...frameSize, period: floorKey, itemId: month.items[i]?.id ?? null,
+        position: [side === 'left' ? HX - FACE : -HX + FACE, frameSize.y, fz],
         rotationY: side === 'left' ? FACING.towardsMinusX : FACING.towardsPlusX,
       });
     }
@@ -153,7 +157,7 @@ export function createLayout(floor) {
     const benchCount = Math.max(1, Math.round(perSide / 3));
     const framesStart = z + SPACING.sectionGap;
     for (let b = 0; b < benchCount; b++) {
-      benches.push({ x: 0, z: framesStart + (perSide * SPACING.pitch) * (b + 0.5) / benchCount, w: 0.62, d: 2.6 });
+      benches.push({ x: 0, z: framesStart + (perSide * pitch) * (b + 0.5) / benchCount, w: 0.62, d: 2.6 });
     }
     z += sectionLength;
   }
@@ -216,5 +220,6 @@ export function createLayout(floor) {
   // Enter at the oldest end, looking down the hall; the cinema door is just ahead on the left.
   const start = { position: [0, 1.65, minZ + 3.2], yaw: Math.PI };
 
-  return { hall, sections, slots, benches, walls, colliders, cinema, start };
+  const theme = isFame ? 'fame' : isCinema ? 'cinema' : 'gallery';
+  return { hall, sections, slots, benches, walls, colliders, cinema, start, theme };
 }
