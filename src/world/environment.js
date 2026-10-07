@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { ROOM } from './layout.js';
+import { LOBBY, ROOM } from './layout.js';
 import { canvasPanel, periodLabel } from './signage.js';
 import { createWoodFloorTexture } from './textures.js';
 
@@ -165,10 +165,12 @@ function buildFameDecor(group, { hall, slots }) {
     const cornice = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.12, hall.length), gold);
     cornice.position.set(x, hall.height - 0.5, (hall.minZ + hall.maxZ) / 2);
     group.add(cornice);
-    // The dado rail runs between the pilasters and stops at the ones flanking each frame.
+    // The dado rail runs between the pilasters and stops at the ones flanking each
+    // frame; on the lobby (-x) wall it also leaves out the directory and elevator.
     const gaps = slots.filter((s) => !s.hero && Math.sign(s.position[0]) === side)
-      .map((s) => [s.position[2] - PILASTER_OFFSET, s.position[2] + PILASTER_OFFSET])
-      .sort((a, b) => a[0] - b[0]);
+      .map((s) => [s.position[2] - PILASTER_OFFSET, s.position[2] + PILASTER_OFFSET]);
+    if (side < 0) gaps.push(lobbyGap());
+    gaps.sort((a, b) => a[0] - b[0]);
     let from = hall.minZ;
     for (const [start, end] of [...gaps, [hall.maxZ, hall.maxZ]]) {
       if (start > from) {
@@ -205,6 +207,13 @@ function buildFameDecor(group, { hall, slots }) {
   title.position.set(0, hall.height - 0.58, hall.maxZ - face - 0.02);
   title.rotation.y = Math.PI;
   group.add(title);
+}
+
+/** Lobby-wall span (z) covering the floor directory and the elevator front, with a margin. */
+function lobbyGap() {
+  const { directory, elevator } = LOBBY;
+  const ez = elevator.placement.position[2];
+  return [directory.position[2] - directory.width / 2 - 0.2, ez + elevator.width / 2 + 0.2];
 }
 
 /** Free geometries, materials and textures under `root`. */
