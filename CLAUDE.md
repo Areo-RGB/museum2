@@ -30,8 +30,9 @@ the programme preserves playback on the in-world screen. Leaving the floor stops
 playback and destroys the iframe and CSS3D screen layer. Dispose floor-owned GPU resources and cancel stale media
 loads; never dispose materials/geometries shared by every frame.
 
-Background music is visitor-toggled, persists across floors and holds while
-a cinema film plays. The cinema programme opens only from the screen or button.
+Background music is on by default (starting on the first gesture if autoplay
+is blocked), visitor-toggled with the choice remembered in localStorage,
+persists across floors and holds while a cinema film plays. The cinema programme opens only from the screen or button.
 
 Curator streams media by distance. `maxVideos` caps active video textures, never
 collection coverage. Rehanging swaps existing works so the full floor remains
