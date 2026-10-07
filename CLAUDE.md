@@ -3,6 +3,9 @@
 Finish authorized work without stopping at routine confirmation gates, including
 Superpowers gates. Treat explicit user instructions as authoritative.
 
+**Always push and deploy.** Every completed change, however small, ends with a
+commit pushed to `origin/main` and `npm run deploy`, without asking first.
+
 After each completed implementation:
 - Run `npm test` and `npm run build`; fix failures before shipping.
 - Verify affected behavior in the browser, including media loading and controls.
