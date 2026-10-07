@@ -77,6 +77,11 @@ function loadVideo(item, signal) {
       signal?.removeEventListener('abort', abort);
       const texture = new THREE.VideoTexture(video);
       texture.colorSpace = THREE.SRGBColorSpace;
+      // VideoTexture only refreshes while playing; distant videos stay paused, so
+      // upload a poster frame now (a moment in, past any black lead-in).
+      texture.needsUpdate = true;
+      video.addEventListener('seeked', () => { texture.needsUpdate = true; }, { once: true });
+      video.currentTime = Math.min(1, (video.duration || 0) / 10);
       resolve({
         texture, video, width: video.videoWidth, height: video.videoHeight,
         dispose() { texture.dispose(); cleanup(); },

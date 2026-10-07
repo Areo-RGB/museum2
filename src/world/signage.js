@@ -4,7 +4,7 @@ import * as THREE from 'three';
  * A flat sign drawn onto a canvas. `draw(ctx, w, h)` paints it; it is redrawn
  * once web fonts have loaded so serif text doesn't stay in the fallback face.
  */
-export function canvasPanel(width, height, draw, { resolution = 1024, lit = true } = {}) {
+export function canvasPanel(width, height, draw, { resolution = 1024, lit = true, transparent = false } = {}) {
   const canvas = document.createElement('canvas');
   canvas.width = resolution;
   canvas.height = Math.round(resolution * height / width);
@@ -21,7 +21,7 @@ export function canvasPanel(width, height, draw, { resolution = 1024, lit = true
   document.fonts?.ready.then(paint);
   const material = lit
     ? new THREE.MeshStandardMaterial({ map: texture, roughness: 0.9, transparent: true })
-    : new THREE.MeshBasicMaterial({ map: texture, toneMapped: false });
+    : new THREE.MeshBasicMaterial({ map: texture, toneMapped: false, transparent });
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, height), material);
   mesh.userData.repaint = paint;
   return mesh;

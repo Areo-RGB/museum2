@@ -176,7 +176,7 @@ function buildFameDecor(group, { hall, slots }) {
     }
   }
 
-  const title = canvasPanel(5.2, 0.9, (ctx, w, h) => {
+  const title = canvasPanel(5.2, 0.75, (ctx, w, h) => {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#d8b56a';
@@ -187,8 +187,9 @@ function buildFameDecor(group, { hall, slots }) {
     ctx.font = `${h * 0.3}px Georgia, serif`;
     for (const x of [w * 0.04, w * 0.96]) ctx.fillText('★', x, h * 0.46);
     ctx.fillRect(w * 0.2, h * 0.88, w * 0.6, h * 0.025);
-  }, { lit: false });
-  title.position.set(0, hall.height - 1.05, hall.maxZ - face - 0.02);
+  }, { lit: false, transparent: true });
+  // Above the featured frame (top edge ≈ 4.1 m including matte and moulding).
+  title.position.set(0, hall.height - 0.58, hall.maxZ - face - 0.02);
   title.rotation.y = Math.PI;
   group.add(title);
 }

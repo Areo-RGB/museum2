@@ -133,7 +133,8 @@ export function createLayout(floor) {
   const allItems = months.flatMap((m) => m.items);
   const featured = allItems[Math.floor(Math.random() * allItems.length)];
   const slots = isCinema ? [] : [{
-    id: `${floorKey}:hero`, ...HERO, position: [0, HERO.y, maxZ - FACE], rotationY: FACING.towardsEntrance,
+    // In the Hall of Fame the featured frame sits lower to leave room for the title above it.
+    id: `${floorKey}:hero`, ...HERO, position: [0, isFame ? 2.3 : HERO.y, maxZ - FACE], rotationY: FACING.towardsEntrance,
     hero: true, period: floorKey, itemId: featured?.id ?? null,
   }];
   const benches = [];
