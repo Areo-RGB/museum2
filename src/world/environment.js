@@ -123,6 +123,8 @@ export function buildHall(app, layout) {
       label.rotation.y = -side * Math.PI / 2;
       group.add(label);
     }
+    // The Hall of Fame's single section needs no divider, and it would cross the carpet.
+    if (fame) continue;
     const line = new THREE.Mesh(new THREE.BoxGeometry(width, 0.006, 0.05), brass);
     line.position.set(0, 0.003, section.startZ);
     group.add(line);
