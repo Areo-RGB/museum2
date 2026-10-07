@@ -1,7 +1,7 @@
 // Declarative description of the building. Each floor is one time period of
 // the collection and shows every work from it: one section per month, oldest
 // at the entrance, a featured piece at the far end. Every floor shares the same
-// lobby (entrance zone) with the cinema door and the elevator between floors.
+// lobby (entrance zone) with the elevator. Only the Cinema floor has a theatre.
 // Environment geometry, colliders, frame slots and signage are all derived
 // from the object createLayout() returns.
 //
@@ -21,7 +21,7 @@ export const DOOR = { halfWidth: 1.1, height: 2.9 };
 export const SPACING = {
   pitch: 4.4,        // distance between neighbouring frames on one wall
   sectionGap: 2.8,   // room for the period label before each section's frames
-  entrance: 9.5,     // back wall → first section (holds the cinema door)
+  entrance: 9.5,     // back wall → first section (holds the elevator)
   exit: 7,           // last section → end wall with the featured piece
 };
 
@@ -101,7 +101,8 @@ function placeBox(box, placement) {
  * @param {ReturnType<import('../media/library.js').MediaLibrary['floors']>[number] | null} floor
  */
 export function createLayout(floor) {
-  const months = floor?.months.length
+  const isCinema = floor?.kind === 'cinema';
+  const months = isCinema ? [] : floor?.months.length
     ? floor.months
     : [{ key: 'empty', label: 'The Collection', items: [] }];
   const floorKey = floor?.key ?? 'empty';
@@ -122,12 +123,12 @@ export function createLayout(floor) {
   // Its 14 m wide shell must sit entirely alongside the hall wall, hence the offset.
   const cinemaHalfWidth = (CINEMA.bounds.maxX - CINEMA.bounds.minX) / 2;
   const doorZ = minZ + cinemaHalfWidth + 0.2;
-  const cinema = { position: [HX, 0, doorZ], rotationY: Math.PI / 2 };
+  const cinema = isCinema ? { position: [HX, 0, doorZ], rotationY: Math.PI / 2 } : null;
 
   const sections = [];
   const allItems = months.flatMap((m) => m.items);
   const featured = allItems[Math.floor(Math.random() * allItems.length)];
-  const slots = [{
+  const slots = isCinema ? [] : [{
     id: `${floorKey}:hero`, ...HERO, position: [0, HERO.y, maxZ - FACE], rotationY: FACING.towardsEntrance,
     hero: true, period: floorKey, itemId: featured?.id ?? null,
   }];
@@ -158,7 +159,7 @@ export function createLayout(floor) {
   }
 
   const C = CINEMA.bounds;
-  const cinemaWalls = [
+  const cinemaWalls = !isCinema ? [] : [
     { room: 'cinema', x: C.minX, z: (C.minZ + C.maxZ) / 2, w: T, d: C.maxZ - C.minZ },
     { room: 'cinema', x: C.maxX, z: (C.minZ + C.maxZ) / 2, w: T, d: C.maxZ - C.minZ },
     { room: 'cinema', x: 0, z: C.maxZ, w: C.maxX - C.minX + T, d: T },
@@ -176,15 +177,17 @@ export function createLayout(floor) {
     { room: 'hall', x: -HX, z: (minZ + elevatorLow) / 2, w: T, d: elevatorLow - minZ },
     { room: 'hall', x: -HX, z: (elevatorHigh + maxZ) / 2, w: T, d: maxZ - elevatorHigh },
     { room: 'hall', x: -HX, z: elevatorZ, w: T, d: e.width, y0: e.height },
-    // Left (+x) wall, split around the cinema door, plus a lintel above it.
+    // Only the cinema destination has a theatre doorway.
+    ...(!isCinema ? [{ room: 'hall', x: HX, z: length / 2, w: T, d: length }] : [
     { room: 'hall', x: HX, z: (minZ + doorLow) / 2, w: T, d: doorLow - minZ },
     { room: 'hall', x: HX, z: (doorHigh + maxZ) / 2, w: T, d: maxZ - doorHigh },
     { room: 'hall', x: HX, z: doorZ, w: T, d: DOOR.halfWidth * 2, y0: DOOR.height },
+    ]),
     ...cinemaWalls,
   ];
 
   const seatBlockOuter = CINEMA.aisleHalfWidth + CINEMA.seatPitch * CINEMA.seatsPerSide;
-  const cinemaColliders = [
+  const cinemaColliders = !isCinema ? [] : [
     // Seat rows, one block either side of the centre aisle.
     ...CINEMA.rows.flatMap((rz) => [-1, 1].map((side) => ({
       minX: side < 0 ? -seatBlockOuter : CINEMA.aisleHalfWidth,

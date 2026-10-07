@@ -3,6 +3,8 @@ import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUnifo
 import { CINEMA, SEATS, DOOR, ROOM } from './layout.js';
 import { createCarpetTexture, createVelvetTexture } from './textures.js';
 import { GeneratedFilm, VideoFilm } from '../cinema/films.js';
+import { YouTubeFilm } from '../cinema/youtube.js';
+import { disposeTree } from './environment.js';
 import { signMesh } from './signage.js';
 
 const B = CINEMA.bounds;
@@ -88,6 +90,19 @@ export class CinemaHall {
     this.loading = entry;
     this.onChange();
     try {
+      if (entry.source.type === 'youtube') {
+        this.disposeFilm();
+        const film = new YouTubeFilm(entry.source.videoId, document.getElementById('youtubePlayer'), () => this.onChange());
+        this.film = film;
+        this.nowPlaying = entry;
+        film.setVolume(this.volume);
+        this.onChange();
+        await film.ready;
+        if (token !== this.loadToken) return;
+        if (document.hidden) this.resumeFilm = film;
+        else await film.play();
+        return;
+      }
       const film = entry.source.type === 'video'
         ? await VideoFilm.load(entry.source.url, { listener: this.ensureListener(), speaker: this.speaker })
         : new GeneratedFilm(entry.source.generator);
@@ -101,6 +116,10 @@ export class CinemaHall {
       // the film then waits paused for the play button.
       if (document.hidden) this.resumeFilm = film;
       else await film.play().catch((err) => console.warn('[cinema] playback blocked', err));
+    } catch (error) {
+      if (token !== this.loadToken) return;
+      if (this.film instanceof YouTubeFilm) this.film.status = error.message;
+      throw error;
     } finally {
       if (token === this.loadToken) this.loading = null;
       this.onChange();
@@ -185,6 +204,14 @@ export class CinemaHall {
 
   // ─── Internals ─────────────────────────────────────────────────────────────
 
+  dispose() {
+    this.stop();
+    this.idleFilm.dispose();
+    this.listener?.removeFromParent();
+    disposeTree(this.group);
+    this.setAmbient(1);
+  }
+
   ensureListener() {
     if (!this.listener) {
       this.listener = new THREE.AudioListener();
@@ -218,7 +245,7 @@ export class CinemaHall {
     if (this.sampleTimer <= 0) {
       this.sampleTimer = 0.15;
       try {
-        this.sampler.drawImage(this.activeFilm.sampleSource, 0, 0, 8, 8);
+        this.sampler.drawImage((this.activeFilm.sampleSource ?? this.idleFilm.sampleSource), 0, 0, 8, 8);
         const data = this.sampler.getImageData(0, 0, 8, 8).data;
         let r = 0, g = 0, b = 0;
         for (let i = 0; i < data.length; i += 4) { r += data[i]; g += data[i + 1]; b += data[i + 2]; }

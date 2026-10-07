@@ -9,7 +9,7 @@ import { CinemaHall } from './world/cinema.js';
 import { MediaLibrary } from './media/library.js';
 import { Curator } from './media/curator.js';
 import { photoCache } from './media/cache.js';
-import { PLACEHOLDER_FILMS, collectionFilms } from './cinema/programme.js';
+import { CINEMA_FLOOR, YOUTUBE_FILMS } from './cinema/programme.js';
 import { PlayerController } from './controls/player.js';
 import { TouchControls } from './controls/touch.js';
 import { createCollisionChecker } from './controls/collision.js';
@@ -29,6 +29,7 @@ const app = new App($('canvas'));
 const library = await MediaLibrary.load(CONFIG.media.manifestUrl);
 const floors = library.floors();
 if (!floors.length) floors.push({ key: 'empty', label: 'The Collection', range: 'Collection offline', count: 0, items: [], months: [] });
+floors.push(CINEMA_FLOOR);
 let currentFloor = 0;
 let layout = createLayout(floors[currentFloor]);
 let environment = buildHall(app, layout);
@@ -39,15 +40,17 @@ const lobby = app.addSystem(new Lobby(floors));
 app.scene.add(environment.group, lobby.group);
 
 const ambientBase = { hemisphere: atmosphere.hemisphere.intensity, env: app.scene.environmentIntensity };
-const cinema = app.addSystem(new CinemaHall(app, layout.cinema, {
-  setAmbient(factor) {
-    atmosphere.hemisphere.intensity = ambientBase.hemisphere * factor;
-    app.scene.environmentIntensity = ambientBase.env * factor;
-  },
-}));
-app.scene.add(cinema.group);
+let cinema = null;
+function createCinema() {
+  cinema = new CinemaHall(app, layout.cinema, {
+    setAmbient(factor) {
+      atmosphere.hemisphere.intensity = ambientBase.hemisphere * factor;
+      app.scene.environmentIntensity = ambientBase.env * factor;
+    },
+  });
+  app.scene.add(cinema.group);
+}
 
-// ─── Controls ────────────────────────────────────────────────────────────────
 const hud = new Hud();
 const player = new PlayerController(app.camera, app.canvas, {
   ...CONFIG.player,
@@ -81,9 +84,10 @@ const floorPanel = new FloorPanel(floors, {
 });
 $('chooseFloors').addEventListener('click', showFloors);
 $('floorButton').addEventListener('click', showFloors);
+$('cinemaButton').addEventListener('click', () => { if (mode !== 'riding' && cinema) openPanel(cinemaPanel); });
+$('watchCinema').addEventListener('click', () => openPanel(cinemaPanel));
 cinemaPanel.setProgramme([
-  { heading: 'Now showing', films: PLACEHOLDER_FILMS },
-  { heading: 'Home movies', films: collectionFilms(library) },
+  { heading: 'September 2026 · Five films', films: YOUTUBE_FILMS },
 ]);
 overlay.setCollectionSize(library.size);
 if (globalThis.caches) $('cacheSettings').classList.remove('hidden');
@@ -143,13 +147,17 @@ function rideElevator(index) {
     mode = 'explore';
     player.enabled = true;
     hud.toast(`Arrived · ${floors[index].label}`);
-    if (!player.active) overlay.showPaused();
+    if (cinema) openPanel(cinemaPanel);
+    else if (!player.active) overlay.showPaused();
   });
 }
 
-/** Replace only floor-owned resources; lobby, cinema and atmosphere persist. */
+/** Replace only floor-owned resources; lobby and atmosphere persist. */
 function switchFloor(index, initial = false) {
   if (!floors[index] || (!initial && index === currentFloor)) return;
+  cinemaPanel.close();
+  cinema?.dispose();
+  cinema = null;
   curator?.dispose();
   for (const frame of frames) frame.dispose();
   if (!initial) {
@@ -173,7 +181,11 @@ function switchFloor(index, initial = false) {
     activate: () => openPanel(editor, frame),
   });
   lobby.registerInteractions(interactions, showFloors);
-  cinema.registerInteractions(interactions, {
+  if (layout.cinema) createCinema();
+  cinemaPanel.setHall(cinema);
+  $('cinemaButton').classList.toggle('hidden', !cinema);
+  $('watchCinema').classList.toggle('hidden', !cinema);
+  cinema?.registerInteractions(interactions, {
     onScreen: () => openPanel(cinemaPanel),
     onSeat: seat => player.sit(seat),
   });
@@ -194,6 +206,8 @@ function switchFloor(index, initial = false) {
 }
 
 function openPanel(panel, ...args) {
+  if (activePanel && activePanel !== panel) activePanel.close();
+  overlay.hide();
   mode = 'panel';
   activePanel = panel;
   hud.setHovered(null);
@@ -213,6 +227,7 @@ function closePanel(resume) {
 }
 
 function startTour() {
+  if (cinema) { overlay.hide(); openPanel(cinemaPanel); return; }
   mode = 'touring';
   player.standUp();
   player.enabled = false;
@@ -260,7 +275,7 @@ document.addEventListener('keydown', (e) => {
     curator.shuffleAll();
     hud.toast('Rehanging the gallery…');
   }
-  if (e.code === 'Space' && cinema.film && (cinema.contains(app.camera.position) || activePanel === cinemaPanel)) {
+  if (e.code === 'Space' && cinema?.film && (cinema.contains(app.camera.position) || activePanel === cinemaPanel)) {
     e.preventDefault();
     cinema.togglePause();
   }
@@ -282,13 +297,16 @@ app.addSystem({
   },
 });
 
-app.addSystem({ update: (dt, app) => curator.update(dt, app), onVisibilityChange: visible => curator.onVisibilityChange(visible) });
+app.addSystem({
+  update(dt, app) { curator.update(dt, app); cinema?.update(dt, app); },
+  onVisibilityChange(visible) { curator.onVisibilityChange(visible); cinema?.onVisibilityChange(visible); },
+});
 switchFloor(0, true);
 app.start();
 
 // Handy for poking at the scene from devtools during development.
 if (import.meta.env.DEV) Object.assign(window, { museum: {
-  app, library, floors, tour, cinema, player, lobby, touch, switchFloor, rideElevator,
-  get layout() { return layout; }, get frames() { return frames; },
+  app, library, floors, tour, player, lobby, touch, switchFloor, rideElevator,
+  get cinema() { return cinema; }, get layout() { return layout; }, get frames() { return frames; },
   get curator() { return curator; }, get currentFloor() { return currentFloor; },
 } });

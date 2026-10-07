@@ -1,5 +1,5 @@
 import { $ } from './dom.js';
-import { generatorPoster } from '../cinema/films.js';
+
 
 /**
  * The cinema programme: pick a film, control playback. Pure DOM; talks to
@@ -21,11 +21,18 @@ export class CinemaPanel {
     this.volume = $('filmVolume');
     this.progress = $('filmProgress');
 
-    this.toggle.addEventListener('click', () => hall.togglePause().catch((e) => console.warn(e)));
-    this.stopButton.addEventListener('click', () => hall.stop());
-    this.volume.addEventListener('input', () => hall.setVolume(+this.volume.value));
+    this.toggle.addEventListener('click', () => this.hall?.togglePause().catch((e) => console.warn(e)));
+    this.stopButton.addEventListener('click', () => this.hall?.stop());
+    this.volume.addEventListener('input', () => this.hall?.setVolume(+this.volume.value));
     $('closeCinema').addEventListener('click', onClose);
-    hall.onChange = () => this.refresh();
+    this.setHall(hall);
+  }
+
+  setHall(hall) {
+    if (this.hall) this.hall.onChange = () => {};
+    this.hall = hall;
+    if (hall) hall.onChange = () => this.refresh();
+    this.refresh();
   }
 
   /** @param {{ heading: string, films: import('../cinema/programme.js').Film[] }[]} sections */
@@ -45,49 +52,52 @@ export class CinemaPanel {
     const button = document.createElement('button');
     button.className = 'film-card';
     button.dataset.id = film.id;
-    let poster;
-    if (film.source.type === 'generated') {
-      poster = document.createElement('img');
-      poster.src = generatorPoster(film.source.generator);
-      poster.alt = '';
-    } else {
-      // Shows a frame one second in. Loaded lazily on first open, and with
-      // CORS so the cached response stays usable by WebGL elsewhere.
-      poster = document.createElement('video');
-      Object.assign(poster, { muted: true, preload: 'metadata', playsInline: true, crossOrigin: 'anonymous' });
-      poster.dataset.src = `${film.source.url}#t=1`;
-    }
+    const poster = document.createElement('img');
+    poster.dataset.src = `https://i.ytimg.com/vi/${film.source.videoId}/hqdefault.jpg`;
+    poster.loading = 'lazy';
+    poster.alt = '';
     poster.className = 'poster';
     const title = document.createElement('strong');
     title.textContent = film.title;
     const meta = document.createElement('span');
     meta.textContent = film.meta;
     button.append(poster, title, meta);
-    button.addEventListener('click', () => this.hall.project(film).catch((err) => {
-      console.error(err);
-      this.nowMeta.textContent = `Couldn't load: ${err.message}`;
-    }));
+    button.addEventListener('click', () => {
+      if (!this.hall) return;
+      const link = $('youtubeLink');
+      link.href = film.source.url;
+      link.classList.remove('hidden');
+      $('youtubePlayer').classList.remove('hidden');
+      this.hall.project(film).catch((err) => {
+        console.error(err);
+        this.nowMeta.textContent = `Couldn't load: ${err.message}`;
+      });
+      this.el.scrollTop = 0;
+    });
     return button;
   }
 
   get isOpen() { return this.el.classList.contains('open'); }
   open() {
-    for (const video of this.list.querySelectorAll('video[data-src]')) {
-      video.src = video.dataset.src;
-      video.removeAttribute('data-src');
+    for (const poster of this.list.querySelectorAll('img[data-src]')) {
+      poster.src = poster.dataset.src;
+      poster.removeAttribute('data-src');
     }
     this.refresh();
     this.el.classList.add('open');
     this.tick();
   }
-  close() { this.el.classList.remove('open'); }
+  close() { this.hall?.stop(); this.el.classList.remove('open'); }
 
   refresh() {
-    const { nowPlaying, loading, film } = this.hall;
+    const { nowPlaying, loading, film } = this.hall ?? {};
     const current = loading ?? nowPlaying;
     this.nowTitle.textContent = current?.title ?? 'Nothing showing';
-    this.nowMeta.textContent = loading ? 'Threading the projector…' : (nowPlaying ? nowPlaying.meta : 'Pick something below');
-    this.toggle.disabled = this.stopButton.disabled = !film;
+    $('youtubePlayer').classList.toggle('hidden', !film);
+    $('youtubeLink').classList.toggle('hidden', !film);
+    this.nowMeta.textContent = film?.status ?? (loading ? 'Threading the projector…' : (nowPlaying ? nowPlaying.meta : 'Pick something below'));
+    this.toggle.disabled = !film || !!loading;
+    this.stopButton.disabled = !film;
     this.toggle.textContent = film && !film.paused ? 'Pause' : 'Play';
     for (const card of this.list.querySelectorAll('.film-card')) {
       card.classList.toggle('playing', card.dataset.id === nowPlaying?.id);
@@ -97,7 +107,7 @@ export class CinemaPanel {
 
   tick() {
     if (!this.isOpen) return;
-    const p = this.hall.film?.progress;
+    const p = this.hall?.film?.progress;
     this.progress.style.transform = `scaleX(${p ?? 0})`;
     requestAnimationFrame(() => this.tick());
   }

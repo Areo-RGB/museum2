@@ -17,12 +17,13 @@
       <img class="club-logo" src="/media/logo.svg" alt="Hertha 03 Zehlendorf" />
       <p class="eyebrow">F.C. Hertha 03 Zehlendorf · 2014er</p>
       <h1>Our memories,<br />one season at a time.</h1>
-      <p class="sub">Explore every photograph and film from the archive. Choose a season at the lobby elevator, wander its monthly galleries, or step into the cinema.</p>
+      <p class="sub">Explore every photograph and film from the archive. Choose a season at the lobby elevator, wander its monthly galleries, or take the elevator to the cinema.</p>
       <p class="count" id="collectionCount">Loading collection…</p>
       <div class="actions">
         <button class="primary" id="enter">Enter the gallery</button>
         <button class="secondary" id="startTour">Guided tour</button>
         <button class="secondary" id="chooseFloors">Choose a time period</button>
+        <button class="secondary hidden" id="watchCinema">Cinema programme</button>
       </div>
       <dl class="keys">
         <div><dt>WASD</dt><dd>walk · Shift to hurry</dd></div>
@@ -50,12 +51,13 @@
     </div>
   </div>
 
+  <button id="cinemaButton" class="pill hidden">Cinema programme</button>
   <button id="floorButton" class="pill">Choose a time period</button>
   <aside id="floorPanel" role="dialog" aria-labelledby="floorHeading">
     <button class="close" id="closeFloors" aria-label="Close period directory">×</button>
     <p class="eyebrow">Lobby elevator</p>
     <h2 id="floorHeading">Choose a time period</h2>
-    <p class="sub">Select a season to ride the elevator. Every work has a place; images and films load as you approach.</p>
+    <p class="sub">Select a season or the cinema to ride the elevator. Every work has a place; images and films load as you approach.</p>
     <div id="floorList"></div>
   </aside>
 
@@ -100,6 +102,8 @@
       </div>
     </div>
     <div class="progress"><div id="filmProgress"></div></div>
+    <div id="youtubePlayer" class="hidden"></div>
+    <a id="youtubeLink" class="hidden" target="_blank" rel="noopener noreferrer">Open selected film on YouTube</a>
     <div id="filmList"></div>
   </aside>
 

@@ -178,5 +178,6 @@ export class Lobby {
 
 /** "1", "2", … for dated floors; the undated archive is the basement. */
 export function floorName(index, floors) {
+  if (floors[index]?.kind === 'cinema') return 'C';
   return floors[index]?.key === 'undated' ? 'B' : String(index + 1);
 }
