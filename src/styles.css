@@ -155,6 +155,9 @@ h1 { margin: 0 0 12px; font: 600 44px/1 var(--serif); letter-spacing: 0.01em; }
 
 /* Touch controls stay outside the 3D canvas and leave its centre unobstructed. */
 .touch-help { display: none; color: var(--muted); font-size: 13px; line-height: 1.6; margin: 20px 0 0; }
+.cache-settings { margin-top: 18px; display: grid; gap: 6px; }
+.cache-settings button { padding: 10px 14px; font-size: 12px; }
+#cacheStatus { color: var(--muted); font-size: 12px; }
 .touch-mode .keys { display: none; }
 .touch-mode .touch-help { display: block; }
 #touchControls { position: fixed; inset: 0; z-index: 12; pointer-events: none; }

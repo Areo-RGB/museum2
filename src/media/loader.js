@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { photoCache } from './cache.js';
 
 /**
  * @typedef {Object} LoadedMedia
@@ -34,12 +35,15 @@ export function loadMedia(item, { maxTextureSize, anisotropy, signal }) {
 }
 
 async function loadImage(item, maxSize, anisotropy, signal) {
-  const blob = item.blob ?? await fetch(item.url, { mode: 'cors', signal }).then((r) => {
-    if (!r.ok) throw new Error(`${r.status} for ${item.url}`);
-    return r.blob();
-  });
+  const blob = item.blob ?? await photoCache.getBlob(item.url, { signal });
   // createImageBitmap decodes off the main thread and honours EXIF orientation.
-  const bitmap = await createImageBitmap(blob);
+  let bitmap;
+  try { bitmap = await createImageBitmap(blob); }
+  catch (error) {
+    // A truncated/corrupt download must retry the network instead of staying cached.
+    if (!item.blob) photoCache.invalidate(item.url);
+    throw error;
+  }
   const scale = Math.min(1, maxSize / Math.max(bitmap.width, bitmap.height));
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(bitmap.width * scale);

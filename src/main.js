@@ -8,6 +8,7 @@ import { MediaFrame } from './world/frame.js';
 import { CinemaHall } from './world/cinema.js';
 import { MediaLibrary } from './media/library.js';
 import { Curator } from './media/curator.js';
+import { photoCache } from './media/cache.js';
 import { PLACEHOLDER_FILMS, collectionFilms } from './cinema/programme.js';
 import { PlayerController } from './controls/player.js';
 import { TouchControls } from './controls/touch.js';
@@ -85,6 +86,13 @@ cinemaPanel.setProgramme([
   { heading: 'Home movies', films: collectionFilms(library) },
 ]);
 overlay.setCollectionSize(library.size);
+if (globalThis.caches) $('cacheSettings').classList.remove('hidden');
+$('clearCache').addEventListener('click', async () => {
+  const button = $('clearCache');
+  button.disabled = true;
+  try { $('cacheStatus').textContent = await photoCache.clear() ? 'Downloaded photos cleared.' : 'Photo cache is unavailable.'; }
+  finally { button.disabled = false; }
+});
 const touch = new TouchControls(player, {
   available: app.profile.touch,
   onUse: () => { if (mode === 'explore') { const picked = interactions.pick(); picked?.target.activate(picked.hit); } },

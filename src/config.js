@@ -1,6 +1,12 @@
 // Central tuning knobs. Anything a future feature might want to tweak lives here
 // rather than being hard-coded inside a module.
 export const CONFIG = {
+  cache: {
+    maxBytes: 96 * 1024 * 1024,
+    maxObjectBytes: 12 * 1024 * 1024,
+    maxEntries: 64,
+    maxAgeMs: 7 * 24 * 60 * 60 * 1000,
+  },
   media: {
     manifestUrl: '/media-manifest.json',
     fallbackUrl: '/media/photo1.jpg',

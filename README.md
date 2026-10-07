@@ -68,6 +68,17 @@ streaming radius. GPU pixel budgets cap high-DPI rendering. This lowers GPU
 memory and decoding work; R2 still serves the original source files, so image
 download sizes are unchanged. Hidden tabs skip rendering and pause video playback.
 
+Visited photos are saved in the browser's disk cache (up to 96 MiB, 64 images,
+12 MiB per image). Least recently used photos are evicted first; after seven
+days a photo is revalidated online, with a saved copy available during network
+outages. The manifest always checks for updates and keeps its last valid copy
+as a network-failure fallback. **Clear downloaded photos** in the welcome/menu
+screen frees the photo cache without removing uploads. Persistent caching needs
+HTTPS or localhost and falls back to normal loading if storage is unavailable.
+Videos retain native HTTP/range streaming. Fingerprinted JS/CSS assets have
+one-year browser caching; HTML and the manifest revalidate so new deployments
+and collection edits remain discoverable. This is not a fully offline app.
+
 ## Project structure
 
 ```
@@ -89,6 +100,7 @@ src/
   media/
     library.js         Loads the R2 manifest, derives dates/captions/periods, deals items like a shuffled deck
     loader.js          Image/video → texture (downscaled, EXIF-aware), concurrency limiter
+    cache.js           Bounded persistent photo cache and network-first manifest fallback
     curator.js         What hangs where (upload → assigned manifest item → fallback),
                        and streams textures in/out by distance
   cinema/

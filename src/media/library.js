@@ -1,3 +1,5 @@
+import { loadManifest } from './cache.js';
+
 /**
  * @typedef {Object} MediaItem
  * @property {string} id        Stable id (bucket key, slot id for uploads, ...)
@@ -110,9 +112,7 @@ export class MediaLibrary {
 
   static async load(url) {
     try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-      const manifest = await res.json();
+      const manifest = await loadManifest(url);
       const items = (manifest.assets ?? []).flatMap((asset) => {
         const kind = kindOf(asset.contentType);
         if (!kind || !asset.url) return [];

@@ -1,0 +1,6 @@
+# Only fingerprinted build assets are immutable. HTML/manifest retain revalidation.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/media-manifest.json
+  Cache-Control: public, max-age=0, must-revalidate
