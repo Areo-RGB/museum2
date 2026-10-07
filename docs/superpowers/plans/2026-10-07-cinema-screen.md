@@ -11,4 +11,10 @@ destroys the player and its CSS renderer.
 - [x] Test screen dimensions, transforms and depth cutout material.
 - [x] Add the screen renderer and connect viewing/programme/walking modes.
 - [x] Verify playback, perspective, occlusion and mobile layout; test/build/review.
-- [ ] Push main, deploy and check live.
+- [x] Push main, deploy and check live.
+
+36 tests and the production build pass. All five films played on the physical
+screen. Walking preserved playback and changed perspective; portrait rotation
+kept the entire screen visible. Stop removes the iframe; floor departure removes
+the whole CSS screen layer. Live playback was verified on gallery.h03.uk.
+Review findings about rotation and leftover popup controls were fixed.
