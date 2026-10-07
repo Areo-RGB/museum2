@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { CONFIG } from '../config.js';
+import { deviceProfile, pixelRatio } from './deviceProfile.js';
 
 /**
  * Owns the renderer, scene, camera and the frame loop.
@@ -8,8 +9,12 @@ import { CONFIG } from '../config.js';
 export class App {
   constructor(canvas) {
     this.canvas = canvas;
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
-    this.renderer.setPixelRatio(Math.min(devicePixelRatio, CONFIG.render.maxPixelRatio));
+    this.profile = deviceProfile({ coarsePointer: matchMedia('(pointer: coarse)').matches, width: innerWidth,
+      deviceMemory: navigator.deviceMemory, saveData: navigator.connection?.saveData });
+    this.renderOptions = { ...CONFIG.render, ...this.profile.render };
+    this.mediaOptions = { ...CONFIG.media, ...this.profile.media };
+    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: this.renderOptions.antialias, powerPreference: 'high-performance' });
+    this.renderer.setPixelRatio(pixelRatio(innerWidth, innerHeight, devicePixelRatio, this.renderOptions));
     this.renderer.setSize(innerWidth, innerHeight);
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = CONFIG.render.exposure;
@@ -22,10 +27,13 @@ export class App {
     this.systems = [];
 
     addEventListener('resize', () => this.resize());
+    document.addEventListener('visibilitychange', () => {
+      for (const system of this.systems) system.onVisibilityChange?.(!document.hidden);
+    });
   }
 
   get maxAnisotropy() {
-    return this.renderer.capabilities.getMaxAnisotropy();
+    return Math.min(this.profile.anisotropy, this.renderer.capabilities.getMaxAnisotropy());
   }
 
   addSystem(system) {
@@ -36,6 +44,7 @@ export class App {
   start() {
     this.renderer.setAnimationLoop((timestamp) => {
       this.timer.update(timestamp);
+      if (document.hidden) return;
       const dt = Math.min(this.timer.getDelta(), 0.05);
       for (const system of this.systems) system.update?.(dt, this);
       this.renderer.render(this.scene, this.camera);
@@ -45,6 +54,7 @@ export class App {
   resize() {
     this.camera.aspect = innerWidth / innerHeight;
     this.camera.updateProjectionMatrix();
+    this.renderer.setPixelRatio(pixelRatio(innerWidth, innerHeight, devicePixelRatio, this.renderOptions));
     this.renderer.setSize(innerWidth, innerHeight);
   }
 }

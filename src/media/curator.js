@@ -25,6 +25,7 @@ export class Curator {
     this.pending = 0;
     this.done = 0;
     this.disposed = false;
+    this.streamElapsed = 0.2;
   }
 
   get fallbackItem() {
@@ -162,10 +163,19 @@ export class Curator {
     for (const frame of this.frames) frame.unload();
   }
 
+  onVisibilityChange(visible) {
+    if (!visible) for (const frame of this.frames) frame.loaded?.video?.pause();
+    else this.streamElapsed = 0.2;
+  }
+
   update(dt, app) {
     if (this.disposed) return;
     const pos = app.camera.position;
     this.cameraPosition = pos;
+    for (const frame of this.frames) frame.update(dt, pos, this.options);
+    this.streamElapsed += dt;
+    if (this.streamElapsed < 0.2) return;
+    this.streamElapsed = 0;
     const { loadDistance, unloadDistance } = this.options;
     // Nearest frames first so the queue fills in the order the visitor sees things.
     const byDistance = this.frames
@@ -178,7 +188,6 @@ export class Curator {
       if ((frame.state === 'idle' || (frame.state === 'failed' && Date.now() >= frame.retryAt))
         && frame.item && d < loadDistance) this.load(frame, false);
       else if (frame.state !== 'idle' && d > unloadDistance) frame.unload();
-      frame.update(dt, pos, this.options);
     }
   }
 }

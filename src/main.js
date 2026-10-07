@@ -10,6 +10,7 @@ import { MediaLibrary } from './media/library.js';
 import { Curator } from './media/curator.js';
 import { PLACEHOLDER_FILMS, collectionFilms } from './cinema/programme.js';
 import { PlayerController } from './controls/player.js';
+import { TouchControls } from './controls/touch.js';
 import { createCollisionChecker } from './controls/collision.js';
 import { Interactions } from './controls/interactions.js';
 import { CinematicTour } from './controls/tour.js';
@@ -61,7 +62,7 @@ let mode = 'intro';
 let activePanel = null;
 
 const overlay = new Overlay({
-  onEnter: () => { overlay.hide(); mode = 'explore'; player.lock(); },
+  onEnter: () => { overlay.hide(); mode = 'explore'; player.enabled = true; player.lock(); },
   onTour: () => { overlay.hide(); startTour(); },
 });
 
@@ -84,6 +85,17 @@ cinemaPanel.setProgramme([
   { heading: 'Home movies', films: collectionFilms(library) },
 ]);
 overlay.setCollectionSize(library.size);
+const touch = new TouchControls(player, {
+  available: app.profile.touch,
+  onUse: () => { if (mode === 'explore') { const picked = interactions.pick(); picked?.target.activate(picked.hit); } },
+  onTour: () => { overlay.hide(); startTour(); },
+  onPause: () => {
+    if (mode !== 'explore') return;
+    player.clearInput(); player.enabled = false;
+    overlay.showPaused();
+  },
+});
+if (app.profile.touch) $('tourBadge').textContent = 'Guided tour · tap the gallery to take over';
 
 function showFloors() {
   if (mode === 'riding') return;
@@ -123,7 +135,7 @@ function rideElevator(index) {
     mode = 'explore';
     player.enabled = true;
     hud.toast(`Arrived · ${floors[index].label}`);
-    if (!player.locked) overlay.showPaused();
+    if (!player.active) overlay.showPaused();
   });
 }
 
@@ -142,7 +154,7 @@ function switchFloor(index, initial = false) {
   frames = layout.slots.map(slot => new MediaFrame(slot));
   for (const frame of frames) app.scene.add(frame.group);
   curator = new Curator(frames, library, {
-    media: CONFIG.media,
+    media: app.mediaOptions,
     anisotropy: Math.min(8, app.maxAnisotropy),
     onProgress: p => { hud.setProgress(p); if (editor.isOpen) editor.refresh(); },
   });
@@ -168,7 +180,7 @@ function switchFloor(index, initial = false) {
   tour.setFrames(frames);
   lobby.setCurrent(index);
   floorPanel.setCurrent(index);
-  $('floorButton').textContent = `${floors[index].label} · M to change period`;
+  $('floorButton').textContent = `${floors[index].label} · ${app.profile.touch ? 'Change period' : 'M to change period'}`;
   hud.setProgress({ pending: 0, done: 0 });
   curator.hangAll();
 }
@@ -178,6 +190,7 @@ function openPanel(panel, ...args) {
   activePanel = panel;
   hud.setHovered(null);
   player.unlock();
+  player.clearInput();
   player.enabled = false;
   panel.open(...args);
 }
@@ -195,6 +208,7 @@ function startTour() {
   mode = 'touring';
   player.standUp();
   player.enabled = false;
+  player.clearInput();
   player.unlock();
   hud.setHovered(null);
   hud.setTour(true);
@@ -211,7 +225,7 @@ function stopTour() {
 }
 
 document.addEventListener('pointerlockchange', () => {
-  if (!player.locked && mode === 'explore') {
+  if (!player.active && mode === 'explore') {
     hud.setHovered(null);
     overlay.showPaused();
   }
@@ -220,6 +234,7 @@ document.addEventListener('pointerlockchange', () => {
 app.canvas.addEventListener('click', () => {
   if (mode === 'touring') return stopTour();
   if (mode !== 'explore') return;
+  if (player.touchEnabled) return;
   if (!player.locked) { overlay.hide(); return player.lock(); }
   const picked = interactions.pick();
   picked?.target.activate(picked.hit);
@@ -247,20 +262,25 @@ document.addEventListener('keydown', (e) => {
 app.addSystem(player);
 app.addSystem(tour);
 app.addSystem({
-  update() {
-    if (mode !== 'explore' || !player.locked) return;
+  elapsed: 0,
+  update(dt) {
+    touch.setVisible(mode === 'explore' && !overlay.visible);
+    if (mode !== 'explore' || !player.active || overlay.visible) return;
+    this.elapsed += dt;
+    if (this.elapsed < 0.1) return;
+    this.elapsed = 0;
     const picked = interactions.pick();
     hud.setHovered(picked ? picked.target.caption(picked.hit) : null);
   },
 });
 
-app.addSystem({ update: (dt, app) => curator.update(dt, app) });
+app.addSystem({ update: (dt, app) => curator.update(dt, app), onVisibilityChange: visible => curator.onVisibilityChange(visible) });
 switchFloor(0, true);
 app.start();
 
 // Handy for poking at the scene from devtools during development.
 if (import.meta.env.DEV) Object.assign(window, { museum: {
-  app, library, floors, tour, cinema, player, lobby, switchFloor, rideElevator,
+  app, library, floors, tour, cinema, player, lobby, touch, switchFloor, rideElevator,
   get layout() { return layout; }, get frames() { return frames; },
   get curator() { return curator; }, get currentFloor() { return currentFloor; },
 } });

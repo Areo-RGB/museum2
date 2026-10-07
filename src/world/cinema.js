@@ -99,7 +99,8 @@ export class CinemaHall {
       this.showOnScreen(film);
       // Autoplay with sound can be refused if the click was too long ago;
       // the film then waits paused for the play button.
-      await film.play().catch((err) => console.warn('[cinema] playback blocked', err));
+      if (document.hidden) this.resumeFilm = film;
+      else await film.play().catch((err) => console.warn('[cinema] playback blocked', err));
     } finally {
       if (token === this.loadToken) this.loading = null;
       this.onChange();
@@ -148,8 +149,12 @@ export class CinemaHall {
   }
 
   update(dt, app) {
-    this.activeFilm.update(dt);
-    this.updateGlow(dt);
+    const inside = this.contains(app.camera.position);
+    // The idle projector is behind a wall: don't redraw its large canvas from the gallery.
+    if (this.film || inside) {
+      this.activeFilm.update(dt);
+      this.updateGlow(dt);
+    }
 
     const dimmed = this.isPlaying;
     this.houseLights = approach(this.houseLights, dimmed ? 0.1 : 1, dt * 0.7);
@@ -158,7 +163,6 @@ export class CinemaHall {
     this.stageLed.material.color.setScalar(0.25 + 0.75 * this.houseLights);
 
     // Only dim the building's ambient light while the visitor is in here.
-    const inside = this.contains(app.camera.position);
     this.ambient = approach(this.ambient, inside ? 0.2 + 0.8 * this.houseLights : 1, dt * 1.2);
     this.setAmbient(this.ambient);
 
@@ -167,6 +171,16 @@ export class CinemaHall {
     this.beamMesh.material.opacity = this.beam * 0.22;
     this.beamMesh.material.color.copy(this.glowColor);
     this.projectorLens.material.color.copy(this.glowColor).multiplyScalar(0.4 + this.beam);
+  }
+
+  onVisibilityChange(visible) {
+    if (!visible) {
+      this.resumeFilm = this.activeFilm.paused ? null : this.activeFilm;
+      this.activeFilm.pause();
+    } else {
+      if (this.resumeFilm === this.activeFilm) this.resumeFilm.play().catch(() => {});
+      this.resumeFilm = null;
+    }
   }
 
   // ─── Internals ─────────────────────────────────────────────────────────────

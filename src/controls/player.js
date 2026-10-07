@@ -18,6 +18,8 @@ export class PlayerController {
     this.bob = 0;
     this._wish = new THREE.Vector3();
     this._next = new THREE.Vector3();
+    this.touchEnabled = false;
+    this.touchMove = { x: 0, z: 0 };
 
     camera.position.fromArray(options.start.position);
     camera.quaternion.setFromEuler(this.euler);
@@ -28,16 +30,23 @@ export class PlayerController {
     document.addEventListener('pointerlockchange', () => this.onLockChange());
   }
 
-  lock() { if (this.enabled && !this.locked) this.canvas.requestPointerLock()?.catch?.(() => {}); }
+  lock() { if (this.enabled && !this.touchEnabled && !this.locked) this.canvas.requestPointerLock()?.catch?.(() => {}); }
   unlock() { if (document.pointerLockElement) document.exitPointerLock(); }
   get locked() { return document.pointerLockElement === this.canvas; }
+  get active() { return this.enabled && (this.locked || this.touchEnabled); }
+
+  clearInput() {
+    this.keys.clear();
+    this.touchMove.x = this.touchMove.z = 0;
+    this.velocity.set(0, 0, 0);
+  }
 
   onLockChange() {
     const method = this.locked ? 'addEventListener' : 'removeEventListener';
     document[method]('mousemove', this._move);
     document[method]('keydown', this._down);
     document[method]('keyup', this._up);
-    if (!this.locked) this.keys.clear();
+    if (!this.locked) this.clearInput();
   }
 
   /** Re-derive yaw/pitch after something else (e.g. the tour) moved the camera. */
@@ -75,9 +84,9 @@ export class PlayerController {
   update(dt) {
     if (!this.enabled) return;
     const k = this.keys;
-    const active = this.locked;
-    const x = active ? (+(k.has('KeyD') || k.has('ArrowRight')) - +(k.has('KeyA') || k.has('ArrowLeft'))) : 0;
-    const z = active ? (+(k.has('KeyS') || k.has('ArrowDown')) - +(k.has('KeyW') || k.has('ArrowUp'))) : 0;
+    const active = this.active;
+    const x = active ? this.touchMove.x + (+(k.has('KeyD') || k.has('ArrowRight')) - +(k.has('KeyA') || k.has('ArrowLeft'))) : 0;
+    const z = active ? this.touchMove.z + (+(k.has('KeyS') || k.has('ArrowDown')) - +(k.has('KeyW') || k.has('ArrowUp'))) : 0;
     if (this.seated) {
       if (x || z) this.standUp();
       return;
@@ -85,14 +94,14 @@ export class PlayerController {
     const sprint = k.has('ShiftLeft') || k.has('ShiftRight') ? this.options.sprintMultiplier : 1;
 
     this._wish.set(x, 0, z);
-    if (this._wish.lengthSq()) this._wish.normalize().applyAxisAngle(THREE.Object3D.DEFAULT_UP, this.euler.y);
+    if (this._wish.lengthSq()) this._wish.clampLength(0, 1).applyAxisAngle(THREE.Object3D.DEFAULT_UP, this.euler.y);
     this._wish.multiplyScalar(this.options.speed * sprint);
     // Exponential smoothing gives gentle acceleration/deceleration.
     this.velocity.lerp(this._wish, 1 - Math.exp(-dt * 10));
     if (this.velocity.lengthSq() < 1e-5) return;
 
     const pos = this.camera.position;
-    const step = this.velocity.clone().multiplyScalar(dt);
+    const step = this._wish.copy(this.velocity).multiplyScalar(dt);
     // Try the full move, then each axis separately so we slide along walls.
     for (const candidate of [[step.x, step.z], [step.x, 0], [0, step.z]]) {
       this._next.set(pos.x + candidate[0], 0, pos.z + candidate[1]);

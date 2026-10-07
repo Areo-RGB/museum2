@@ -3,8 +3,7 @@
 A walkable Three.js museum of the 111 images and videos described by
 `public/media-manifest.json`, hosted in Cloudflare R2. Choose among nine seasonal
 floors (including the undated archive) using the elevator recessed into the right-hand
-wall, its wall-mounted directory,
-directory, the welcome screen, or `M`. Every asset has its own ordinary frame; a
+wall, its wall-mounted directory, the welcome screen, or `M`. Every asset has its own ordinary frame; a
 featured duplicate closes each floor. Month sections run in date order. Only the
 selected floor exists, and textures stream in by distance. Switching floors
 cancels pending media loads and disposes floor-owned GPU resources. The elevator
@@ -55,6 +54,20 @@ to `.cloudflare/output/` (git-ignored).
 | `Space` | pause / resume the film (in the cinema) |
 | `Esc` | release the mouse |
 
+On touch devices, use the left stick to walk and drag the gallery to look. Aim
+the crosshair and tap **Use** to curate, call the elevator, select a cinema film,
+or sit. **Tour** starts the guided visit; tap the gallery to take over. **Menu**
+pauses movement and opens the welcome controls. Panels support portrait and
+landscape screens and device safe areas.
+
+Rendering batches each frame's moulding and uses two draws for its caption.
+Streaming decisions run five times per second; fades and movement stay smooth.
+Phones, small viewports, low-memory and data-saving devices use 1024px image
+textures, two concurrent media loads, two active gallery videos and a smaller
+streaming radius. GPU pixel budgets cap high-DPI rendering. This lowers GPU
+memory and decoding work; R2 still serves the original source files, so image
+download sizes are unchanged. Hidden tabs skip rendering and pause video playback.
+
 ## Project structure
 
 ```
@@ -63,6 +76,7 @@ src/
   config.js            All tuning knobs (media limits, player speed, tour timing, rendering)
   styles.css
   core/app.js          Renderer, scene, camera, frame loop; features plug in as systems { update(dt, app) }
+  core/deviceProfile.js Device-aware render/media budgets
   world/
     layout.js          createLayout(floor): hall, month sections, frame slots, walls, colliders, cinema placement
                        (the cinema is defined in its own local coordinates and placed via a transform)
@@ -84,6 +98,7 @@ src/
   controls/
     interactions.js    Registry of clickable things: add(meshes, { caption, activate }); walls occlude
     player.js          Pointer lock, sliding collisions, sitting
+    touch.js           Joystick, drag-to-look and touch actions
     tour.js            Cinematic tour
   ui/                  Overlay, HUD, frame editor and cinema programme (DOM only, talk via callbacks)
   storage/db.js        IndexedDB persistence for uploads

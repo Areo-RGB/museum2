@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="Interactive Three.js media gallery" />
   <title>Hertha 03 Zehlendorf · 2014er Museum</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -33,6 +33,16 @@
         <div><dt>Space</dt><dd>pause the film</dd></div>
         <div><dt>Seat</dt><dd>click to sit, move to stand</dd></div>
       </dl>
+      <p class="touch-help">Use the left stick to walk. Drag the gallery to look around, then tap Use to interact. Tap the gallery to leave a guided tour.</p>
+    </div>
+  </div>
+
+  <div id="touchControls" class="hidden" aria-label="Gallery touch controls">
+    <div id="moveStick" aria-label="Drag to walk"><span id="moveKnob"></span><span class="stick-label">Move</span></div>
+    <div class="touch-actions">
+      <button id="touchUse" class="pill">Use</button>
+      <button id="touchTour" class="pill ghost">Tour</button>
+      <button id="touchPause" class="pill ghost" aria-label="Pause and open menu">Menu</button>
     </div>
   </div>
 

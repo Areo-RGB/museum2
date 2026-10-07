@@ -46,7 +46,8 @@ export class MediaFrame {
     this.center = this.group.position.clone();
     this.normal = new THREE.Vector3(0, 0, 1).applyAxisAngle(THREE.Object3D.DEFAULT_UP, slot.rotationY);
 
-    this.bars = Array.from({ length: 4 }, () => new THREE.Mesh(UNIT_BOX, MOULDING));
+    this.bars = Array.from({ length: 4 }, () => new THREE.Object3D());
+    this.moulding = new THREE.InstancedMesh(UNIT_BOX, MOULDING, 4);
     this.matte = new THREE.Mesh(UNIT_BOX, MATTE);
     this.screen = new THREE.Mesh(UNIT_PLANE, new THREE.MeshBasicMaterial({ color: 0x000000, toneMapped: false }));
     this.screen.position.z = 0.031;
@@ -61,12 +62,12 @@ export class MediaFrame {
     this.wash.position.z = 0.004;
     this.wash.renderOrder = -1;
 
-    this.group.add(this.wash, ...this.bars, this.matte, this.screen, this.plaque.mesh);
+    this.group.add(this.wash, this.moulding, this.matte, this.screen, this.plaque.mesh);
     this.layout();
   }
 
   /** Meshes that respond to the crosshair. */
-  get hitTargets() { return [this.screen, this.matte, ...this.bars]; }
+  get hitTargets() { return [this.screen, this.matte, this.moulding]; }
 
   get aspect() {
     return this.knownAspect ?? this.slot.maxWidth / this.slot.maxHeight;
@@ -129,9 +130,10 @@ export class MediaFrame {
     this.unload();
     this.group.removeFromParent();
     this.screen.material.dispose();
-    // All other geometry/materials are shared across floors; only the plaque
-    // face texture and screen material belong to this frame.
-    const face = this.plaque.mesh.material[4];
+    this.moulding.dispose();
+    // Shared geometry/materials survive floor switches; the instance buffer,
+    // plaque face texture/material and screen material belong to this frame.
+    const face = this.plaque.face.material;
     face.map.dispose();
     face.dispose();
   }
@@ -170,6 +172,10 @@ export class MediaFrame {
     bottom.scale.copy(top.scale); bottom.position.set(0, -top.position.y, DEPTH / 2);
     left.scale.set(BAR, innerH, DEPTH); left.position.set(-(innerW / 2 + BAR / 2), 0, DEPTH / 2);
     right.scale.copy(left.scale); right.position.set(-left.position.x, 0, DEPTH / 2);
+    this.bars.forEach((bar, i) => { bar.updateMatrix(); this.moulding.setMatrixAt(i, bar.matrix); });
+    this.moulding.instanceMatrix.needsUpdate = true;
+    this.moulding.computeBoundingSphere();
+    this.moulding.computeBoundingBox();
 
     this.plaque.mesh.position.x = outerW / 2 + 0.32;
     this.plaque.mesh.position.z = 0.006;
@@ -190,8 +196,9 @@ export class MediaFrame {
 
     const video = this.loaded?.video;
     if (video) {
-      const toCamera = cameraPosition.clone().sub(this.center);
-      const visible = toCamera.dot(this.normal) > 0 && toCamera.length() < videoPlayDistance;
+      const dx = cameraPosition.x - this.center.x, dy = cameraPosition.y - this.center.y, dz = cameraPosition.z - this.center.z;
+      const visible = !document.hidden && dx * this.normal.x + dy * this.normal.y + dz * this.normal.z > 0
+        && dx * dx + dy * dy + dz * dz < videoPlayDistance * videoPlayDistance;
       if (visible && video.paused) video.play().catch(() => {});
       else if (!visible && !video.paused) video.pause();
     }
@@ -226,8 +233,11 @@ function createPlaque() {
   texture.anisotropy = 4;
 
   const face = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.6 });
-  const mesh = new THREE.Mesh(UNIT_BOX, [PLAQUE_BACK, PLAQUE_BACK, PLAQUE_BACK, PLAQUE_BACK, face, PLAQUE_BACK]);
+  const mesh = new THREE.Mesh(UNIT_BOX, PLAQUE_BACK);
   mesh.scale.set(0.36, 0.18, 0.012);
+  const faceMesh = new THREE.Mesh(UNIT_PLANE, face);
+  faceMesh.position.z = 0.501;
+  mesh.add(faceMesh);
 
   function draw(title, subtitle) {
     ctx.fillStyle = '#f3efe6';
@@ -241,7 +251,7 @@ function createPlaque() {
     texture.needsUpdate = true;
   }
   draw('', '');
-  return { mesh, draw };
+  return { mesh, face: faceMesh, draw };
 }
 
 function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
