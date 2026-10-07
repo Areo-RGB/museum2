@@ -28,6 +28,8 @@ const FAME = {
   carpet: 0x7a1420,
   gold: 0xc9a45c,
 };
+/** Distance from a Hall of Fame frame's centre to the gold pilasters flanking it. */
+const PILASTER_OFFSET = 3.1;
 
 /**
  * Building-wide lighting and atmosphere, set up once. Returns the hemisphere
@@ -160,15 +162,26 @@ function buildFameDecor(group, { hall, slots }) {
   const face = ROOM.wall / 2;
   for (const side of [-1, 1]) {
     const x = side * (hall.maxX - face - 0.02);
-    for (const [y, h] of [[1.05, 0.05], [hall.height - 0.5, 0.12]]) {
-      const band = new THREE.Mesh(new THREE.BoxGeometry(0.04, h, hall.length), gold);
-      band.position.set(x, y, (hall.minZ + hall.maxZ) / 2);
-      group.add(band);
+    const cornice = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.12, hall.length), gold);
+    cornice.position.set(x, hall.height - 0.5, (hall.minZ + hall.maxZ) / 2);
+    group.add(cornice);
+    // The dado rail runs between the pilasters and stops at the ones flanking each frame.
+    const gaps = slots.filter((s) => !s.hero && Math.sign(s.position[0]) === side)
+      .map((s) => [s.position[2] - PILASTER_OFFSET, s.position[2] + PILASTER_OFFSET])
+      .sort((a, b) => a[0] - b[0]);
+    let from = hall.minZ;
+    for (const [start, end] of [...gaps, [hall.maxZ, hall.maxZ]]) {
+      if (start > from) {
+        const rail = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.05, start - from), gold);
+        rail.position.set(x, 1.05, (from + start) / 2);
+        group.add(rail);
+      }
+      from = Math.max(from, end);
     }
   }
   // Pilasters either side of every pair of facing works.
   const sideZs = [...new Set(slots.filter((s) => !s.hero).map((s) => s.position[2]))];
-  for (const z of sideZs.flatMap((z) => [z - 3.1, z + 3.1])) {
+  for (const z of sideZs.flatMap((z) => [z - PILASTER_OFFSET, z + PILASTER_OFFSET])) {
     for (const side of [-1, 1]) {
       const pilaster = new THREE.Mesh(new THREE.BoxGeometry(0.1, hall.height - 0.6, 0.32), gold);
       pilaster.position.set(side * (hall.maxX - face - 0.05), (hall.height - 0.6) / 2, z);
