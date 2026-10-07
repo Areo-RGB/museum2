@@ -135,7 +135,8 @@ export function createLayout(floor) {
   const slots = isCinema ? [] : [{
     // In the Hall of Fame the featured frame sits lower to leave room for the title above it.
     id: `${floorKey}:hero`, ...HERO, position: [0, isFame ? 2.3 : HERO.y, maxZ - FACE], rotationY: FACING.towardsEntrance,
-    hero: true, period: floorKey, itemId: featured?.id ?? null,
+    // A floor may pin its featured piece (the Hall of Fame's lettering) so rehanging keeps it.
+    hero: true, period: floorKey, itemId: floor?.featured?.id ?? featured?.id ?? null, pinned: !!floor?.featured,
   }];
   const benches = [];
 

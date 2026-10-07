@@ -10,7 +10,7 @@ import { MediaLibrary } from './media/library.js';
 import { Curator } from './media/curator.js';
 import { photoCache } from './media/cache.js';
 import { CINEMA_FLOOR, YOUTUBE_FILMS } from './cinema/programme.js';
-import { BACKGROUND_MUSIC_URL, HALL_OF_FAME_FLOOR, HALL_OF_FAME_ITEMS } from './fame/programme.js';
+import { BACKGROUND_MUSIC_URL, HALL_OF_FAME_FEATURE, HALL_OF_FAME_FLOOR, HALL_OF_FAME_ITEMS } from './fame/programme.js';
 import { PlayerController } from './controls/player.js';
 import { TouchControls } from './controls/touch.js';
 import { createCollisionChecker } from './controls/collision.js';
@@ -31,7 +31,7 @@ const app = new App($('canvas'));
 const library = await MediaLibrary.load(CONFIG.media.manifestUrl);
 const floors = library.floors();
 // The entrance floor is the Hall of Fame; its works resolve through the library like any other.
-library.add(HALL_OF_FAME_ITEMS);
+library.add([...HALL_OF_FAME_ITEMS, HALL_OF_FAME_FEATURE]);
 floors.unshift(HALL_OF_FAME_FLOOR);
 floors.push(CINEMA_FLOOR);
 let currentFloor = 0;

@@ -12,9 +12,15 @@ export const HALL_OF_FAME_ITEMS = [
   url: `${BASE}/${encodeURIComponent(key)}?cors=1`,
 }));
 
+/** Lettering shown in the featured frame on the end wall. */
+export const HALL_OF_FAME_FEATURE = {
+  id: 'fame:feature', kind: 'text', text: 'Lionel', source: 'fame', period: FAME_PERIOD, date: null,
+  title: 'Lionel', subtitle: 'Hall of Fame',
+};
+
 export const HALL_OF_FAME_FLOOR = {
   key: FAME_PERIOD, kind: 'fame', label: 'Hall of Fame', range: 'Entrance floor',
-  count: HALL_OF_FAME_ITEMS.length, items: HALL_OF_FAME_ITEMS,
+  count: HALL_OF_FAME_ITEMS.length, items: HALL_OF_FAME_ITEMS, featured: HALL_OF_FAME_FEATURE,
   months: [{ key: 'legends', label: 'Hall of Fame', items: HALL_OF_FAME_ITEMS }],
 };
 

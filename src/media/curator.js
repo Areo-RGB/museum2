@@ -56,7 +56,7 @@ export class Curator {
       [items[i], items[j]] = [items[j], items[i]];
     }
     frames.forEach((f, i) => f.assign(items[i]));
-    for (const f of this.frames.filter(f => f.slot.hero && f.item?.source !== 'upload')) {
+    for (const f of this.frames.filter(f => f.slot.hero && !f.slot.pinned && f.item?.source !== 'upload')) {
       f.assign(this.library.draw(i => i.period === f.slot.period) ?? this.fallbackItem);
     }
   }
@@ -70,6 +70,8 @@ export class Curator {
       const previous = frame.item;
       frame.assign(peer.item);
       peer.assign(previous);
+    } else if (frame.slot.pinned) {
+      frame.assign(this.drawFor(frame));
     } else if (frame.slot.hero) {
       frame.assign(this.library.draw(i => i.period === frame.slot.period && i.id !== frame.item?.id)
         ?? this.drawFor(frame));

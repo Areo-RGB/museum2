@@ -29,9 +29,42 @@ export function createLimiter(n) {
  * @returns {Promise<LoadedMedia>}
  */
 export function loadMedia(item, { maxTextureSize, anisotropy, signal }) {
+  if (item.kind === 'text') return loadText(item, anisotropy);
   return item.kind === 'video'
     ? loadVideo(item, signal)
     : loadImage(item, maxTextureSize, anisotropy, signal);
+}
+
+/** A name lettered in gold on navy, drawn once the display serif has loaded. */
+async function loadText(item, anisotropy) {
+  const font = `italic 600 300px "Cormorant Garamond", Georgia, serif`;
+  await document.fonts?.load(font).catch(() => {});
+  const canvas = document.createElement('canvas');
+  canvas.width = 1500;
+  canvas.height = 1000;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const glow = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w * 0.6);
+  glow.addColorStop(0, '#1d3a66');
+  glow.addColorStop(1, '#0b1a33');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, w, h);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#d8b56a';
+  ctx.font = font;
+  ctx.fillText(item.text, w / 2, h * 0.47);
+  ctx.fillRect(w * 0.32, h * 0.7, w * 0.36, 5);
+  ctx.font = '60px Georgia, serif';
+  for (const x of [w * 0.26, w * 0.74]) ctx.fillText('★', x, h * 0.7);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = anisotropy;
+  return {
+    texture, video: null, width: w, height: h,
+    dispose() { texture.dispose(); canvas.width = canvas.height = 0; },
+  };
 }
 
 async function loadImage(item, maxSize, anisotropy, signal) {

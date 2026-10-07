@@ -23,6 +23,7 @@ and month sections from the manifest. `createLayout(floor)` creates one ordinary
 slot per asset, plus a featured duplicate. Uploads may override individual slots.
 The entrance floor (index 0) is the Hall of Fame, a curated list in
 `src/fame/programme.js` registered via `library.add()` and excluded from seasons.
+Its featured frame is pinned to a lettered `text` item (rehanging keeps it).
 Only the selected floor's hall and frames exist. Lobby and atmosphere persist across switches. The cinema is its own elevator
 destination; its theatre and YouTube player exist only on that floor. Closing
 the programme preserves playback on the in-world screen. Leaving the floor stops
