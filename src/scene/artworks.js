@@ -1,363 +1,363 @@
-// Curated Historical Exhibits for the Soccer Team Museum & Hall of Fame
+// Curated Exhibits for F.C. Hertha 03 Zehlendorf - Team Jahrgang 2014 (h03.de)
 
 export const EXHIBITS = [
-  // --- CENTRAL HALLWAY: 1980s ERA (FOUNDATION & EARLY YEARS) ---
+  // --- CENTRAL TIMELINE: 2018–2020 (DIE ANFÄNGE · MINIS & F-JUGEND) ---
   {
-    id: 'hall-1980s-1',
-    era: '1980s',
-    room: 'Central Hallway',
-    title: '1982 · The Founding Eleven',
-    subtitle: 'The inaugural club squad on muddy home turf',
-    desc: 'The original squad line-up before the historic inaugural league campaign. Posing with the classic leather ball under overcast skies.',
+    id: 'hall-u8-1',
+    era: '2019/20 · Minis / F-Jugend',
+    room: 'Timeline Hallway',
+    title: 'Erstes Training am Siebenendenweg',
+    subtitle: 'Blau-weiße Trikots bis zu den Knien & riesige Vorfreude',
+    desc: 'Die allerersten Schritte auf dem Ernst-Reuter-Sportfeld. Im viel zu großen Trikot von Hertha 03 Zehlendorf, das erste Mal Schnürsenkel binden und dem Ball hinterherjagen.',
     aspect: '4:3',
-    theme: 'sepia',
-    badge: '1982 INAUGURAL',
-    icon: 'team'
+    theme: 'h03_grassroots',
+    badge: 'H03 ZEHLENDORF MINIS',
+    icon: 'kids'
   },
   {
-    id: 'hall-1980s-2',
-    era: '1980s',
-    room: 'Central Hallway',
-    title: '1986 · The Promotion Climax',
-    subtitle: 'Mud, passion, and the final whistle pitch invasion',
-    desc: 'The defining 1-0 away victory in the rain that secured the club promotion to the top tier for the first time in club history.',
+    id: 'hall-u8-2',
+    era: '2020/21 · F-Jugend',
+    room: 'Timeline Hallway',
+    title: 'Regenschlacht auf dem Ernst-Reuter-Sportfeld',
+    subtitle: 'Matschige Schienbeinschoner & heißer Tee am Spielfeldrand',
+    desc: 'Typisches Berliner Herbstwetter in Zehlendorf. Eisiger Nieselregen, schlammige Knie, lachende Gesichter und warme Obstschnitze von den treuen Eltern an der Seitenlinie.',
     aspect: '4:3',
-    theme: 'sepia',
-    badge: '1986 PROMOTION',
-    icon: 'action'
+    theme: 'h03_grassroots',
+    badge: 'F-JUGEND ZEHLENDORF',
+    icon: 'mud'
   },
   {
-    id: 'hall-1980s-3',
-    era: '1980s',
-    room: 'Central Hallway',
-    title: '1989 · The Gaffer & The Tactics',
-    subtitle: 'The master tactician who built our identity',
-    desc: 'Manager reviewing chalkboard diagrams with the senior leadership group in the modest vintage tunnel dressing room.',
+    id: 'hall-u8-3',
+    era: '2021/22 · F- bis E-Jugend',
+    room: 'Timeline Hallway',
+    title: 'Das erste Kombinationsspiel',
+    subtitle: 'Kopf hochnehmen, Pass in den Lauf & Torjubel',
+    desc: 'Der Moment, in dem das Zusammenspiel klickte: Blickkontakt zwischen den Jungs, Doppelpass auf Außen und der Ball schlägt flach im langen Eck ein. Reines Hertha 03 Teamplay.',
     aspect: '4:3',
-    theme: 'sepia',
-    badge: '1989 TACTICS',
+    theme: 'h03_blue',
+    badge: 'SPIELKULTUR H03',
     icon: 'tactics'
   },
 
-  // --- LEFT WING 1: TROPHY & SILVERWARE ROOM ---
+  // --- WING I (WEST): TURNIERE & BERLINER POKAL ---
   {
-    id: 'trophy-1',
-    era: '1990s-2020s',
-    room: 'Trophy Room',
-    title: '1994 · First League Cup Silverware',
-    subtitle: 'Captain raises the cup under the stadium towers',
-    desc: 'A rain-soaked afternoon at the national stadium as the club hoisted its first major national trophy, sparking a golden era.',
+    id: 'tournament-1',
+    era: 'Turniere & Pokal',
+    room: 'Turnier-Flügel',
+    title: 'Sommerturnier-Finale in der Sonne',
+    subtitle: 'Vier Spiele an einem Tag & der Pokal gehört uns',
+    desc: 'Hitzeschlacht beim Sommercup. Verschwitzt, ausgepowert, aber im Finale mit 2:1 die Oberhand behalten. Stolz die Siegerurkunde und den goldenen Pokal in die Luft gestemmt.',
     aspect: '16:9',
-    theme: 'trophy',
-    badge: 'LEAGUE CUP 1994',
+    theme: 'h03_gold',
+    badge: 'TURNIERSIEGER H03',
     icon: 'trophy'
   },
   {
-    id: 'trophy-2',
-    era: '1990s-2020s',
-    room: 'Trophy Room',
-    title: '2004 · The Undefeated Champions',
-    subtitle: '38 league matches. Zero defeats.',
-    desc: 'The immortal invincible season. Golden Premier Trophy awarded for an unprecedented flawless championship campaign.',
+    id: 'tournament-2',
+    era: 'Turniere & Pokal',
+    room: 'Turnier-Flügel',
+    title: 'Neunmeter-Krimi im Halbfinale',
+    subtitle: 'Arm in Arm am Mittelkreis – unser Keeper hält!',
+    desc: '2:2 nach regulärer Spielzeit. Alle Spieler haken sich fest an den Schultern ein. Ein Schuss an die Latte, dann taucht unser Torwart ab und fischt den entscheidenden Ball aus der Ecke.',
     aspect: '16:9',
-    theme: 'gold',
-    badge: 'INVINCIBLES 2004',
+    theme: 'h03_drama',
+    badge: 'ELFMEETER-DRAMA',
+    icon: 'shootout'
+  },
+  {
+    id: 'tournament-3',
+    era: 'Turniere & Pokal',
+    room: 'Turnier-Flügel',
+    title: 'Medaillenfeier auf dem Siegerpodest',
+    subtitle: 'Blau-weiße Bänder um den Hals & breites Grinsen',
+    desc: 'Gemeinsam auf dem Siegerpodest. Die Medaillen glänzen in der Sonne, die Kameras der Zehlendorfer Eltern klicken im Sekundentakt. Ein unvergesslicher Moment für die 2014er.',
+    aspect: '4:3',
+    theme: 'h03_gold',
+    badge: 'GOLDMEDAILLE H03',
+    icon: 'medals'
+  },
+  {
+    id: 'tournament-4',
+    era: 'Turniere & Pokal',
+    room: 'Turnier-Flügel',
+    title: 'Berliner Hallenturnier-Zauber',
+    subtitle: 'Budenzauber, Bandenspiel & Hallenpokal',
+    desc: 'Im Berliner Winter rein in die Sporthalle: Schneller Hallenboden, satter Sound vom Futsal-Ball und trickreiches Kurzpassspiel bis zum Hallen-Staffelsieg.',
+    aspect: '4:3',
+    theme: 'h03_blue',
+    badge: 'BUDENZAUBER BERLIN',
+    icon: 'hallen'
+  },
+
+  // --- WING I (EAST): AUSFLÜGE, TRAININGSLAGER & SOMMERFESTE ---
+  {
+    id: 'trips-1',
+    era: 'Team-Leben',
+    room: 'Ausflüge & Feste',
+    title: 'Fahrgemeinschaft auf der Autobahn',
+    subtitle: 'Autokolonne mit Blau-Weiß-Wimpeln & Playlist',
+    desc: 'Mit Elternbussen und Minivans auf Tour zum überregionalen Auswärtsturnier. Walkie-Talkies zwischen den Autos, laute Musik und beste Stimmung auf der A10.',
+    aspect: '16:9',
+    theme: 'h03_trips',
+    badge: 'H03 ON TOUR',
+    icon: 'bus'
+  },
+  {
+    id: 'trips-2',
+    era: 'Team-Leben',
+    room: 'Ausflüge & Feste',
+    title: 'Sommertrainingslager am See',
+    subtitle: 'Morgens Athletik & Passübungen, nachmittags Badesee',
+    desc: 'Intensives Trainingslager der 2014er. Nach schweißtreibenden Einheiten gemeinsam in den See gesprungen, Grillabend am Lagerfeuer und Zusammenhalt für die ganze Saison.',
+    aspect: '16:9',
+    theme: 'h03_trips',
+    badge: 'TRAININGSLAGER',
+    icon: 'camp'
+  },
+  {
+    id: 'trips-3',
+    era: 'Team-Leben',
+    room: 'Ausflüge & Feste',
+    title: 'Saisonabschluss & Pizza-Abend',
+    subtitle: 'Pokalübergabe, Trainerworte & Familienfest',
+    desc: 'Traditioneller Saisonabschluss auf dem Ernst-Reuter-Sportfeld oder beim Italiener in Zehlendorf. Dankeschön-Geschenke an die Trainer und Pizza für alle Champions.',
+    aspect: '4:3',
+    theme: 'h03_trips',
+    badge: 'SAISONABSCHLUSS',
+    icon: 'banquet'
+  },
+  {
+    id: 'trips-4',
+    era: 'Team-Leben',
+    room: 'Ausflüge & Feste',
+    title: 'Kabinenjubel & Siegergesänge',
+    subtitle: '„Hertha 03 Zehlendorf!“ dröhnt durch die Kabine',
+    desc: 'Trommeln auf die Holzbänke, Flaschenklappern und unser eigener 2014er-Schlachtruf. Nach einem harten Spiel gibt es nichts Schöneres als den gemeinsamen Kabinenorkan.',
+    aspect: '4:3',
+    theme: 'h03_blue',
+    badge: 'KABINENJUBEL H03',
+    icon: 'chant'
+  },
+
+  // --- CENTRAL TIMELINE: 2022–2024 (E-JUGEND & DER SCHRITT AUFS 9v9) ---
+  {
+    id: 'hall-u12-1',
+    era: '2022/23 · E-Jugend',
+    room: 'Timeline Hallway',
+    title: 'E-Jugend Glanzzeit am Siebenendenweg',
+    subtitle: 'Größere Tore, präzise Ecken & feste Positionen',
+    desc: 'Die Zeit, in der jeder seine feste Rolle fand: Zuverlässige Abwehrkette, ballsicheres Mittelfeld und wirbelnde Stürmer im blau-weißen Zehlendorf-Dress.',
+    aspect: '4:3',
+    theme: 'h03_blue',
+    badge: 'E-JUGEND ZEHLENDORF',
+    icon: 'tactics'
+  },
+  {
+    id: 'hall-u12-2',
+    era: '2023/24 · D-Jugend Schritt',
+    room: 'Timeline Hallway',
+    title: 'Übergang zur D-Jugend (9 gegen 9)',
+    subtitle: 'Halbfeld-Abseits, Weite des Platzes & taktische Reife',
+    desc: 'Der große Schritt vom Kleinfeld zum 9v9. Plötzlich eröffnen sich Räume für weite Flugbälle, schnelles Umschaltspiel und Ausdauer über volle 60 Minuten.',
+    aspect: '4:3',
+    theme: 'h03_blue',
+    badge: 'D-JUGEND 9v9',
+    icon: 'kids'
+  },
+  {
+    id: 'hall-u12-3',
+    era: '2024/25 · Flutlicht & Fokus',
+    room: 'Timeline Hallway',
+    title: 'Dienstagabend-Training unter Flutlicht',
+    subtitle: 'Atemdampf in der Kälte & Konzentration bis zum Schluss',
+    desc: 'Wenn im Berliner Winter die Flutlichtmasten am Ernst-Reuter-Sportfeld brennen. Trotz Kälte auf den Platz, Passformen einschleifen und Schusstechnik perfektionieren.',
+    aspect: '4:3',
+    theme: 'h03_dark',
+    badge: 'FLUTLICHT ERNST-REUTER',
+    icon: 'floodlights'
+  },
+
+  // --- WING II (WEST): POKALSCHRANK & EHRUNGEN ---
+  {
+    id: 'cabinet-1',
+    era: 'Erfolge & Trophäen',
+    room: 'Pokalschrank',
+    title: 'Ungeschlagener Staffelsieger',
+    subtitle: 'Meisterhafte Saisonleistung der Zehlendorfer 2014er',
+    desc: 'Die Meisterschale für eine überragende Staffel-Saison. Nur Gegentore an einer Hand abzählbar und vorne ein Torfestival nach dem anderen.',
+    aspect: '16:9',
+    theme: 'h03_gold',
+    badge: 'STAFFELSIEGER H03',
     icon: 'trophy'
   },
   {
-    id: 'trophy-3',
-    era: '1990s-2020s',
-    room: 'Trophy Room',
-    title: '2016 · The Domestic Double',
-    subtitle: 'League & FA Cup triumph in a historic week',
-    desc: 'Open-top bus parade through the city streets packed with 250,000 roaring fans celebrating the domestic double.',
-    aspect: '4:3',
-    theme: 'trophy',
-    badge: 'THE DOUBLE 2016',
-    icon: 'celebration'
+    id: 'cabinet-2',
+    era: 'Erfolge & Trophäen',
+    room: 'Pokalschrank',
+    title: 'Der Fair-Play-Pokal des BFV',
+    subtitle: 'Respekt vor Schiedsrichtern, Gegnern & Mitspielern',
+    desc: 'Gelebte Werte von Hertha 03 Zehlendorf: Sportlicher Ehrgeiz gepaart mit Fairness, Handschlag nach dem Abpfiff und Respekt für jeden Gegner auf Berliner Plätzen.',
+    aspect: '16:9',
+    theme: 'h03_blue',
+    badge: 'FAIR-PLAY PREIS',
+    icon: 'shield'
   },
   {
-    id: 'trophy-4',
-    era: '1990s-2020s',
-    room: 'Trophy Room',
-    title: 'The Golden Boot Showcase',
-    subtitle: '34 league goals in 32 matches',
-    desc: 'Our legendary striker clinching the European Golden Shoe with a thunderous 30-yard strike in the final match.',
+    id: 'cabinet-3',
+    era: 'Erfolge & Trophäen',
+    room: 'Pokalschrank',
+    title: 'Torjägerkanone & Bester Vorlagengeber',
+    subtitle: 'Gnadenlose Abschlüsse & uneigennützige Assists',
+    desc: 'Auszeichnung für unsere treffsicheren Stürmer und die Spielmacher, die mit Auge und Präzision immer den freien Mitspieler gefunden haben.',
     aspect: '4:3',
-    theme: 'gold',
-    badge: 'GOLDEN SHOE RECORD',
+    theme: 'h03_gold',
+    badge: 'BESTER TORSCHÜTZE',
     icon: 'boot'
   },
-
-  // --- RIGHT WING 1: EPIC DERBIES & TOURNAMENTS ---
   {
-    id: 'derby-1',
-    era: '1990s-2020s',
-    room: 'Derby Room',
-    title: '1996 · The Stoppage-Time Volley',
-    subtitle: '94th minute derby winner into the top corner',
-    desc: 'An explosive right-footed volley past the diving rival keeper, triggering a legendary corner flag celebration.',
-    aspect: '16:9',
-    theme: 'derby',
-    badge: 'DERBY CLASSIC 1996',
-    icon: 'action'
-  },
-  {
-    id: 'derby-2',
-    era: '1990s-2020s',
-    room: 'Derby Room',
-    title: '2009 · Red Wall Tifo Display',
-    subtitle: 'A stadium enveloped in passion and flares',
-    desc: 'The south stand unveiling a 70-meter hand-painted tifo depicting the club crest and roaring stadium mosaic.',
-    aspect: '16:9',
-    theme: 'derby',
-    badge: 'TIFO MOSAIC 2009',
-    icon: 'stadium'
-  },
-  {
-    id: 'derby-3',
-    era: '1990s-2020s',
-    room: 'Derby Room',
-    title: '2018 · 5-2 Derby Demolition',
-    subtitle: 'Five goals, relentless press, pure dominance',
-    desc: 'A tactical masterclass as our rapid front three dismantled our city rivals under the glowing floodlights.',
+    id: 'cabinet-4',
+    era: 'Erfolge & Trophäen',
+    room: 'Pokalschrank',
+    title: 'Größte Entwicklung des Jahrgangs',
+    subtitle: 'Trainingsfleiß schlägt Talent – jeder wächst über sich hinaus',
+    desc: 'Würdigung für die Spieler, die durch unermüdlichen Trainingsfleiß auf dem Platz den größten Sprung gemacht haben. Zehlendorfer Tugenden in Reinform.',
     aspect: '4:3',
-    theme: 'derby',
-    badge: 'DERBY 5-2 MASTERCLASS',
-    icon: 'action'
-  },
-  {
-    id: 'derby-4',
-    era: '1990s-2020s',
-    room: 'Derby Room',
-    title: 'The Penalty Shootout Hero',
-    subtitle: 'Three saves in sudden death',
-    desc: 'Our goalkeeper diving low to the right to stop the decisive spot-kick and send the fans into delirium.',
-    aspect: '4:3',
-    theme: 'derby',
-    badge: 'DERBY SHOOTOUT HERO',
-    icon: 'goalkeeper'
+    theme: 'h03_blue',
+    badge: 'TEAMGEIST & FLEISS',
+    icon: 'heart'
   },
 
-  // --- CENTRAL HALLWAY: 1990s-2000s (THE GOLDEN GENERATION) ---
+  // --- WING II (EAST): TRAINER & DIE 03-ELTERN ---
   {
-    id: 'hall-golden-1',
-    era: '1990s-2000s',
-    room: 'Central Hallway',
-    title: '1998 · The Youth Academy Class',
-    subtitle: 'Homegrown prodigies who conquered the world',
-    desc: 'The famous academy cohort who graduated together into the first team and formed the spine of the championship decade.',
-    aspect: '4:3',
-    theme: 'retro',
-    badge: 'CLASS OF 1998',
-    icon: 'team'
+    id: 'sideline-1',
+    era: 'Die Hertha-Familie',
+    room: 'Trainer & Eltern',
+    title: 'Das Trainer-Team: Vorbilder & Mentoren',
+    subtitle: 'Pfeife, Hütchen, Spielverständnis & endloses Engagement',
+    desc: 'Woche für Woche auf dem Platz: Übungen vorbereiten, Taktik erklären, nach Niederlagen aufbauen und jedem Spieler das Rüstzeug fürs Leben mitgeben.',
+    aspect: '16:9',
+    theme: 'h03_coach',
+    badge: 'TRAINER-TEAM H03',
+    icon: 'coach'
   },
   {
-    id: 'hall-golden-2',
-    era: '1990s-2000s',
-    room: 'Central Hallway',
-    title: '2001 · European Night in Milan',
-    subtitle: 'Silencing the San Siro with a 2-1 masterclass',
-    desc: 'A legendary European away night: counter-attacking football at its highest velocity in the rain.',
-    aspect: '4:3',
-    theme: 'retro',
-    badge: 'SAN SIRO 2001',
-    icon: 'action'
+    id: 'sideline-2',
+    era: 'Die Hertha-Familie',
+    room: 'Trainer & Eltern',
+    title: 'Die Zehlendorfer Eltern: Der 12. Mann',
+    subtitle: 'Klappstühle, Thermoskannen & die lauteste Fankurve',
+    desc: 'Unsere treuesten Unterstützer. Bei Wind und Wetter an der Seitenlinie am Siebenendenweg, klatschen, anfeuern und die Mannschaft nach vorne peitschen.',
+    aspect: '16:9',
+    theme: 'h03_parents',
+    badge: 'H03 ELTERNKURVE',
+    icon: 'parents'
   },
   {
-    id: 'hall-golden-3',
-    era: '1990s-2000s',
-    room: 'Central Hallway',
-    title: '2006 · The Last Match at Old Ground',
-    subtitle: 'A farewell to 85 years of memories',
-    desc: 'Emotional farewell lap of honour at our historic cathedral ground before the move to our modern stadium.',
+    id: 'sideline-3',
+    era: 'Die Hertha-Familie',
+    room: 'Trainer & Eltern',
+    title: 'Die Betreuer: Die Helden im Hintergrund',
+    subtitle: 'Spielerbögen, Trikotwäsche & Verpflegungsplan',
+    desc: 'Ohne sie läuft nichts: DFBnet-Spielberichte, Turnier-Anmeldungen, Trikotsätze waschen und dafür sorgen, dass jeder Pass und jede Trinkflasche bereitsteht.',
     aspect: '4:3',
-    theme: 'retro',
-    badge: 'FAREWELL OLD GROUND',
-    icon: 'stadium'
+    theme: 'h03_coach',
+    badge: 'BETREUER-HERZ',
+    icon: 'clipboard'
+  },
+  {
+    id: 'sideline-4',
+    era: 'Die Hertha-Familie',
+    room: 'Trainer & Eltern',
+    title: 'Unsere Team-Fotografen',
+    subtitle: 'Tausende Schnappschüsse voller Emotion & Action',
+    desc: 'Mit der Kamera an der Außenlinie: Jedes Traumtor, jede spektakuläre Parade und jeder lachende Moment für die Ewigkeit im Bild festgehalten.',
+    aspect: '4:3',
+    theme: 'h03_parents',
+    badge: 'H03 FOTO-ARCHIV',
+    icon: 'camera'
   },
 
-  // --- LEFT WING 2: CONTINENTAL TOURNAMENTS ---
+  // --- CENTRAL TIMELINE: HEUTE & ZUKUNFT (D-JUGEND WEG ZUM GROSSFELD) ---
   {
-    id: 'continental-1',
-    era: '2000s-2020s',
-    room: 'Continental Room',
-    title: '2008 · Continental Champions of Europe',
-    subtitle: 'Lifting the European Cup into the rainy night sky',
-    desc: 'The pinnacle of club football. Midnight in Moscow: confetti raining as the skipper hoists the big-eared cup.',
-    aspect: '16:9',
-    theme: 'europe',
-    badge: 'UCL CHAMPIONS 2008',
-    icon: 'trophy'
-  },
-  {
-    id: 'continental-2',
-    era: '2000s-2020s',
-    room: 'Continental Room',
-    title: '2019 · The Semi-Final Comeback Miracle',
-    subtitle: 'Overturning a 3-0 deficit in 90 electrifying minutes',
-    desc: 'An iconic corner taken quickly, four second-half goals, and an unforgettable collective roar under the lights.',
-    aspect: '16:9',
-    theme: 'europe',
-    badge: 'COMEBACK MIRACLE 2019',
+    id: 'hall-u15-1',
+    era: '2025/26 · Aktuelle Saison',
+    room: 'Timeline Hallway',
+    title: 'Derbysiege in Berlin',
+    subtitle: 'Prestige-Duelle & Stolz auf das blau-weiße Wappen',
+    desc: 'Gegen die Berliner Lokalrivalen auf Augenhöhe. Hohes Pressing, kompromisslose Zweikämpfe und der Stolz, die Farben von Hertha 03 Zehlendorf zu tragen.',
+    aspect: '4:3',
+    theme: 'h03_blue',
+    badge: 'DERBYSIEGER BERLIN',
     icon: 'celebration'
   },
   {
-    id: 'continental-3',
-    era: '2000s-2020s',
-    room: 'Continental Room',
-    title: 'Club World Cup Champions',
-    subtitle: 'Crowned champions of the globe in Tokyo',
-    desc: 'Conquering the South American champions 1-0 in extra time to earn the golden world champions badge on our shirts.',
+    id: 'hall-u15-2',
+    era: 'Ausblick · Großfeld',
+    room: 'Timeline Hallway',
+    title: 'Weg zum 11 gegen 11 Großfeld',
+    subtitle: 'Aus kleinen Knirpsen werden gestandene Jugendspieler',
+    desc: 'Aus den schüchternen U8-Anfängern ist ein eingeschworener Jahrgang geworden. Der Schritt auf das volle Großfeld steht bevor – bereit für jedes Abenteuer.',
     aspect: '4:3',
-    theme: 'europe',
-    badge: 'WORLD CLUB CHAMPIONS',
-    icon: 'trophy'
-  },
-  {
-    id: 'continental-4',
-    era: '2000s-2020s',
-    room: 'Continental Room',
-    title: 'European Super Cup Thriller',
-    subtitle: 'Sudden-death overtime in Monaco',
-    desc: 'Scoring a 118th-minute bicycle kick winner to add the continental Super Cup to the club museum cabinets.',
-    aspect: '4:3',
-    theme: 'europe',
-    badge: 'SUPER CUP WINNERS',
-    icon: 'action'
+    theme: 'h03_blue',
+    badge: 'BLAU-WEISSE ZUKUNFT',
+    icon: 'kids'
   },
 
-  // --- RIGHT WING 2: CLUB LEGENDS & BALLON D\'OR ---
-  {
-    id: 'legends-1',
-    era: '1980s-2020s',
-    room: 'Legends Room',
-    title: 'The Eternal Captain (#6)',
-    subtitle: '710 appearances, 18 seasons, one badge',
-    desc: 'Our steadfast leader who marshalled the backline for nearly two decades, embodying loyalty and courage.',
-    aspect: '16:9',
-    theme: 'legend',
-    badge: 'CAPTAIN LEADER LEGEND',
-    icon: 'jersey'
-  },
-  {
-    id: 'legends-2',
-    era: '1980s-2020s',
-    room: 'Legends Room',
-    title: 'The Maestro (#10)',
-    subtitle: 'Ballon d\'Or winner and artistic genius',
-    desc: 'Gliding past four defenders with effortless dribbles and visionary no-look passes that defined an era of beautiful football.',
-    aspect: '16:9',
-    theme: 'gold',
-    badge: 'BALLON D\'OR WINNER',
-    icon: 'jersey'
-  },
-  {
-    id: 'legends-3',
-    era: '1980s-2020s',
-    room: 'Legends Room',
-    title: 'The Flying Winger (#7)',
-    subtitle: 'Speed, step-overs, and iconic free-kicks',
-    desc: 'Bending free-kicks over the wall with unerring precision from 35 yards out into the top postage stamp corner.',
-    aspect: '4:3',
-    theme: 'legend',
-    badge: 'ICONIC NUMBER 7',
-    icon: 'action'
-  },
-  {
-    id: 'legends-4',
-    era: '1980s-2020s',
-    room: 'Legends Room',
-    title: 'The Legendary Gaffer',
-    subtitle: '26 major trophies across 24 seasons',
-    desc: 'The greatest manager in football history standing in his trademark coat, pointing at his watch with iconic smile.',
-    aspect: '4:3',
-    theme: 'legend',
-    badge: 'THE GAFFER 1990-2014',
-    icon: 'tactics'
-  },
-
-  // --- CENTRAL HALLWAY: 2010s-2020s (MODERN ERA) ---
-  {
-    id: 'hall-modern-1',
-    era: '2010s-2020s',
-    room: 'Central Hallway',
-    title: '2012 · 93:20 Stoppage Time Miracle',
-    subtitle: 'The most dramatic title-winning moment in history',
-    desc: 'Striker snatching the championship at 93 minutes and 20 seconds, spinning his jersey around his head in ecstasy.',
-    aspect: '4:3',
-    theme: 'modern',
-    badge: '93:20 TITLE MIRACLE',
-    icon: 'celebration'
-  },
-  {
-    id: 'hall-modern-2',
-    era: '2010s-2020s',
-    room: 'Central Hallway',
-    title: '2021 · Modern High-Press Revolution',
-    subtitle: '100 points, 106 goals in a single season',
-    desc: 'The tactical revolution of aggressive counter-pressing and fluid possession that rewrote all top-flight records.',
-    aspect: '4:3',
-    theme: 'modern',
-    badge: '100 POINTS CENTURIONS',
-    icon: 'tactics'
-  },
-
-  // --- GRAND CHAMPIONS ROTUNDA: HERO RETROSPECTIVE ---
+  // --- THE ROTUNDA: DIE 2014er EHRENHALLE ---
   {
     id: 'rotunda-hero',
-    era: '2024 & Beyond',
-    room: 'Champions Rotunda',
-    title: 'The Centenary Treble Celebration',
-    subtitle: '100 Years of Pride, Passion & Unbroken Brotherhood',
-    desc: 'The entire club squad, coaching staff, and youth captains raising the golden league trophy together in front of 80,000 faithful supporters.',
+    era: 'Jahrgang 2014',
+    room: 'Ehrenhalle Rotunde',
+    title: 'F.C. Hertha 03 Zehlendorf · Jahrgang 2014',
+    subtitle: 'Ein Team. Ein Verein. Eine unzerbrechliche Gemeinschaft.',
+    desc: 'Das große Panoramabild unseres 2014er-Teams. Zusammen gewachsen am Ernst-Reuter-Sportfeld, zusammen gekämpft, gelacht und unzählige Erinnerungen geschaffen. Einmal Zehlendorfer, immer Zehlendorfer!',
     aspect: '16:9',
-    theme: 'hero',
-    badge: 'CENTENARY TREBLE CHAMPIONS',
-    icon: 'trophy'
+    theme: 'h03_hero',
+    badge: 'HERTHA 03 · 2014er',
+    icon: 'graduation'
   },
   {
     id: 'rotunda-left',
-    era: 'Future Legacy',
-    room: 'Champions Rotunda',
-    title: 'The Next Generation Academy',
-    subtitle: 'The future stars carrying our colors forward',
-    desc: 'Our youth academy champions lifting the international youth trophy, continuing the tradition of homegrown greatness.',
+    era: 'Vereinstreue',
+    room: 'Ehrenhalle Rotunde',
+    title: 'Die Kapitänsbinde von Hertha 03',
+    subtitle: 'Verantwortung, Vorbild & Respekt auf und neben dem Platz',
+    desc: 'Unsere Spielführer, die mit blau-weißer Kapitänsbinde die Mannschaft aufs Feld führen und vorangehen, wenn es eng wird.',
     aspect: '4:3',
-    theme: 'gold',
-    badge: 'ACADEMY FUTURE STARS',
-    icon: 'team'
+    theme: 'h03_gold',
+    badge: 'KAPITÄNSBINDE H03',
+    icon: 'armband'
   },
   {
     id: 'rotunda-right',
-    era: 'Club Soul',
-    room: 'Champions Rotunda',
-    title: 'The 12th Man: Our Global Supporters',
-    subtitle: 'From local terraced streets to millions across continents',
-    desc: 'Fans singing in harmony with scarves held high as the stadium choir echoes into the night air: Forever Club Pride.',
+    era: 'Kader & Unterschriften',
+    room: 'Ehrenhalle Rotunde',
+    title: 'Die Ehrenwand der 2014er Spieler',
+    subtitle: 'Jeder Name, jede Nummer & jeder Mitspieler unvergessen',
+    desc: 'Hier haben alle Spieler unseres Jahrgangs ihren festen Platz. Die Nummern auf dem Rücken, die gemeinsamen Tore und die Freundschaft fürs Leben.',
     aspect: '4:3',
-    theme: 'hero',
-    badge: 'THE 12TH MAN SUPPORTERS',
-    icon: 'stadium'
+    theme: 'h03_hero',
+    badge: 'UNSER KADER 2014',
+    icon: 'signatures'
   }
 ];
 
 export function getExhibitById(id) {
   return EXHIBITS.find(e => e.id === id) || {
     id,
-    era: 'Exhibition',
-    room: 'Museum Hall',
-    title: `Exhibit ${id}`,
-    subtitle: 'Archival Collection',
-    desc: 'Click to upload your team photos or videos to this frame.',
-    theme: 'modern',
-    badge: 'ARCHIVE',
+    era: 'Erinnerung',
+    room: 'Hertha 03 Galerie',
+    title: `Moment ${id}`,
+    subtitle: 'Hertha 03 Zehlendorf 2014er',
+    desc: 'Klicke auf diesen Rahmen, um Fotos oder Videos eures Teams hochzuladen.',
+    theme: 'h03_blue',
+    badge: 'H03 ZEHLENDORF',
     aspect: '4:3'
   };
 }
 
 /**
- * Procedurally generates a museum-quality canvas texture for any exhibit
+ * Procedurally generates Hertha 03 Zehlendorf branded canvas graphics
  */
 export function generateExhibitCanvas(exhibit) {
   const isWide = exhibit.aspect === '16:9';
@@ -369,369 +369,295 @@ export function generateExhibitCanvas(exhibit) {
   canvas.height = height;
   const ctx = canvas.getContext('2d');
 
-  // Themes
+  // Hertha 03 Zehlendorf Blue & White theme colors
   const themes = {
-    sepia: {
-      bg1: '#26201a', bg2: '#120f0d',
-      accent: '#d4a362', text: '#f3eedf', sub: '#b0a08e',
-      border: 'rgba(212, 163, 98, 0.45)', badgeBg: 'rgba(212, 163, 98, 0.2)'
+    h03_blue: {
+      bg1: '#0d2b5c', bg2: '#051329', // Hertha 03 Deep Royal Blue
+      accent: '#60a5fa', text: '#ffffff', sub: '#bfdbfe',
+      border: 'rgba(96, 165, 250, 0.6)', badgeBg: 'rgba(96, 165, 250, 0.25)'
     },
-    retro: {
-      bg1: '#1a1d2e', bg2: '#0b0c14',
-      accent: '#e04040', text: '#f8f8fb', sub: '#9ea4b5',
-      border: 'rgba(224, 64, 64, 0.5)', badgeBg: 'rgba(224, 64, 64, 0.25)'
+    h03_grassroots: {
+      bg1: '#0e3820', bg2: '#061a0f', // Ernst-Reuter Rasen grün mit Blau
+      accent: '#4ade80', text: '#f0fdf4', sub: '#bbf7d0',
+      border: 'rgba(74, 222, 128, 0.5)', badgeBg: 'rgba(74, 222, 128, 0.22)'
     },
-    gold: {
-      bg1: '#1f1b13', bg2: '#0d0b07',
-      accent: '#ffd700', text: '#fff9e6', sub: '#cfc4a2',
-      border: 'rgba(255, 215, 0, 0.55)', badgeBg: 'rgba(255, 215, 0, 0.22)'
+    h03_gold: {
+      bg1: '#1e2438', bg2: '#0a0d18', // Pokalblau mit edlem Gold
+      accent: '#facc15', text: '#ffffff', sub: '#fef08a',
+      border: 'rgba(250, 204, 21, 0.65)', badgeBg: 'rgba(250, 204, 21, 0.25)'
     },
-    trophy: {
-      bg1: '#12231b', bg2: '#08120e',
-      accent: '#e5b842', text: '#f0fdf4', sub: '#9cb3a5',
-      border: 'rgba(229, 184, 66, 0.55)', badgeBg: 'rgba(229, 184, 66, 0.25)'
+    h03_trips: {
+      bg1: '#1a2238', bg2: '#0a0e1c', // Ausflugsblau
+      accent: '#38bdf8', text: '#ffffff', sub: '#bae6fd',
+      border: 'rgba(56, 189, 248, 0.55)', badgeBg: 'rgba(56, 189, 248, 0.22)'
     },
-    derby: {
-      bg1: '#261214', bg2: '#120709',
-      accent: '#ff4d4d', text: '#fff5f5', sub: '#d4a5a8',
-      border: 'rgba(255, 77, 77, 0.6)', badgeBg: 'rgba(255, 77, 77, 0.3)'
+    h03_coach: {
+      bg1: '#111e33', bg2: '#070c14',
+      accent: '#93c5fd', text: '#ffffff', sub: '#dbeafe',
+      border: 'rgba(147, 197, 253, 0.5)', badgeBg: 'rgba(147, 197, 253, 0.2)'
     },
-    europe: {
-      bg1: '#0d1d36', bg2: '#050c17',
-      accent: '#4da6ff', text: '#f0f7ff', sub: '#8db7e0',
-      border: 'rgba(77, 166, 255, 0.55)', badgeBg: 'rgba(77, 166, 255, 0.25)'
+    h03_parents: {
+      bg1: '#172545', bg2: '#090f1f',
+      accent: '#a5b4fc', text: '#ffffff', sub: '#e0e7ff',
+      border: 'rgba(165, 180, 252, 0.5)', badgeBg: 'rgba(165, 180, 252, 0.2)'
     },
-    legend: {
-      bg1: '#18151f', bg2: '#0a080d',
-      accent: '#cca0ff', text: '#fdfbfe', sub: '#afa6c0',
-      border: 'rgba(204, 160, 255, 0.5)', badgeBg: 'rgba(204, 160, 255, 0.22)'
+    h03_drama: {
+      bg1: '#241a29', bg2: '#0f0814',
+      accent: '#f43f5e', text: '#ffffff', sub: '#fecdd3',
+      border: 'rgba(244, 63, 94, 0.6)', badgeBg: 'rgba(244, 63, 94, 0.25)'
     },
-    hero: {
-      bg1: '#1d1912', bg2: '#0c0a06',
-      accent: '#f5c542', text: '#ffffff', sub: '#e0d5be',
-      border: 'rgba(245, 197, 66, 0.7)', badgeBg: 'rgba(245, 197, 66, 0.3)'
+    h03_dark: {
+      bg1: '#0c1a2e', bg2: '#040912',
+      accent: '#38bdf8', text: '#ffffff', sub: '#7dd3fc',
+      border: 'rgba(56, 189, 248, 0.5)', badgeBg: 'rgba(56, 189, 248, 0.2)'
     },
-    modern: {
-      bg1: '#151922', bg2: '#090b0f',
-      accent: '#38bdf8', text: '#f8fafc', sub: '#94a3b8',
-      border: 'rgba(56, 189, 248, 0.5)', badgeBg: 'rgba(56, 189, 248, 0.25)'
+    h03_hero: {
+      bg1: '#0f3166', bg2: '#040e21',
+      accent: '#38bdf8', text: '#ffffff', sub: '#e0f2fe',
+      border: 'rgba(56, 189, 248, 0.7)', badgeBg: 'rgba(56, 189, 248, 0.3)'
     }
   };
 
-  const style = themes[exhibit.theme] || themes.modern;
+  const style = themes[exhibit.theme] || themes.h03_blue;
 
-  // Background Gradient
-  const grad = ctx.createRadialGradient(width * 0.5, height * 0.42, 40, width * 0.5, height * 0.5, width * 0.7);
+  // Background Radial Gradient
+  const grad = ctx.createRadialGradient(width * 0.5, height * 0.42, 30, width * 0.5, height * 0.5, width * 0.75);
   grad.addColorStop(0, style.bg1);
   grad.addColorStop(1, style.bg2);
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, width, height);
 
-  // Subtle pitch lines / stadium floodlight cone overlay
+  // Subtle Hertha 03 Blue-White vertical stripes overlay in the background
   ctx.save();
+  for (let x = 0; x < width; x += 110) {
+    ctx.fillStyle = (Math.floor(x / 110) % 2 === 0) ? 'rgba(255, 255, 255, 0.025)' : 'rgba(0, 75, 147, 0.06)';
+    ctx.fillRect(x, 0, 110, height);
+  }
+  // Stadium Floodlight angle
   ctx.beginPath();
-  ctx.moveTo(width * 0.5 - 120, 0);
-  ctx.lineTo(width * 0.5 + 120, 0);
-  ctx.lineTo(width * 0.85, height);
-  ctx.lineTo(width * 0.15, height);
+  ctx.moveTo(width * 0.5 - 140, 0); ctx.lineTo(width * 0.5 + 140, 0);
+  ctx.lineTo(width * 0.9, height); ctx.lineTo(width * 0.1, height);
   ctx.closePath();
-  const coneGrad = ctx.createLinearGradient(0, 0, 0, height);
-  coneGrad.addColorStop(0, 'rgba(255, 255, 255, 0.12)');
-  coneGrad.addColorStop(0.7, 'rgba(255, 255, 255, 0.03)');
-  coneGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-  ctx.fillStyle = coneGrad;
+  const cone = ctx.createLinearGradient(0, 0, 0, height);
+  cone.addColorStop(0, 'rgba(255, 255, 255, 0.09)');
+  cone.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  ctx.fillStyle = cone;
   ctx.fill();
   ctx.restore();
 
-  // Pitch Grass / Stadium Grid Lines
-  ctx.save();
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-  ctx.lineWidth = 1.5;
-  for (let y = height * 0.55; y <= height; y += 38) {
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(width, y);
-    ctx.stroke();
-  }
-  // Center circle arc at bottom
-  ctx.beginPath();
-  ctx.arc(width * 0.5, height * 0.85, 140, Math.PI, 0, false);
-  ctx.stroke();
-  ctx.restore();
+  // Draw Central Artwork
+  drawHertha03Art(ctx, width, height, exhibit, style);
 
-  // Draw Thematic Graphic Illustration in the center
-  drawCentralArt(ctx, width, height, exhibit, style);
-
-  // Museum Inner Frame & Guilloche Border
+  // Frame Border
   ctx.save();
   ctx.strokeStyle = style.border;
-  ctx.lineWidth = 2;
-  ctx.strokeRect(28, 28, width - 56, height - 56);
-  // Delicate Corner brackets
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(26, 26, width - 52, height - 52);
+
+  // Corner Accents
   const bLen = 22;
   ctx.lineWidth = 3.5;
   ctx.strokeStyle = style.accent;
-  // Top-left
-  ctx.beginPath(); ctx.moveTo(28, 28 + bLen); ctx.lineTo(28, 28); ctx.lineTo(28 + bLen, 28); ctx.stroke();
-  // Top-right
-  ctx.beginPath(); ctx.moveTo(width - 28 - bLen, 28); ctx.lineTo(width - 28, 28); ctx.lineTo(width - 28, 28 + bLen); ctx.stroke();
-  // Bottom-left
-  ctx.beginPath(); ctx.moveTo(28, height - 28 - bLen); ctx.lineTo(28, height - 28); ctx.lineTo(28 + bLen, height - 28); ctx.stroke();
-  // Bottom-right
-  ctx.beginPath(); ctx.moveTo(width - 28 - bLen, height - 28); ctx.lineTo(width - 28, height - 28); ctx.lineTo(width - 28, height - 28 - bLen); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(26, 26 + bLen); ctx.lineTo(26, 26); ctx.lineTo(26 + bLen, 26); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(width - 26 - bLen, 26); ctx.lineTo(width - 26, 26); ctx.lineTo(width - 26, 26 + bLen); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(26, height - 26 - bLen); ctx.lineTo(26, height - 26); ctx.lineTo(26 + bLen, height - 26); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(width - 26 - bLen, height - 26); ctx.lineTo(width - 26, height - 26); ctx.lineTo(width - 26, height - 26 - bLen); ctx.stroke();
   ctx.restore();
 
-  // Header Ribbon: Museum Archival Tag
+  // Top Ribbon: Hertha 03 Zehlendorf Badge Tag
   ctx.save();
   ctx.fillStyle = style.badgeBg;
-  ctx.fillRect(48, 44, 210, 32);
+  ctx.fillRect(44, 42, 235, 30);
   ctx.strokeStyle = style.accent;
-  ctx.lineWidth = 1;
-  ctx.strokeRect(48, 44, 210, 32);
+  ctx.lineWidth = 1.2;
+  ctx.strokeRect(44, 42, 235, 30);
 
-  ctx.font = '600 12px Inter, sans-serif';
+  ctx.font = '700 11.5px Inter, sans-serif';
   ctx.fillStyle = style.accent;
   ctx.textAlign = 'center';
-  ctx.letterSpacing = '2px';
-  ctx.fillText(exhibit.badge, 153, 65);
+  ctx.letterSpacing = '1.5px';
+  ctx.fillText(exhibit.badge, 161, 62);
 
   // Room / Era Header on Right
   ctx.font = '500 13px Inter, sans-serif';
   ctx.fillStyle = style.sub;
   ctx.textAlign = 'right';
-  ctx.fillText(`${exhibit.room.toUpperCase()} · ${exhibit.era}`, width - 48, 65);
+  ctx.fillText(`${exhibit.room.toUpperCase()} · ${exhibit.era}`, width - 44, 62);
   ctx.restore();
 
-  // Bottom Plaque Overlay: Title, Subtitle, and Curatorial Summary
+  // Bottom Plaque Overlay: Title, Subtitle, and Description
   ctx.save();
-  const plaqueY = height - 160;
-  const plaqueH = 120;
-  const plaqueGrad = ctx.createLinearGradient(0, plaqueY - 30, 0, height - 35);
+  const plaqueY = height - 165;
+  const plaqueH = 125;
+  const plaqueGrad = ctx.createLinearGradient(0, plaqueY - 30, 0, height - 30);
   plaqueGrad.addColorStop(0, 'rgba(0,0,0,0)');
-  plaqueGrad.addColorStop(0.35, 'rgba(10,10,12,0.85)');
-  plaqueGrad.addColorStop(1, 'rgba(5,5,8,0.98)');
+  plaqueGrad.addColorStop(0.35, 'rgba(5,13,26,0.9)');
+  plaqueGrad.addColorStop(1, 'rgba(3,8,18,0.98)');
   ctx.fillStyle = plaqueGrad;
-  ctx.fillRect(32, plaqueY - 20, width - 64, plaqueH + 20);
+  ctx.fillRect(30, plaqueY - 20, width - 60, plaqueH + 20);
 
   // Title
-  ctx.font = '700 28px "Cinzel", "Playfair Display", Georgia, serif';
+  ctx.font = '700 26px "Cinzel", "Playfair Display", Georgia, serif';
   ctx.fillStyle = style.text;
   ctx.textAlign = 'left';
-  ctx.fillText(exhibit.title, 52, plaqueY + 36);
+  ctx.fillText(exhibit.title, 50, plaqueY + 36);
 
   // Subtitle
   ctx.font = 'italic 16px Georgia, serif';
   ctx.fillStyle = style.accent;
-  ctx.fillText(exhibit.subtitle, 52, plaqueY + 64);
+  ctx.fillText(exhibit.subtitle, 50, plaqueY + 64);
 
-  // Description (short 1-line summary)
+  // Description / Story
   ctx.font = '400 13px Inter, system-ui, sans-serif';
   ctx.fillStyle = style.sub;
-  ctx.fillText(exhibit.desc, 52, plaqueY + 92, width - 110);
+  ctx.fillText(exhibit.desc, 50, plaqueY + 92, width - 100);
   ctx.restore();
 
-  // Archival Official Club Stamp in top right center
-  drawArchivalStamp(ctx, width - 110, 150, style.accent);
+  // Official F.C. Hertha 03 Zehlendorf Stamp in top right
+  drawHertha03Seal(ctx, width - 105, 140, style.accent);
 
   return canvas;
 }
 
-function drawCentralArt(ctx, w, h, exhibit, style) {
+function drawHertha03Art(ctx, w, h, exhibit, style) {
   const cx = w * 0.5;
   const cy = h * 0.42;
 
   ctx.save();
 
-  if (exhibit.icon === 'trophy') {
-    // Elegant Golden Trophy Silhouette
-    ctx.fillStyle = style.accent;
-    ctx.shadowColor = style.accent;
-    ctx.shadowBlur = 24;
-
-    // Cup Bowl
-    ctx.beginPath();
-    ctx.moveTo(cx - 65, cy - 70);
-    ctx.lineTo(cx + 65, cy - 70);
-    ctx.bezierCurveTo(cx + 60, cy + 30, cx - 60, cy + 30, cx - 65, cy - 70);
-    ctx.fill();
-
-    // Cup Handles
-    ctx.lineWidth = 10;
-    ctx.strokeStyle = style.accent;
-    ctx.beginPath();
-    ctx.arc(cx - 75, cy - 40, 32, -Math.PI * 0.4, Math.PI * 0.7);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(cx + 75, cy - 40, 32, Math.PI * 0.3, Math.PI * 1.4);
-    ctx.stroke();
-
-    // Stem and Pedestal
-    ctx.fillRect(cx - 16, cy + 24, 32, 45);
-    ctx.fillRect(cx - 55, cy + 69, 110, 18);
-    ctx.fillRect(cx - 75, cy + 87, 150, 14);
-
-    // Stars above trophy
-    ctx.shadowBlur = 10;
-    drawStar(ctx, cx, cy - 105, 5, 14, 6, style.accent);
-    drawStar(ctx, cx - 45, cy - 98, 5, 10, 4, style.accent);
-    drawStar(ctx, cx + 45, cy - 98, 5, 10, 4, style.accent);
-  } else if (exhibit.icon === 'jersey') {
-    // Iconic Jersey Silhouette with Number
-    ctx.fillStyle = style.accent;
-    ctx.shadowColor = style.accent;
-    ctx.shadowBlur = 20;
-
-    ctx.beginPath();
-    ctx.moveTo(cx - 50, cy - 80);
-    ctx.lineTo(cx - 20, cy - 80);
-    ctx.quadraticCurveTo(cx, cy - 60, cx + 20, cy - 80);
-    ctx.lineTo(cx + 50, cy - 80);
-    ctx.lineTo(cx + 105, cy - 35);
-    ctx.lineTo(cx + 80, cy - 0);
-    ctx.lineTo(cx + 50, cy - 20);
-    ctx.lineTo(cx + 45, cy + 70);
-    ctx.lineTo(cx - 45, cy + 70);
-    ctx.lineTo(cx - 50, cy - 20);
-    ctx.lineTo(cx - 80, cy - 0);
-    ctx.lineTo(cx - 105, cy - 35);
-    ctx.closePath();
-    ctx.fill();
-
-    // Number #10 or #7
-    ctx.fillStyle = '#0a0a0e';
-    ctx.font = '900 62px "Cinzel", Georgia, serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('10', cx, cy + 12);
-  } else if (exhibit.icon === 'celebration' || exhibit.icon === 'action') {
-    // Dynamic Match Scene: Player Volley / Celebration Silhouette + Stadium Lights
+  if (exhibit.icon === 'kids' || exhibit.icon === 'celebration') {
+    // Blau-Weiße Hertha 03 Jungs im Torjubel
     ctx.fillStyle = style.accent;
     ctx.shadowColor = style.accent;
     ctx.shadowBlur = 18;
 
-    // Jumping silhouette
+    // Drei Zehlendorfer Spieler im Arm
+    ctx.beginPath(); ctx.arc(cx, cy - 65, 17, 0, Math.PI * 2); ctx.fill();
+    ctx.fillRect(cx - 15, cy - 45, 30, 60);
+
+    ctx.beginPath(); ctx.arc(cx - 50, cy - 60, 16, 0, Math.PI * 2); ctx.fill();
     ctx.beginPath();
-    ctx.arc(cx - 20, cy - 80, 18, 0, Math.PI * 2); // Head
+    ctx.moveTo(cx - 65, cy - 40); ctx.lineTo(cx - 35, cy - 40);
+    ctx.lineTo(cx - 30, cy + 15); ctx.lineTo(cx - 60, cy + 15); ctx.closePath(); ctx.fill();
+
+    ctx.beginPath(); ctx.arc(cx + 50, cy - 60, 16, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(cx + 35, cy - 40); ctx.lineTo(cx + 65, cy - 40);
+    ctx.lineTo(cx + 60, cy + 15); ctx.lineTo(cx + 30, cy + 15); ctx.closePath(); ctx.fill();
+
+    // Arme um die Schultern
+    ctx.lineWidth = 8; ctx.strokeStyle = style.accent;
+    ctx.beginPath(); ctx.moveTo(cx - 45, cy - 35); ctx.lineTo(cx - 10, cy - 35);
+    ctx.moveTo(cx + 10, cy - 35); ctx.lineTo(cx + 45, cy - 35); ctx.stroke();
+
+    // Fußball am Fuß
+    ctx.beginPath(); ctx.arc(cx, cy + 50, 18, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff'; ctx.fill();
+    ctx.strokeStyle = '#051329'; ctx.lineWidth = 2.5; ctx.stroke();
+  } else if (exhibit.icon === 'trophy' || exhibit.icon === 'medals') {
+    // Goldener Pokal & Medaillen
+    ctx.fillStyle = style.accent; ctx.shadowColor = style.accent; ctx.shadowBlur = 22;
+
+    ctx.beginPath();
+    ctx.moveTo(cx - 55, cy - 60); ctx.lineTo(cx + 55, cy - 60);
+    ctx.bezierCurveTo(cx + 50, cy + 25, cx - 50, cy + 25, cx - 55, cy - 60);
     ctx.fill();
 
+    ctx.lineWidth = 9; ctx.strokeStyle = style.accent;
+    ctx.beginPath(); ctx.arc(cx - 62, cy - 32, 26, -Math.PI * 0.4, Math.PI * 0.8); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx + 62, cy - 32, 26, Math.PI * 0.2, Math.PI * 1.4); ctx.stroke();
+
+    ctx.fillRect(cx - 14, cy + 20, 28, 40);
+    ctx.fillRect(cx - 50, cy + 60, 100, 16);
+    ctx.fillRect(cx - 70, cy + 76, 140, 14);
+
+    // H03 Aufschrift auf Sockel
+    ctx.fillStyle = '#051329';
+    ctx.font = '700 13px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('H03 ZEHLENDORF', cx, cy + 73);
+  } else if (exhibit.icon === 'bus' || exhibit.icon === 'camp') {
+    // Mannschaftsbus / Minivan on Tour
+    ctx.fillStyle = style.accent; ctx.shadowColor = style.accent; ctx.shadowBlur = 18;
+
     ctx.beginPath();
-    ctx.moveTo(cx - 20, cy - 60);
-    ctx.lineTo(cx - 10, cy - 0);
-    ctx.lineTo(cx + 60, cy - 40); // kicking leg high
-    ctx.lineTo(cx + 55, cy - 50);
-    ctx.lineTo(cx - 10, cy - 5);
-    ctx.lineTo(cx - 40, cy + 50); // support leg
-    ctx.closePath();
+    ctx.roundRect(cx - 80, cy - 40, 160, 75, 12);
     ctx.fill();
 
-    // Arms in triumph
-    ctx.lineWidth = 10;
-    ctx.strokeStyle = style.accent;
-    ctx.beginPath();
-    ctx.moveTo(cx - 20, cy - 50);
-    ctx.lineTo(cx - 70, cy - 90);
-    ctx.moveTo(cx - 20, cy - 50);
-    ctx.lineTo(cx + 40, cy - 85);
-    ctx.stroke();
+    ctx.fillStyle = '#051329';
+    ctx.fillRect(cx - 70, cy - 30, 36, 26);
+    ctx.fillRect(cx - 26, cy - 30, 45, 26);
+    ctx.fillRect(cx + 26, cy - 30, 45, 26);
 
-    // Flying Football
-    ctx.beginPath();
-    ctx.arc(cx + 90, cy - 75, 16, 0, Math.PI * 2);
     ctx.fillStyle = '#ffffff';
-    ctx.fill();
-    ctx.strokeStyle = '#0a0a0e';
-    ctx.lineWidth = 2.5;
-    ctx.stroke();
-  } else {
-    // Classic Soccer Crest & Stadium Silhouette
-    ctx.fillStyle = style.accent;
-    ctx.shadowColor = style.accent;
-    ctx.shadowBlur = 20;
+    ctx.beginPath(); ctx.arc(cx - 45, cy + 35, 18, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx + 45, cy + 35, 18, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#051329';
+    ctx.beginPath(); ctx.arc(cx - 45, cy + 35, 10, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx + 45, cy + 35, 10, 0, Math.PI * 2); ctx.fill();
 
-    // Heraldic Shield Crest
+    // H03 Zehlendorf Logo auf Bus
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '800 14px "Cinzel", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('HERTHA 03', cx + 2, cy + 12);
+  } else {
+    // Das Hertha 03 Zehlendorf Wappen (H03 - 1903)
+    ctx.fillStyle = style.accent; ctx.shadowColor = style.accent; ctx.shadowBlur = 20;
+
+    // Blau-Weißes Schild
     ctx.beginPath();
-    ctx.moveTo(cx - 65, cy - 75);
-    ctx.lineTo(cx + 65, cy - 75);
+    ctx.moveTo(cx - 65, cy - 75); ctx.lineTo(cx + 65, cy - 75);
     ctx.lineTo(cx + 65, cy + 10);
     ctx.quadraticCurveTo(cx, cy + 90, cx, cy + 90);
     ctx.quadraticCurveTo(cx - 65, cy + 10, cx - 65, cy + 10);
     ctx.closePath();
     ctx.fill();
 
-    // Inner shield cutout
-    ctx.fillStyle = '#0a0a0f';
+    // Innerer Kern
+    ctx.fillStyle = '#051329';
     ctx.beginPath();
-    ctx.moveTo(cx - 52, cy - 65);
-    ctx.lineTo(cx + 52, cy - 65);
-    ctx.lineTo(cx + 52, cy + 5);
+    ctx.moveTo(cx - 52, cy - 65); ctx.lineTo(cx + 52, cy - 65);
+    ctx.lineTo(cx + 52, cy + 6);
     ctx.quadraticCurveTo(cx, cy + 74, cx, cy + 74);
-    ctx.quadraticCurveTo(cx - 52, cy + 5, cx - 52, cy + 5);
+    ctx.quadraticCurveTo(cx - 52, cy + 6, cx - 52, cy + 6);
     ctx.closePath();
     ctx.fill();
 
-    // Classic 32-panel Ball inside shield
-    ctx.beginPath();
-    ctx.arc(cx, cy, 32, 0, Math.PI * 2);
+    // "H03" Schriftzug
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '800 32px "Cinzel", Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('H 03', cx, cy - 14);
+
     ctx.fillStyle = style.accent;
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(cx, cy, 32, 0, Math.PI * 2);
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 2;
-    ctx.stroke();
+    ctx.font = '600 12px Inter, sans-serif';
+    ctx.fillText('ZEHLENDORF', cx, cy + 18);
+    ctx.fillText('1903', cx, cy + 38);
   }
 
   ctx.restore();
 }
 
-function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius, color) {
-  let rot = (Math.PI / 2) * 3;
-  let x = cx;
-  let y = cy;
-  const step = Math.PI / spikes;
-
-  ctx.beginPath();
-  ctx.moveTo(cx, cy - outerRadius);
-  for (let i = 0; i < spikes; i++) {
-    x = cx + Math.cos(rot) * outerRadius;
-    y = cy + Math.sin(rot) * outerRadius;
-    ctx.lineTo(x, y);
-    rot += step;
-
-    x = cx + Math.cos(rot) * innerRadius;
-    y = cy + Math.sin(rot) * innerRadius;
-    ctx.lineTo(x, y);
-    rot += step;
-  }
-  ctx.lineTo(cx, cy - outerRadius);
-  ctx.closePath();
-  ctx.fillStyle = color;
-  ctx.fill();
-}
-
-function drawArchivalStamp(ctx, x, y, color) {
+function drawHertha03Seal(ctx, x, y, color) {
   ctx.save();
   ctx.translate(x, y);
-  ctx.rotate(-0.15);
+  ctx.rotate(-0.08);
 
   ctx.strokeStyle = color;
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.arc(0, 0, 38, 0, Math.PI * 2);
-  ctx.stroke();
+  ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.arc(0, 0, 36, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.arc(0, 0, 30, 0, Math.PI * 2); ctx.stroke();
 
-  ctx.beginPath();
-  ctx.arc(0, 0, 32, 0, Math.PI * 2);
-  ctx.stroke();
-
-  ctx.font = '600 8px Inter, sans-serif';
+  ctx.font = '700 7px Inter, sans-serif';
   ctx.fillStyle = color;
   ctx.textAlign = 'center';
-  ctx.fillText('OFFICIAL ARCHIVE', 0, -10);
-  ctx.font = '800 10px Inter, sans-serif';
-  ctx.fillText('CLUB NO. 1', 0, 3);
-  ctx.font = '500 7px Inter, sans-serif';
-  ctx.fillText('HISTORIC VAULT', 0, 16);
+  ctx.fillText('HERTHA 03', 0, -10);
+  ctx.font = '800 11px Inter, sans-serif';
+  ctx.fillText('2014er', 0, 3);
+  ctx.font = '600 6.5px Inter, sans-serif';
+  ctx.fillText('ZEHLENDORF', 0, 15);
 
   ctx.restore();
 }

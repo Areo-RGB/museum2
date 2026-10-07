@@ -9,16 +9,16 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPrefere
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.15;
+renderer.toneMappingExposure = 1.18;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x181716);
-scene.fog = new THREE.Fog(0x181716, 22, 60);
+scene.background = new THREE.Color(0x0c1524);
+scene.fog = new THREE.Fog(0x0c1524, 22, 60);
 
 const camera = new THREE.PerspectiveCamera(65, innerWidth / innerHeight, 0.1, 100);
-// Spawn at the 1980s Entrance, looking down the timeline hallway towards -Z
+// Spawn at the Minis/F-Jugend Entrance, looking down the timeline hallway towards -Z
 camera.position.set(0, 1.65, 24.5);
 camera.lookAt(0, 1.65, -10);
 
@@ -40,6 +40,9 @@ const editorRoom = document.getElementById('editorRoom');
 const editorDesc = document.getElementById('editorDesc');
 const mediaInput = document.getElementById('mediaInput');
 const fitSelect = document.getElementById('fit');
+const customTitleInput = document.getElementById('customTitle');
+const customDateInput = document.getElementById('customDate');
+const customPlayersInput = document.getElementById('customPlayers');
 const customNoteInput = document.getElementById('customNote');
 const cinematicBadge = document.getElementById('cinematicBadge');
 const locationBadge = document.getElementById('locationBadge');
@@ -48,19 +51,22 @@ const plaqueYear = document.getElementById('plaqueYear');
 const plaqueTitle = document.getElementById('plaqueTitle');
 const plaqueDesc = document.getElementById('plaqueDesc');
 const directoryModal = document.getElementById('directoryModal');
+const teamNameInput = document.getElementById('teamNameInput');
+const brandTitleElements = document.querySelectorAll('.brand-team-name');
 
-// Museum Waypoints for Fast Travel & Cinematic Tour
+// Waypoints for Fast Travel & Cinematic Tour
 export const ROOM_WAYPOINTS = {
-  'entrance': { label: 'Entrance & 1980s Era', x: 0, z: 23, yaw: 0 },
-  'trophy': { label: 'Wing I: Trophy & Silverware Hall', x: -11, z: 8, yaw: Math.PI / 2 },
-  'derby': { label: 'Wing I: Epic Derbies & Clashes', x: 11, z: 8, yaw: -Math.PI / 2 },
-  'golden': { label: 'Central Hallway: 1990s-2000s Golden Age', x: 0, z: -2, yaw: 0 },
-  'continental': { label: 'Wing II: Continental Tournaments', x: -11, z: -14, yaw: Math.PI / 2 },
-  'legends': { label: 'Wing II: Club Legends & Ballon d\'Or', x: 11, z: -14, yaw: -Math.PI / 2 },
-  'rotunda': { label: 'Champions Rotunda & Centenary Pavilion', x: 0, z: -38, yaw: 0 }
+  'entrance': { label: '2018–2020: Minis & F-Jugend (Eingang)', x: 0, z: 23, yaw: 0 },
+  'tournament': { label: 'Flügel I (West): Turniere & Berliner Pokal', x: -11, z: 8, yaw: Math.PI / 2 },
+  'trips': { label: 'Flügel I (Ost): Ausflüge, Camps & Feste', x: 11, z: 8, yaw: -Math.PI / 2 },
+  'mid': { label: '2021–2023: E-Jugend & Teamgeist', x: 0, z: -2, yaw: 0 },
+  'cabinet': { label: 'Flügel II (West): Pokalschrank & Ehrungen', x: -11, z: -14, yaw: Math.PI / 2 },
+  'sideline': { label: 'Flügel II (Ost): Trainer & Hertha-Eltern', x: 11, z: -14, yaw: -Math.PI / 2 },
+  'golden': { label: '2024–2026: D-Jugend & Großfeld', x: 0, z: -24, yaw: 0 },
+  'rotunda': { label: 'Die 2014er Ehrenhalle (Zehlendorf)', x: 0, z: -38, yaw: 0 }
 };
 
-// Cinematic spline path points
+// Cinematic Spline Tour Waypoints
 const TOUR_NODES = [
   { pos: new THREE.Vector3(0, 1.8, 23), target: new THREE.Vector3(0, 1.8, 15) },
   { pos: new THREE.Vector3(0, 1.8, 14), target: new THREE.Vector3(-8, 2.0, 8) },
@@ -81,6 +87,7 @@ const TOUR_NODES = [
 ];
 
 async function init() {
+  loadTeamName();
   gallery = await buildGallery(renderer);
   scene.add(gallery.group);
   collisionCheck = createCollisionChecker(gallery.collisionMeshes);
@@ -88,9 +95,27 @@ async function init() {
   animate();
 }
 
+function loadTeamName() {
+  const defaultName = 'F.C. Hertha 03 Zehlendorf · 2014er';
+  const saved = localStorage.getItem('h03_team_name') || defaultName;
+  if (teamNameInput) teamNameInput.value = saved;
+  updateTeamNameDisplays(saved);
+}
+
+function updateTeamNameDisplays(name) {
+  brandTitleElements.forEach(el => {
+    el.textContent = name;
+  });
+}
+
 function setupEventListeners() {
   // Enter Gallery
   document.getElementById('enter').addEventListener('click', () => {
+    if (teamNameInput?.value.trim()) {
+      const name = teamNameInput.value.trim();
+      localStorage.setItem('h03_team_name', name);
+      updateTeamNameDisplays(name);
+    }
     startModal.classList.add('hidden');
     player.lock();
   });
@@ -107,11 +132,14 @@ function setupEventListeners() {
     const defaultCanvas = defaultMediaFor(selectedFrame.slot);
     await applyCanvasMedia(selectedFrame, defaultCanvas, renderer);
     fitSelect.value = 'cover';
+    if (customTitleInput) customTitleInput.value = '';
+    if (customDateInput) customDateInput.value = '';
+    if (customPlayersInput) customPlayersInput.value = '';
     if (customNoteInput) customNoteInput.value = '';
-    document.getElementById('editorStatus').textContent = 'Frame restored to official historical museum artwork.';
+    document.getElementById('editorStatus').textContent = 'Rahmen auf offizielles Hertha 03 Archivbild zurückgesetzt.';
   });
 
-  // Change Fit (Cover / Contain)
+  // Change Fit
   fitSelect.addEventListener('change', async () => {
     if (!selectedFrame) return;
     selectedFrame.fit = fitSelect.value;
@@ -122,17 +150,22 @@ function setupEventListeners() {
     }
   });
 
-  // Save custom note/caption
-  if (customNoteInput) {
-    customNoteInput.addEventListener('input', async () => {
-      if (!selectedFrame) return;
-      const saved = await getSlotMedia(selectedFrame.slot.id) || { slotId: selectedFrame.slot.id };
-      saved.customNotes = customNoteInput.value;
-      await saveSlotMedia(saved);
-    });
-  }
+  // Save metadata inputs
+  const saveFields = async () => {
+    if (!selectedFrame) return;
+    const saved = await getSlotMedia(selectedFrame.slot.id) || { slotId: selectedFrame.slot.id };
+    saved.customTitle = customTitleInput?.value || '';
+    saved.customDate = customDateInput?.value || '';
+    saved.customPlayers = customPlayersInput?.value || '';
+    saved.customNotes = customNoteInput?.value || '';
+    await saveSlotMedia(saved);
+  };
 
-  // Upload custom photo / video
+  [customTitleInput, customDateInput, customPlayersInput, customNoteInput].forEach(inp => {
+    if (inp) inp.addEventListener('input', saveFields);
+  });
+
+  // Upload user image / video
   mediaInput.addEventListener('change', async () => {
     const file = mediaInput.files?.[0];
     if (!file || !selectedFrame) return;
@@ -145,9 +178,12 @@ function setupEventListeners() {
       type: file.type,
       fit: fitSelect.value,
       name: file.name,
+      customTitle: customTitleInput?.value || '',
+      customDate: customDateInput?.value || '',
+      customPlayers: customPlayersInput?.value || '',
       customNotes: customNoteInput?.value || ''
     });
-    document.getElementById('editorStatus').textContent = `Uploaded "${file.name}" saved in browser storage.`;
+    document.getElementById('editorStatus').textContent = `Foto/Video "${file.name}" im Browser gespeichert.`;
     mediaInput.value = '';
   });
 
@@ -172,17 +208,13 @@ function setupEventListeners() {
     }
   });
 
-  // Directory / Room Guide
+  // Directory Modal
   const openDirectoryBtn = document.getElementById('openDirectoryBtn');
-  if (openDirectoryBtn) {
-    openDirectoryBtn.addEventListener('click', toggleDirectory);
-  }
+  if (openDirectoryBtn) openDirectoryBtn.addEventListener('click', toggleDirectory);
   const closeDirectoryBtn = document.getElementById('closeDirectoryBtn');
-  if (closeDirectoryBtn) {
-    closeDirectoryBtn.addEventListener('click', closeDirectory);
-  }
+  if (closeDirectoryBtn) closeDirectoryBtn.addEventListener('click', closeDirectory);
 
-  // Fast Travel buttons in directory
+  // Fast Travel buttons
   document.querySelectorAll('[data-teleport]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const roomKey = e.currentTarget.getAttribute('data-teleport');
@@ -228,22 +260,22 @@ function updateAimedPlaqueHUD() {
 function updateLocationHUD() {
   const x = camera.position.x;
   const z = camera.position.z;
-  let loc = 'Central Hallway · 1980s Era';
+  let loc = 'Zeitstrahl · 2018–2020: Minis & F-Jugend';
 
   if (z <= -34) {
-    loc = 'Champions Rotunda · Centenary Pavilion';
+    loc = 'Die 2014er Ehrenhalle · Hertha 03 Zehlendorf';
   } else if (x < -4 && z >= 1 && z <= 15) {
-    loc = 'Left Wing · Trophy & Silverware Hall';
+    loc = 'Flügel I (West) · Turniere & Berliner Pokal';
   } else if (x > 4 && z >= 1 && z <= 15) {
-    loc = 'Right Wing · Epic Derbies & Rivalry Clashes';
+    loc = 'Flügel I (Ost) · Ausflüge, Camps & Feste';
   } else if (x < -4 && z >= -21 && z <= -7) {
-    loc = 'Left Wing · Continental Tournaments';
+    loc = 'Flügel II (West) · Pokalschrank & Ehrungen';
   } else if (x > 4 && z >= -21 && z <= -7) {
-    loc = 'Right Wing · Club Legends & Ballon d\'Or';
+    loc = 'Flügel II (Ost) · Trainer & Hertha-Eltern';
   } else {
-    if (z > 10) loc = 'Central Hallway · 1980s: Early Era';
-    else if (z >= -10) loc = 'Central Hallway · 1990s-2000s: Golden Age';
-    else loc = 'Central Hallway · 2010s-2020s: Modern Dynasties';
+    if (z > 10) loc = 'Zeitstrahl · 2018–2020: Minis & F-Jugend';
+    else if (z >= -10) loc = 'Zeitstrahl · 2021–2023: E-Jugend & Teamgeist';
+    else loc = 'Zeitstrahl · 2024–2026: D-Jugend & Großfeld';
   }
 
   locationBadge.textContent = loc;
@@ -260,13 +292,14 @@ async function openEditor(frame) {
   fitSelect.value = frame.fit || 'cover';
 
   const saved = await getSlotMedia(frame.slot.id);
-  if (customNoteInput) {
-    customNoteInput.value = saved?.customNotes || '';
-  }
+  if (customTitleInput) customTitleInput.value = saved?.customTitle || '';
+  if (customDateInput) customDateInput.value = saved?.customDate || '';
+  if (customPlayersInput) customPlayersInput.value = saved?.customPlayers || '';
+  if (customNoteInput) customNoteInput.value = saved?.customNotes || '';
 
   document.getElementById('editorStatus').textContent = saved?.blob
-    ? `Custom file: ${saved.name || 'Stored media'}`
-    : 'Displaying official historical archive artwork.';
+    ? `Eigenes Bild: ${saved.name || 'Gespeichert'}`
+    : 'Hertha 03 Zehlendorf Archiv-Grafik aktiv.';
 
   editorModal.style.display = 'block';
 }
@@ -321,7 +354,7 @@ function toggleCinematic() {
 function updateCinematic() {
   if (!cinematic) return;
   const elapsed = (performance.now() - cinematicStart) / 1000;
-  const tourDuration = 48; // 48 seconds total loop for all wings
+  const tourDuration = 48;
   const progress = (elapsed % tourDuration) / tourDuration;
 
   const totalSegments = TOUR_NODES.length;
@@ -332,7 +365,6 @@ function updateCinematic() {
   const curr = TOUR_NODES[index];
   const next = TOUR_NODES[(index + 1) % totalSegments];
 
-  // Smooth Hermite / Cosine interpolation
   const smoothFrac = 0.5 * (1 - Math.cos(frac * Math.PI));
 
   camera.position.lerpVectors(curr.pos, next.pos, smoothFrac);
