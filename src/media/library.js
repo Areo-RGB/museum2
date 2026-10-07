@@ -110,12 +110,13 @@ export class MediaLibrary {
     this.deck = [];
   }
 
-  static async load(url) {
+  static async load(url, { hidden = [] } = {}) {
     try {
       const manifest = await loadManifest(url);
+      const skip = new Set(hidden);
       const items = (manifest.assets ?? []).flatMap((asset) => {
         const kind = kindOf(asset.contentType);
-        if (!kind || !asset.url) return [];
+        if (!kind || !asset.url || skip.has(asset.key)) return [];
         const caption = captionFor(asset.key, kind);
         return [{
           id: asset.key, kind, url: corsCacheKey(asset.url), source: 'collection', sizeBytes: asset.sizeBytes,

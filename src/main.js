@@ -28,7 +28,7 @@ import { $ } from './ui/dom.js';
 // The hall is generated from the collection's time periods, so read the
 // manifest (a small local JSON file) before building anything.
 const app = new App($('canvas'));
-const library = await MediaLibrary.load(CONFIG.media.manifestUrl);
+const library = await MediaLibrary.load(CONFIG.media.manifestUrl, { hidden: CONFIG.media.hidden });
 const floors = library.floors();
 // The entrance floor is the Hall of Fame; its works resolve through the library like any other.
 library.add([...HALL_OF_FAME_ITEMS, HALL_OF_FAME_FEATURE]);

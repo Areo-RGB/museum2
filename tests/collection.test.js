@@ -44,3 +44,15 @@ test('direct editor loads respect a zero video budget', async () => {
   frame.beginLoad = () => { throw new Error('Video must not start outside its budget'); };
   await curator.load(frame);
 });
+
+test('hidden manifest keys are left out of the collection', async () => {
+  const previous = globalThis.fetch;
+  const assets = ['2014/IMG_20231209_1.jpg', '2014/VID_20231209_164640.mp4'].map(key => ({
+    key, url: `https://example.test/${key}`, contentType: key.endsWith('.mp4') ? 'video/mp4' : 'image/jpeg',
+  }));
+  globalThis.fetch = async () => new Response(JSON.stringify({ assets }));
+  try {
+    const library = await MediaLibrary.load('/manifest.json', { hidden: ['2014/VID_20231209_164640.mp4'] });
+    assert.deepEqual(library.items.map(i => i.id), ['2014/IMG_20231209_1.jpg']);
+  } finally { globalThis.fetch = previous; }
+});

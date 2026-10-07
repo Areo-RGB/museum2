@@ -9,6 +9,8 @@ export const CONFIG = {
   },
   media: {
     manifestUrl: '/media-manifest.json',
+    // Manifest keys left out of the museum (the files stay in the bucket).
+    hidden: ['2014/VID_20231209_164640.mp4'],
     fallbackUrl: '/media/photo1.jpg',
     // Phone photos are 12+ MP; downscale before upload to the GPU.
     maxTextureSize: 2048,
