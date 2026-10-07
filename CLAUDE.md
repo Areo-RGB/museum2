@@ -20,7 +20,8 @@ and month sections from the manifest. `createLayout(floor)` creates one ordinary
 slot per asset, plus a featured duplicate. Uploads may override individual slots.
 Only the selected floor's hall and frames exist. Lobby and atmosphere persist across switches. The cinema is its own elevator
 destination; its theatre and YouTube player exist only on that floor. Closing
-the programme or leaving the floor stops playback and destroys the iframe. Dispose floor-owned GPU resources and cancel stale media
+the programme preserves playback on the in-world screen. Leaving the floor stops
+playback and destroys the iframe and CSS3D screen layer. Dispose floor-owned GPU resources and cancel stale media
 loads; never dispose materials/geometries shared by every frame.
 
 Curator streams media by distance. `maxVideos` caps active video textures, never

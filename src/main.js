@@ -61,7 +61,7 @@ const tour = new CinematicTour(app.camera, frames, { ...CONFIG.tour, eyeHeight: 
 const interactions = new Interactions(app.camera);
 
 // ─── UI & input modes ────────────────────────────────────────────────────────
-/** @type {'intro'|'explore'|'panel'|'touring'|'riding'} */
+/** @type {'intro'|'explore'|'panel'|'touring'|'riding'|'watching'} */
 let mode = 'intro';
 let activePanel = null;
 
@@ -77,7 +77,7 @@ const editor = new EditorPanel({
   onFit: (fit) => curator.setFit(editor.frame, fit),
   onClose: () => closePanel(true),
 });
-const cinemaPanel = new CinemaPanel(cinema, { onClose: () => closePanel(true) });
+const cinemaPanel = new CinemaPanel(cinema, { onClose: () => closePanel(true), onSelect: startWatching });
 const floorPanel = new FloorPanel(floors, {
   onSelect: rideElevator,
   onClose: () => closePanel(false),
@@ -86,6 +86,16 @@ $('chooseFloors').addEventListener('click', showFloors);
 $('floorButton').addEventListener('click', showFloors);
 $('cinemaButton').addEventListener('click', () => { if (mode !== 'riding' && cinema) openPanel(cinemaPanel); });
 $('watchCinema').addEventListener('click', () => openPanel(cinemaPanel));
+$('watchProgramme').addEventListener('click', () => openPanel(cinemaPanel));
+$('watchWalk').addEventListener('click', leaveWatching);
+$('watchToggle').addEventListener('click', () => cinema?.togglePause());
+$('watchStop').addEventListener('click', () => cinema?.stop());
+addEventListener('resize', () => {
+  if (mode !== 'watching' || !cinema) return;
+  app.camera.position.copy(cinema.viewingPosition());
+  app.camera.lookAt(cinema.lookAtScreen());
+  player.syncFromCamera();
+});
 cinemaPanel.setProgramme([
   { heading: 'September 2026 · Five films', films: YOUTUBE_FILMS },
 ]);
@@ -156,6 +166,7 @@ function rideElevator(index) {
 function switchFloor(index, initial = false) {
   if (!floors[index] || (!initial && index === currentFloor)) return;
   cinemaPanel.close();
+  setWatchingUI(false);
   cinema?.dispose();
   cinema = null;
   curator?.dispose();
@@ -206,6 +217,7 @@ function switchFloor(index, initial = false) {
 }
 
 function openPanel(panel, ...args) {
+  setWatchingUI(false);
   if (activePanel && activePanel !== panel) activePanel.close();
   overlay.hide();
   mode = 'panel';
@@ -218,12 +230,38 @@ function openPanel(panel, ...args) {
 }
 
 function closePanel(resume) {
+  if (activePanel === cinemaPanel && cinema?.film) { startWatching(); return; }
   activePanel?.close();
   activePanel = null;
   curator.preferredFrame = null;
   mode = 'explore';
   player.enabled = true;
   if (resume) player.lock(); else overlay.showPaused();
+}
+
+function setWatchingUI(watching) {
+  document.body.classList.toggle('cinema-watching', watching);
+  $('cinemaViewing').classList.toggle('hidden', !watching);
+  cinema?.videoScreen.setInteractive(watching);
+}
+
+function startWatching() {
+  if (!cinema) return;
+  activePanel?.close(); activePanel = null;
+  overlay.hide();
+  mode = 'watching';
+  player.standUp(); player.clearInput(); player.enabled = false; player.unlock();
+  app.camera.position.copy(cinema.viewingPosition());
+  app.camera.lookAt(cinema.lookAtScreen());
+  player.syncFromCamera();
+  hud.setHovered(null);
+  setWatchingUI(true);
+}
+
+function leaveWatching() {
+  setWatchingUI(false);
+  mode = 'explore';
+  player.syncFromCamera(); player.enabled = true; player.lock();
 }
 
 function startTour() {
@@ -266,6 +304,7 @@ app.canvas.addEventListener('click', () => {
 document.addEventListener('keydown', (e) => {
   if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
   if (e.code === 'KeyM') { showFloors(); return; }
+  if (e.code === 'Escape' && mode === 'watching') { leaveWatching(); return; }
   if (e.code === 'Escape' && mode === 'panel') closePanel(false);
   if (e.code === 'Escape' && mode === 'touring') { stopTour(); return; }
   if (e.code === 'KeyC' && (mode === 'explore' || mode === 'touring')) {

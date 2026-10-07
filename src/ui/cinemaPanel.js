@@ -2,7 +2,7 @@ import { $ } from './dom.js';
 
 
 /**
- * The cinema programme: pick a film, control playback. Pure DOM; talks to
+ * The cinema programme: pick a film. Pure DOM; talks to
  * the hall through the handlers passed in.
  */
 export class CinemaPanel {
@@ -10,20 +10,13 @@ export class CinemaPanel {
    * @param {import('../world/cinema.js').CinemaHall} hall
    * @param {{ onClose(): void }} handlers
    */
-  constructor(hall, { onClose }) {
+  constructor(hall, { onClose, onSelect }) {
+    this.onSelect = onSelect;
     this.hall = hall;
     this.el = $('cinemaPanel');
     this.list = $('filmList');
     this.nowTitle = $('nowTitle');
     this.nowMeta = $('nowMeta');
-    this.toggle = $('filmToggle');
-    this.stopButton = $('filmStop');
-    this.volume = $('filmVolume');
-    this.progress = $('filmProgress');
-
-    this.toggle.addEventListener('click', () => this.hall?.togglePause().catch((e) => console.warn(e)));
-    this.stopButton.addEventListener('click', () => this.hall?.stop());
-    this.volume.addEventListener('input', () => this.hall?.setVolume(+this.volume.value));
     $('closeCinema').addEventListener('click', onClose);
     this.setHall(hall);
   }
@@ -67,7 +60,7 @@ export class CinemaPanel {
       const link = $('youtubeLink');
       link.href = film.source.url;
       link.classList.remove('hidden');
-      $('youtubePlayer').classList.remove('hidden');
+      this.onSelect();
       this.hall.project(film).catch((err) => {
         console.error(err);
         this.nowMeta.textContent = `Couldn't load: ${err.message}`;
@@ -85,30 +78,23 @@ export class CinemaPanel {
     }
     this.refresh();
     this.el.classList.add('open');
-    this.tick();
   }
-  close() { this.hall?.stop(); this.el.classList.remove('open'); }
+  close() { this.el.classList.remove('open'); }
 
   refresh() {
     const { nowPlaying, loading, film } = this.hall ?? {};
     const current = loading ?? nowPlaying;
     this.nowTitle.textContent = current?.title ?? 'Nothing showing';
-    $('youtubePlayer').classList.toggle('hidden', !film);
     $('youtubeLink').classList.toggle('hidden', !film);
     this.nowMeta.textContent = film?.status ?? (loading ? 'Threading the projector…' : (nowPlaying ? nowPlaying.meta : 'Pick something below'));
-    this.toggle.disabled = !film || !!loading;
-    this.stopButton.disabled = !film;
-    this.toggle.textContent = film && !film.paused ? 'Pause' : 'Play';
+    $('watchStatus').textContent = film?.status ?? 'Choose a film from the programme';
+    $('watchToggle').disabled = !film || !!loading;
+    $('watchToggle').textContent = film && !film.paused ? 'Pause' : 'Play';
+    $('watchStop').disabled = !film;
     for (const card of this.list.querySelectorAll('.film-card')) {
       card.classList.toggle('playing', card.dataset.id === nowPlaying?.id);
       card.classList.toggle('loading', card.dataset.id === loading?.id);
     }
   }
 
-  tick() {
-    if (!this.isOpen) return;
-    const p = this.hall?.film?.progress;
-    this.progress.style.transform = `scaleX(${p ?? 0})`;
-    requestAnimationFrame(() => this.tick());
-  }
 }

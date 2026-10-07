@@ -13,7 +13,7 @@ export class App {
       deviceMemory: navigator.deviceMemory, saveData: navigator.connection?.saveData });
     this.renderOptions = { ...CONFIG.render, ...this.profile.render };
     this.mediaOptions = { ...CONFIG.media, ...this.profile.media };
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: this.renderOptions.antialias, powerPreference: 'high-performance' });
+    this.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: this.renderOptions.antialias, powerPreference: 'high-performance' });
     this.renderer.setPixelRatio(pixelRatio(innerWidth, innerHeight, devicePixelRatio, this.renderOptions));
     this.renderer.setSize(innerWidth, innerHeight);
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;

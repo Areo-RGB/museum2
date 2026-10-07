@@ -95,17 +95,20 @@
         <h2 id="nowTitle">Nothing showing</h2>
         <p id="nowMeta"></p>
       </div>
-      <div class="transport">
-        <button class="pill" id="filmToggle">Play</button>
-        <button class="pill ghost" id="filmStop">Stop</button>
-        <label class="volume">Vol <input id="filmVolume" type="range" min="0" max="1" step="0.01" value="0.8" /></label>
-      </div>
     </div>
-    <div class="progress"><div id="filmProgress"></div></div>
-    <div id="youtubePlayer" class="hidden"></div>
     <a id="youtubeLink" class="hidden" target="_blank" rel="noopener noreferrer">Open selected film on YouTube</a>
     <div id="filmList"></div>
   </aside>
+
+  <div id="cinemaViewing" class="hidden" role="toolbar" aria-label="Cinema playback">
+    <span id="watchStatus" role="status"></span>
+    <div>
+      <button id="watchToggle" class="pill">Play</button>
+      <button id="watchStop" class="pill ghost">Stop</button>
+      <button id="watchProgramme" class="pill ghost">Programme</button>
+      <button id="watchWalk" class="pill ghost">Walk around</button>
+    </div>
+  </div>
 
   <script type="module" src="/src/main.js"></script>
 </body>

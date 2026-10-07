@@ -4,6 +4,7 @@ import { CINEMA, SEATS, DOOR, ROOM } from './layout.js';
 import { createCarpetTexture, createVelvetTexture } from './textures.js';
 import { GeneratedFilm, VideoFilm } from '../cinema/films.js';
 import { YouTubeFilm } from '../cinema/youtube.js';
+import { CinemaScreen, viewingPosition } from '../cinema/screen.js';
 import { disposeTree } from './environment.js';
 import { signMesh } from './signage.js';
 
@@ -71,6 +72,7 @@ export class CinemaHall {
     this.idleFilm = new GeneratedFilm('idle', { width: 1680, height: 720 });
     this.idleFilm.play();
     this.showOnScreen(this.idleFilm);
+    this.videoScreen = new CinemaScreen(app, this.surface);
   }
 
   // ─── Public API ────────────────────────────────────────────────────────────
@@ -92,7 +94,9 @@ export class CinemaHall {
     try {
       if (entry.source.type === 'youtube') {
         this.disposeFilm();
-        const film = new YouTubeFilm(entry.source.videoId, document.getElementById('youtubePlayer'), () => this.onChange());
+        this.surface.scale.set(6.4, 3.6, 1);
+        this.videoScreen.setActive(true);
+        const film = new YouTubeFilm(entry.source.videoId, this.videoScreen.container, () => this.onChange());
         this.film = film;
         this.nowPlaying = entry;
         film.setVolume(this.volume);
@@ -168,6 +172,7 @@ export class CinemaHall {
   }
 
   update(dt, app) {
+    this.videoScreen.update();
     const inside = this.contains(app.camera.position);
     // The idle projector is behind a wall: don't redraw its large canvas from the gallery.
     if (this.film || inside) {
@@ -206,6 +211,7 @@ export class CinemaHall {
 
   dispose() {
     this.stop();
+    this.videoScreen.dispose();
     this.idleFilm.dispose();
     this.listener?.removeFromParent();
     disposeTree(this.group);
@@ -224,6 +230,15 @@ export class CinemaHall {
     this.film?.dispose();
     this.film = null;
     this.nowPlaying = null;
+    this.videoScreen?.setActive(false);
+  }
+
+  viewingPosition() {
+    return this.group.localToWorld(viewingPosition(this.app.camera.fov, this.app.camera.aspect));
+  }
+
+  lookAtScreen() {
+    return this.surface.getWorldPosition(new THREE.Vector3());
   }
 
   showOnScreen(film) {

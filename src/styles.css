@@ -196,8 +196,15 @@ h1 { margin: 0 0 12px; font: 600 44px/1 var(--serif); letter-spacing: 0.01em; }
 
 /* The cinema viewer scrolls as one panel so playback stays usable on phones. */
 #cinemaPanel { overflow-y: auto; max-height: calc(100dvh - 48px); }
-#youtubePlayer { flex: 0 0 auto; width: 100%; aspect-ratio: 16 / 9; min-height: 200px; background: #000; }
+#youtubePlayer { background: #000; backface-visibility: hidden; }
 #youtubePlayer iframe { width: 100%; height: 100%; border: 0; display: block; }
 #youtubeLink { color: #c9a873; font-size: 12px; }
 #filmList { overflow-y: visible; flex: 0 0 auto; }
-#cinemaButton { position: fixed; top: 65px; left: 20px; z-index: 12; }
+#cinemaButton { --cream: #f1e8d8; position: fixed; top: 65px; left: 20px; z-index: 12; }
+.cinema-screen-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+#canvas { position: relative; z-index: 1; }
+.cinema-watching #canvas { pointer-events: none; }
+#cinemaViewing { --cream: #f1e8d8; position: fixed; z-index: 15; bottom: max(16px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); max-width: calc(100vw - 24px); width: max-content; text-align: center; background: rgba(18,14,15,.92); color: #f1e8d8; border-radius: 12px; padding: 10px 14px; }
+#cinemaViewing > span { display: block; font-size: 12px; margin-bottom: 8px; }
+#cinemaViewing > div { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+#cinemaViewing .pill { min-height: 44px; }
