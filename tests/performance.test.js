@@ -17,6 +17,18 @@ function withDocument(run) {
   try { run(); } finally { globalThis.document = previous; }
 }
 
+test('caption faces remain separated from their backing in world units', () => withDocument(() => {
+  const frame = new MediaFrame({ position: [6.88, 2.3, 14.5], rotationY: -Math.PI / 2, maxWidth: 3.1, maxHeight: 2.15 });
+  try {
+    const { mesh, face } = frame.plaque;
+    const gap = (face.position.z - 0.5) * mesh.scale.z;
+    assert.ok(gap >= 0.001, `caption clearance is ${gap} metres`);
+    assert.equal(face.material.polygonOffset, true);
+    assert.ok(face.material.polygonOffsetFactor < 0);
+    assert.equal(face.material.depthTest, true, 'walls still occlude the label');
+  } finally { frame.dispose(); }
+}));
+
 test('batched frame moulding stays clickable after portrait and landscape fit changes', () => withDocument(() => {
   const frame = new MediaFrame({ position: [0, 1.65, 0], rotationY: 0, maxWidth: 3, maxHeight: 2 });
   try {

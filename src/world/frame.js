@@ -232,11 +232,16 @@ function createPlaque() {
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = 4;
 
-  const face = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.6 });
+  const face = new THREE.MeshStandardMaterial({
+    map: texture, roughness: 0.6,
+    polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1,
+  });
   const mesh = new THREE.Mesh(UNIT_BOX, PLAQUE_BACK);
   mesh.scale.set(0.36, 0.18, 0.012);
   const faceMesh = new THREE.Mesh(UNIT_PLANE, face);
-  faceMesh.position.z = 0.501;
+  // The parent scales z to 12 mm: use 1.2 mm of actual clearance, rather
+  // than the former 0.012 mm gap that z-fought with the metal at oblique angles.
+  faceMesh.position.z = 0.6;
   mesh.add(faceMesh);
 
   function draw(title, subtitle) {
