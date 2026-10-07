@@ -104,7 +104,7 @@ function placeInElevator() {
   player.velocity.set(0, 0, 0);
   player.keys.clear();
   app.camera.position.fromArray(lobby.cabinPosition);
-  player.euler.set(0, 0, 0); // face out of the cabin, towards the entrance
+  player.euler.set(0, lobby.cabinYaw, 0); // face out of the recessed cabin into the hall
   app.camera.quaternion.setFromEuler(player.euler);
 }
 

@@ -27,12 +27,13 @@ export const SPACING = {
 
 /**
  * Lobby fixtures on the visitor's right (-x) side of the entrance zone: an
- * elevator cabin, and a floor directory facing the
- * entrance.
+ * recessed elevator cabin and a wall-mounted floor directory.
  */
 export const LOBBY = {
-  elevator: { x: -4.9, width: 3.2, depth: 2.5, frontZ: 6, height: 3.3, opening: 1.6 },
-  directory: { position: [-2.6, 0, 6.2], width: 1.1, height: 1.9 },
+  // Cabin coordinates stay local: +z runs behind the right-hand wall (-x).
+  elevator: { x: 0, width: 3.2, depth: 2.5, frontZ: 0, height: 3.3, opening: 1.6,
+    placement: { position: [-HX, 0, 5.8], rotationY: -Math.PI / 2 } },
+  directory: { position: [-HX + FACE + 0.085, 1.65, 2.65], rotationY: Math.PI / 2, width: 1.1, height: 1.9 },
 };
 
 /**
@@ -69,6 +70,17 @@ const toRect = ({ x, z, w, d }) => ({ minX: x - w / 2, maxX: x + w / 2, minZ: z 
 function placePoint(x, z, { position: [px, , pz], rotationY }) {
   const c = Math.cos(rotationY), s = Math.sin(rotationY);
   return [px + x * c + z * s, pz - x * s + z * c];
+}
+
+/** Shared transforms for elevator meshes, collision checks and arrival camera. */
+export function elevatorPoint(x, z) {
+  return placePoint(x, z, LOBBY.elevator.placement);
+}
+
+export function elevatorLocalPoint({ x, z }) {
+  const { position: [px, , pz], rotationY } = LOBBY.elevator.placement;
+  const c = Math.cos(rotationY), s = Math.sin(rotationY);
+  return { x: (x - px) * c - (z - pz) * s, z: (x - px) * s + (z - pz) * c };
 }
 
 /** Map a local axis-aligned rectangle into the world (rotations must be multiples of 90°). */
@@ -153,11 +165,17 @@ export function createLayout(floor) {
   ].map((w) => placeBox(w, cinema));
 
   const doorLow = doorZ - DOOR.halfWidth, doorHigh = doorZ + DOOR.halfWidth;
+  const { elevator: e, directory } = LOBBY;
+  const elevatorZ = e.placement.position[2];
+  const elevatorLow = elevatorZ - e.width / 2, elevatorHigh = elevatorZ + e.width / 2;
   /** Axis-aligned wall boxes: centre (x, z), size (w along x, d along z), optional vertical span [y0, y1]. */
   const walls = [
     { room: 'hall', x: 0, z: minZ, w: ROOM.width + T, d: T },
     { room: 'hall', accent: true, x: 0, z: maxZ, w: ROOM.width + T, d: T },
-    { room: 'hall', x: -HX, z: (minZ + maxZ) / 2, w: T, d: length },
+    // Right wall continues around the recessed elevator facade and above it.
+    { room: 'hall', x: -HX, z: (minZ + elevatorLow) / 2, w: T, d: elevatorLow - minZ },
+    { room: 'hall', x: -HX, z: (elevatorHigh + maxZ) / 2, w: T, d: maxZ - elevatorHigh },
+    { room: 'hall', x: -HX, z: elevatorZ, w: T, d: e.width, y0: e.height },
     // Left (+x) wall, split around the cinema door, plus a lintel above it.
     { room: 'hall', x: HX, z: (minZ + doorLow) / 2, w: T, d: doorLow - minZ },
     { room: 'hall', x: HX, z: (doorHigh + maxZ) / 2, w: T, d: maxZ - doorHigh },
@@ -177,17 +195,19 @@ export function createLayout(floor) {
     { minX: C.minX, maxX: C.maxX, minZ: C.maxZ - CINEMA.stage.depth, maxZ: C.maxZ },
   ].map((r) => placeRect(r, cinema));
 
-  const { elevator: e, directory } = LOBBY;
+  const elevatorColliders = [
+    ...[-1, 1].map(side => toRect({ x: e.x + side * e.width / 2, z: e.frontZ + e.depth / 2, w: 0.12, d: e.depth })),
+    toRect({ x: e.x, z: e.frontZ + e.depth, w: e.width, d: 0.12 }),
+    ...[-1, 1].map(side => toRect({ x: e.x + side * (e.opening / 2 + (e.width - e.opening) / 4), z: e.frontZ, w: (e.width - e.opening) / 2, d: 0.16 })),
+  ].map(rect => placeRect(rect, e.placement));
   /** Collision rectangles in the XZ plane (only things that reach the floor). */
   const colliders = [
     ...walls.filter((w) => !w.y0).map(toRect),
     ...benches.map(toRect),
     ...cinemaColliders,
     // Cabin walls and front jambs; the sliding doors are checked by Lobby.blocksDoor().
-    ...[-1, 1].map(side => toRect({ x: e.x + side * e.width / 2, z: e.frontZ + e.depth / 2, w: 0.12, d: e.depth })),
-    toRect({ x: e.x, z: e.frontZ + e.depth, w: e.width, d: 0.12 }),
-    ...[-1, 1].map(side => toRect({ x: e.x + side * (e.opening / 2 + (e.width - e.opening) / 4), z: e.frontZ, w: (e.width - e.opening) / 2, d: 0.16 })),
-    toRect({ x: directory.position[0], z: directory.position[2], w: directory.width, d: 0.4 }),
+    ...elevatorColliders,
+    toRect({ x: directory.position[0], z: directory.position[2], w: 0.14, d: directory.width + 0.1 }),
   ];
 
   // Enter at the oldest end, looking down the hall; the cinema door is just ahead on the left.

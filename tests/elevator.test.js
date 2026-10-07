@@ -27,13 +27,16 @@ test('elevator cabin is accessible through its entrance but has solid sides and 
   assert.ok(LOBBY.elevator);
   const e = LOBBY.elevator;
   const collides = createCollisionChecker(createLayout(null).colliders, 0.4);
-  assert.equal(collides({ x: e.x, z: e.frontZ + 0.9 }), false);
-  assert.equal(collides({ x: e.x, z: e.frontZ + e.depth }), true);
-  assert.equal(collides({ x: e.x + e.width / 2, z: e.frontZ + 0.9 }), true);
+  assert.equal(collides({ x: -7.9, z: 5.8 }), false);
+  assert.equal(collides({ x: -9.5, z: 5.8 }), true);
+  assert.equal(collides({ x: -7.9, z: 7.4 }), true);
+  // Cross the actual right-hand hall wall through the recessed entrance.
+  for (let x = -6; x >= -8.5; x -= 0.1) assert.equal(collides({ x, z: 5.8 }), false);
+  assert.equal(collides({ x: -7, z: 8 }), true);
 });
 
 test('closed elevator doors block entry and open doors permit exit', () => withLobby(lobby => {
-  const doorway = { x: LOBBY.elevator.x, z: LOBBY.elevator.frontZ };
+  const doorway = { x: -7, z: 5.8 };
   assert.equal(lobby.blocksDoor(doorway, 0.4), true);
   lobby.openDoors();
   for (let i = 0; i < 20; i++) lobby.update(0.05);
@@ -43,8 +46,8 @@ test('closed elevator doors block entry and open doors permit exit', () => withL
 test('clicking the seam between closed doors opens the elevator controls', () => withLobby(lobby => {
   const e = LOBBY.elevator;
   const camera = new THREE.PerspectiveCamera();
-  camera.position.set(e.x, 1.65, e.frontZ - 2);
-  camera.lookAt(e.x, 1.65, e.frontZ);
+  camera.position.set(-5, 1.65, 5.8);
+  camera.lookAt(-7, 1.65, 5.8);
   camera.updateMatrixWorld(true);
   lobby.group.updateMatrixWorld(true);
   const interactions = new Interactions(camera);

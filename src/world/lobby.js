@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { LOBBY } from './layout.js';
+import { LOBBY, elevatorPoint, elevatorLocalPoint } from './layout.js';
 import { canvasPanel } from './signage.js';
 
 const { elevator: E, directory: D } = LOBBY;
@@ -11,6 +11,10 @@ export class Lobby {
     this.current = 0;
     this.group = new THREE.Group();
     this.group.name = 'lobby';
+    this.elevatorGroup = new THREE.Group();
+    this.elevatorGroup.position.fromArray(E.placement.position);
+    this.elevatorGroup.rotation.y = E.placement.rotationY;
+    this.group.add(this.elevatorGroup);
     this.doorOpen = 0;
     this.targetOpen = 0;
     this.travel = null;
@@ -18,7 +22,11 @@ export class Lobby {
     this.buildDirectory();
   }
 
-  get cabinPosition() { return [E.x, 1.65, E.frontZ + E.depth / 2]; }
+  get cabinPosition() {
+    const [x, z] = elevatorPoint(E.x, E.frontZ + E.depth / 2);
+    return [x, 1.65, z];
+  }
+  get cabinYaw() { return E.placement.rotationY; }
 
   setCurrent(index) {
     this.current = index;
@@ -36,8 +44,9 @@ export class Lobby {
   }
 
   blocksDoor(position, radius) {
-    return this.doorOpen < 0.95 && Math.abs(position.x - E.x) < E.opening / 2 + radius
-      && Math.abs(position.z - E.frontZ) < radius + 0.08;
+    const local = elevatorLocalPoint(position);
+    return this.doorOpen < 0.95 && Math.abs(local.x - E.x) < E.opening / 2 + radius
+      && Math.abs(local.z - E.frontZ) < radius + 0.08;
   }
 
   registerInteractions(interactions, onActivate) {
@@ -81,7 +90,7 @@ export class Lobby {
     const box = (w, h, d, x, y, z, material) => {
       const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), material);
       mesh.position.set(x, y, z);
-      this.group.add(mesh);
+      this.elevatorGroup.add(mesh);
       return mesh;
     };
     const height = E.height;
@@ -103,7 +112,7 @@ export class Lobby {
       new THREE.MeshBasicMaterial({ color: 0xfff2d7 }));
     const light = new THREE.PointLight(0xfff1dc, 4, 4, 2);
     light.position.set(E.x, height - 0.3, E.frontZ + E.depth / 2);
-    this.group.add(light);
+    this.elevatorGroup.add(light);
     this.doors = [-1, 1].map(side => box(E.opening / 2, 2.5, 0.06,
       E.x + side * E.opening / 4, 1.29, E.frontZ + 0.015, steel));
     this.callButton = box(0.16, 0.28, 0.045, E.x + E.opening / 2 + 0.25, 1.35, E.frontZ - 0.11, brass);
@@ -117,14 +126,16 @@ export class Lobby {
     }, { lit: false, resolution: 768 });
     this.display.position.set(E.x, 2.9, E.frontZ - 0.095);
     this.display.rotation.y = Math.PI;
-    this.group.add(this.display);
+    this.elevatorGroup.add(this.display);
   }
 
   buildDirectory() {
-    const [x, , z] = D.position;
-    const base = new THREE.Mesh(new THREE.BoxGeometry(D.width + 0.1, D.height + 0.3, 0.12),
+    const directoryGroup = new THREE.Group();
+    directoryGroup.position.fromArray(D.position);
+    directoryGroup.rotation.y = D.rotationY;
+    this.group.add(directoryGroup);
+    const base = new THREE.Mesh(new THREE.BoxGeometry(D.width + 0.1, D.height + 0.1, 0.12),
       new THREE.MeshStandardMaterial({ color: 0x1b1a17, roughness: 0.5, metalness: 0.3 }));
-    base.position.set(x, (D.height + 0.3) / 2, z);
 
     const draw = (ctx, w, h) => {
       ctx.fillStyle = '#1b1a17';
@@ -159,10 +170,9 @@ export class Lobby {
       });
     };
     const mesh = canvasPanel(D.width, D.height, draw, { lit: false, resolution: 768 });
-    mesh.position.set(x, D.height / 2 + 0.2, z - 0.065);
-    mesh.rotation.y = Math.PI; // face the entrance
+    mesh.position.z = 0.065;
     this.directory = { mesh, base, repaint: () => mesh.userData.repaint() };
-    this.group.add(base, mesh);
+    directoryGroup.add(base, mesh);
   }
 }
 

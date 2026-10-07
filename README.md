@@ -2,7 +2,8 @@
 
 A walkable Three.js museum of the 111 images and videos described by
 `public/media-manifest.json`, hosted in Cloudflare R2. Choose among nine seasonal
-floors (including the undated archive) using the lobby elevator with sliding doors, its
+floors (including the undated archive) using the elevator recessed into the right-hand
+wall, its wall-mounted directory,
 directory, the welcome screen, or `M`. Every asset has its own ordinary frame; a
 featured duplicate closes each floor. Month sections run in date order. Only the
 selected floor exists, and textures stream in by distance. Switching floors
