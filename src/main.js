@@ -308,6 +308,11 @@ app.canvas.addEventListener('click', () => {
 document.addEventListener('keydown', (e) => {
   if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
   if (e.code === 'KeyM') { showFloors(); return; }
+  if (e.code === 'KeyB') {
+    music.toggle();
+    hud.toast(music.wanted ? 'Background music on · B to stop' : 'Background music off');
+    return;
+  }
   if (e.code === 'Escape' && mode === 'watching') { leaveWatching(); return; }
   if (e.code === 'Escape' && mode === 'panel') closePanel(false);
   if (e.code === 'Escape' && mode === 'touring') { stopTour(); return; }

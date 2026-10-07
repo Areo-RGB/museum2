@@ -45,5 +45,6 @@ export class BackgroundMusic {
     this.button.textContent = playing ? '❚❚ Music' : '▶ Music';
     this.button.setAttribute('aria-pressed', String(this.wanted));
     this.button.setAttribute('aria-label', playing ? 'Pause background music' : 'Play background music');
+    this.button.title = 'Background music (B)';
   }
 }
