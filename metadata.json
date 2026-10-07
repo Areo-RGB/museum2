@@ -1,0 +1,5 @@
+{
+  "name": "Media Gallery",
+  "description": "Interactive Three.js media gallery",
+  "requestFramePermissions": []
+}
