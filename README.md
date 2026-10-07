@@ -2,11 +2,13 @@
 
 A walkable Three.js museum of the 111 images and videos described by
 `public/media-manifest.json`, hosted in Cloudflare R2. Choose among nine seasonal
-floors (including the undated archive) using the animated lobby escalator, its
+floors (including the undated archive) using the lobby elevator with sliding doors, its
 directory, the welcome screen, or `M`. Every asset has its own ordinary frame; a
 featured duplicate closes each floor. Month sections run in date order. Only the
 selected floor exists, and textures stream in by distance. Switching floors
-cancels pending media loads and disposes floor-owned GPU resources.
+cancels pending media loads and disposes floor-owned GPU resources. The elevator
+closes its doors during the change, then reopens with you inside the cabin on the
+selected floor. Walk out through the doorway to explore.
 
 Upload your own image or video to any frame (saved locally in IndexedDB).
 Rehanging swaps works while keeping the floor's complete collection represented.
@@ -44,7 +46,7 @@ to `.cloudflare/output/` (git-ignored).
 | `WASD` / arrows | walk (`Shift` to hurry) |
 | Mouse | look |
 | Click a frame | open the curator panel |
-| `M` / click the lobby escalator | choose a time period |
+| `M` / click the lobby elevator | choose a time period |
 | `C` | guided tour (click or `C` again to take over) |
 | `R` | rehang every frame with new random pieces (uploads stay) |
 | Click the cinema screen | open the film programme |
@@ -64,7 +66,7 @@ src/
     layout.js          createLayout(floor): hall, month sections, frame slots, walls, colliders, cinema placement
                        (the cinema is defined in its own local coordinates and placed via a transform)
     environment.js     One-time atmosphere and disposable per-floor architecture
-    lobby.js           Animated escalator and floor directory
+    lobby.js           Elevator cabin with sliding doors and floor directory
     signage.js         Canvas-drawn signs and period wall text
     frame.js           MediaFrame: moulding, mat, media surface, caption plaque, picture light, fit modes
     cinema.js          CinemaHall: seats, screen, drapes, projector, house lights, playback API

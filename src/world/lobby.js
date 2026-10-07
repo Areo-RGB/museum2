@@ -1,62 +1,49 @@
 import * as THREE from 'three';
-import { LOBBY, ROOM } from './layout.js';
+import { LOBBY } from './layout.js';
 import { canvasPanel } from './signage.js';
 
-const { escalator: E, directory: D } = LOBBY;
-const RISE = ROOM.height;               // the escalator disappears into the ceiling
-const RUN = E.topZ - E.bottomZ;
-const SLOPE = Math.atan2(RISE, RUN);
-const STEP_RUN = 0.4;                   // horizontal depth of one step
-const STEP_SPEED = 0.45;                // m/s along the run
-const STEP_COUNT = Math.ceil(RUN / STEP_RUN);
+const { elevator: E, directory: D } = LOBBY;
 
-const PALETTE = {
-  truss: 0x2b2a28,
-  step: 0x8d8b86,
-  rail: 0x111111,
-  glass: 0xcfe3e6,
-  comb: 0xb9a36c,
-  led: 0xffd9a0,
-};
-
-/**
- * Lobby fixtures shared by every floor: the escalator (between floors) and the
- * floor directory. Click either to choose a floor.
- */
+/** Shared elevator cabin and directory. The hall changes behind closed doors. */
 export class Lobby {
-  /** @param {{ key: string, label: string, range: string, count: number }[]} floors */
   constructor(floors) {
     this.floors = floors;
     this.current = 0;
     this.group = new THREE.Group();
     this.group.name = 'lobby';
-    this.stepOffset = 0;
-    this.buildEscalator();
+    this.doorOpen = 0;
+    this.targetOpen = 0;
+    this.travel = null;
+    this.buildElevator();
     this.buildDirectory();
   }
 
-  /** World position on the escalator's walking line at horizontal distance `t` (0..RUN) from the bottom. */
-  pointOnRun(t, height = 0) {
-    return new THREE.Vector3(E.x, Math.max(0, t) * Math.tan(SLOPE) + height, E.bottomZ + t);
-  }
-
-  /** Where a ride starts (bottom landing) and ends (inside the ceiling), at eye height. */
-  get ride() {
-    return {
-      landing: new THREE.Vector3(E.x, 1.65, E.bottomZ - 0.6),
-      top: this.pointOnRun(RUN, 1.65),
-      slope: SLOPE,
-    };
-  }
+  get cabinPosition() { return [E.x, 1.65, E.frontZ + E.depth / 2]; }
 
   setCurrent(index) {
     this.current = index;
     this.directory.repaint();
+    this.display.userData.repaint();
+  }
+
+  openDoors() { if (!this.travel) this.targetOpen = 1; }
+
+  /** Called by the composition root; callbacks keep floor loading out of the cabin. */
+  travelTo(index, onArrive, onFinished) {
+    if (this.travel || !this.floors[index]) return;
+    this.targetOpen = 0;
+    this.travel = { index, elapsed: 0, arrived: false, onArrive, onFinished };
+  }
+
+  blocksDoor(position, radius) {
+    return this.doorOpen < 0.95 && Math.abs(position.x - E.x) < E.opening / 2 + radius
+      && Math.abs(position.z - E.frontZ) < radius + 0.08;
   }
 
   registerInteractions(interactions, onActivate) {
-    interactions.add(this.escalatorMeshes, {
-      caption: () => ({ title: 'Escalator', subtitle: 'Click to choose a floor' }),
+    interactions.addOccluders(this.walls);
+    interactions.add([...this.doors, this.callButton, this.display], {
+      caption: () => ({ title: 'Elevator', subtitle: 'Click to choose a time period' }),
       activate: onActivate,
     });
     interactions.add([this.directory.mesh, this.directory.base], {
@@ -66,78 +53,71 @@ export class Lobby {
   }
 
   update(dt) {
-    this.stepOffset = (this.stepOffset + dt * STEP_SPEED) % STEP_RUN;
-    this.layoutSteps();
+    const step = dt * 1.8;
+    this.doorOpen += Math.sign(this.targetOpen - this.doorOpen) * Math.min(step, Math.abs(this.targetOpen - this.doorOpen));
+    this.doors.forEach((door, i) => {
+      const side = i === 0 ? -1 : 1;
+      door.position.x = E.x + side * (E.opening / 4 + this.doorOpen * E.opening / 2);
+    });
+    const ride = this.travel;
+    if (!ride) return;
+    ride.elapsed += dt;
+    if (!ride.arrived && ride.elapsed >= 1) {
+      ride.arrived = true;
+      this.setCurrent(ride.index);
+      ride.onArrive();
+    }
+    if (ride.elapsed >= 1.5) this.targetOpen = 1;
+    if (ride.arrived && this.doorOpen === 1) {
+      this.travel = null;
+      ride.onFinished();
+    }
   }
 
-  buildEscalator() {
-    const length = Math.hypot(RUN, RISE);
-    const metal = new THREE.MeshStandardMaterial({ color: PALETTE.truss, roughness: 0.5, metalness: 0.6 });
-    const along = (mesh, height, offsetX = 0) => {
-      // Place a box of the given length centred on the walking line, tilted to the slope.
-      const mid = this.pointOnRun(RUN / 2, height);
-      mesh.position.set(E.x + offsetX, mid.y, mid.z);
-      mesh.rotation.x = -SLOPE;
+  buildElevator() {
+    const steel = new THREE.MeshStandardMaterial({ color: 0x9ba4ae, roughness: 0.38, metalness: 0.72 });
+    const dark = new THREE.MeshStandardMaterial({ color: 0x173a60, roughness: 0.7 });
+    const brass = new THREE.MeshStandardMaterial({ color: 0xbba471, roughness: 0.3, metalness: 0.8 });
+    const box = (w, h, d, x, y, z, material) => {
+      const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), material);
+      mesh.position.set(x, y, z);
+      this.group.add(mesh);
       return mesh;
     };
-
-    const truss = along(new THREE.Mesh(new THREE.BoxGeometry(E.width, 0.5, length), metal), -0.3);
-    const glassMat = new THREE.MeshStandardMaterial({
-      color: PALETTE.glass, transparent: true, opacity: 0.22, roughness: 0.05, metalness: 0.1, depthWrite: false,
-    });
-    const railMat = new THREE.MeshStandardMaterial({ color: PALETTE.rail, roughness: 0.6 });
-    const ledMat = new THREE.MeshBasicMaterial({ color: PALETTE.led });
-    const parts = [truss];
+    const height = E.height;
+    const sideWidth = (E.width - E.opening) / 2;
+    this.walls = [
+      box(0.12, height, E.depth, E.x - E.width / 2, height / 2, E.frontZ + E.depth / 2, dark),
+      box(0.12, height, E.depth, E.x + E.width / 2, height / 2, E.frontZ + E.depth / 2, dark),
+      box(E.width, height, 0.12, E.x, height / 2, E.frontZ + E.depth, dark),
+    ];
     for (const side of [-1, 1]) {
-      const x = side * (E.width / 2 - 0.05);
-      parts.push(
-        along(new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.85, length), glassMat), 0.5, x),
-        along(new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.08, length + 0.4), railMat), 0.95, x),
-        along(new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.02, length), ledMat), 0.06, x * 0.92),
-      );
+      this.walls.push(box(sideWidth, height, 0.16, E.x + side * (E.opening / 2 + sideWidth / 2), height / 2, E.frontZ, steel));
+      box(0.045, 2.55, 0.05, E.x + side * (E.opening / 2 + 0.025), 1.275, E.frontZ - 0.1, brass);
+      box(0.05, 0.05, E.depth - 0.3, E.x + side * (E.width / 2 - 0.15), 1.05, E.frontZ + E.depth / 2, brass);
     }
-
-    // Moving steps (treads + risers) as instanced boxes.
-    const stepMat = new THREE.MeshStandardMaterial({ color: PALETTE.step, roughness: 0.4, metalness: 0.7 });
-    const stepW = E.width - 0.2;
-    this.treads = new THREE.InstancedMesh(new THREE.BoxGeometry(stepW, 0.04, STEP_RUN - 0.03), stepMat, STEP_COUNT);
-    this.risers = new THREE.InstancedMesh(new THREE.BoxGeometry(stepW, STEP_RUN * Math.tan(SLOPE), 0.02), stepMat, STEP_COUNT);
-    this.treads.frustumCulled = this.risers.frustumCulled = false;
-    this._dummy = new THREE.Object3D();
-    this.layoutSteps();
-
-    // Landing plate with a brass comb edge, and the dark opening it disappears into.
-    const landing = new THREE.Mesh(new THREE.BoxGeometry(E.width, 0.03, 1.0),
-      new THREE.MeshStandardMaterial({ color: PALETTE.step, roughness: 0.35, metalness: 0.8 }));
-    landing.position.set(E.x, 0.015, E.bottomZ - 0.5);
-    const comb = new THREE.Mesh(new THREE.BoxGeometry(E.width - 0.1, 0.035, 0.06),
-      new THREE.MeshStandardMaterial({ color: PALETTE.comb, roughness: 0.3, metalness: 0.9 }));
-    comb.position.set(E.x, 0.03, E.bottomZ - 0.02);
-    const opening = new THREE.Mesh(new THREE.PlaneGeometry(E.width + 0.4, 2.2), new THREE.MeshBasicMaterial({ color: 0x050505 }));
-    opening.rotation.x = Math.PI / 2;
-    opening.position.set(E.x, ROOM.height - 0.012, E.topZ - 0.6);
-
-    this.escalatorMeshes = [...parts, this.treads, this.risers];
-    this.group.add(...parts, this.treads, this.risers, landing, comb, opening);
-  }
-
-  layoutSteps() {
-    const d = this._dummy;
-    const rise = STEP_RUN * Math.tan(SLOPE);
-    for (let i = 0; i < STEP_COUNT; i++) {
-      const t = i * STEP_RUN + this.stepOffset;
-      // Tread: flat, its front edge on the slope line, so the run reads as a staircase.
-      const p = this.pointOnRun(t + STEP_RUN / 2);
-      d.position.set(E.x, Math.ceil(t / STEP_RUN) * rise - 0.02, p.z);
-      d.rotation.set(0, 0, 0);
-      d.updateMatrix();
-      this.treads.setMatrixAt(i, d.matrix);
-      d.position.set(E.x, Math.ceil(t / STEP_RUN) * rise - rise / 2 - 0.02, E.bottomZ + t + 0.01);
-      d.updateMatrix();
-      this.risers.setMatrixAt(i, d.matrix);
-    }
-    this.treads.instanceMatrix.needsUpdate = true;
-    this.risers.instanceMatrix.needsUpdate = true;
+    box(E.width, height - 2.55, 0.16, E.x, (height + 2.55) / 2, E.frontZ, steel);
+    box(E.width, 0.08, E.depth, E.x, 0.04, E.frontZ + E.depth / 2, steel);
+    box(E.width, 0.12, E.depth, E.x, height, E.frontZ + E.depth / 2, dark);
+    box(E.width - 0.4, 0.015, E.depth - 0.4, E.x, height - 0.07, E.frontZ + E.depth / 2,
+      new THREE.MeshBasicMaterial({ color: 0xfff2d7 }));
+    const light = new THREE.PointLight(0xfff1dc, 4, 4, 2);
+    light.position.set(E.x, height - 0.3, E.frontZ + E.depth / 2);
+    this.group.add(light);
+    this.doors = [-1, 1].map(side => box(E.opening / 2, 2.5, 0.06,
+      E.x + side * E.opening / 4, 1.29, E.frontZ + 0.015, steel));
+    this.callButton = box(0.16, 0.28, 0.045, E.x + E.opening / 2 + 0.25, 1.35, E.frontZ - 0.11, brass);
+    box(0.055, 0.055, 0.025, this.callButton.position.x, 1.35, E.frontZ - 0.145,
+      new THREE.MeshBasicMaterial({ color: 0xb9dbff }));
+    this.display = canvasPanel(1.6, 0.38, (ctx, w, h) => {
+      ctx.fillStyle = '#0c1928'; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#e5d5ac'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = `500 ${h * 0.34}px Inter, sans-serif`;
+      ctx.fillText(`${floorName(this.current, this.floors)} · ${this.floors[this.current]?.label ?? 'Elevator'}`, w / 2, h / 2);
+    }, { lit: false, resolution: 768 });
+    this.display.position.set(E.x, 2.9, E.frontZ - 0.095);
+    this.display.rotation.y = Math.PI;
+    this.group.add(this.display);
   }
 
   buildDirectory() {

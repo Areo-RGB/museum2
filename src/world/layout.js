@@ -1,7 +1,7 @@
 // Declarative description of the building. Each floor is one time period of
 // the collection and shows every work from it: one section per month, oldest
 // at the entrance, a featured piece at the far end. Every floor shares the same
-// lobby (entrance zone) with the cinema door and the escalator between floors.
+// lobby (entrance zone) with the cinema door and the elevator between floors.
 // Environment geometry, colliders, frame slots and signage are all derived
 // from the object createLayout() returns.
 //
@@ -27,12 +27,12 @@ export const SPACING = {
 
 /**
  * Lobby fixtures on the visitor's right (-x) side of the entrance zone: an
- * escalator running up towards the ceiling, and a floor directory facing the
+ * elevator cabin, and a floor directory facing the
  * entrance.
  */
 export const LOBBY = {
-  escalator: { x: -5.6, width: 1.4, bottomZ: 1.2, topZ: 8.6 },
-  directory: { position: [-3.6, 0, 6.2], width: 1.1, height: 1.9 },
+  elevator: { x: -4.9, width: 3.2, depth: 2.5, frontZ: 6, height: 3.3, opening: 1.6 },
+  directory: { position: [-2.6, 0, 6.2], width: 1.1, height: 1.9 },
 };
 
 /**
@@ -177,13 +177,16 @@ export function createLayout(floor) {
     { minX: C.minX, maxX: C.maxX, minZ: C.maxZ - CINEMA.stage.depth, maxZ: C.maxZ },
   ].map((r) => placeRect(r, cinema));
 
-  const { escalator, directory } = LOBBY;
+  const { elevator: e, directory } = LOBBY;
   /** Collision rectangles in the XZ plane (only things that reach the floor). */
   const colliders = [
     ...walls.filter((w) => !w.y0).map(toRect),
     ...benches.map(toRect),
     ...cinemaColliders,
-    { minX: -HX, maxX: escalator.x + escalator.width / 2 + 0.15, minZ: escalator.bottomZ, maxZ: escalator.topZ + 1 },
+    // Cabin walls and front jambs; the sliding doors are checked by Lobby.blocksDoor().
+    ...[-1, 1].map(side => toRect({ x: e.x + side * e.width / 2, z: e.frontZ + e.depth / 2, w: 0.12, d: e.depth })),
+    toRect({ x: e.x, z: e.frontZ + e.depth, w: e.width, d: 0.12 }),
+    ...[-1, 1].map(side => toRect({ x: e.x + side * (e.opening / 2 + (e.width - e.opening) / 4), z: e.frontZ, w: (e.width - e.opening) / 2, d: 0.16 })),
     toRect({ x: directory.position[0], z: directory.position[2], w: directory.width, d: 0.4 }),
   ];
 

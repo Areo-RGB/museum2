@@ -56,7 +56,7 @@ const tour = new CinematicTour(app.camera, frames, { ...CONFIG.tour, eyeHeight: 
 const interactions = new Interactions(app.camera);
 
 // ─── UI & input modes ────────────────────────────────────────────────────────
-/** @type {'intro'|'explore'|'panel'|'touring'} */
+/** @type {'intro'|'explore'|'panel'|'touring'|'riding'} */
 let mode = 'intro';
 let activePanel = null;
 
@@ -74,7 +74,7 @@ const editor = new EditorPanel({
 });
 const cinemaPanel = new CinemaPanel(cinema, { onClose: () => closePanel(true) });
 const floorPanel = new FloorPanel(floors, {
-  onSelect: (index) => { switchFloor(index); closePanel(true); },
+  onSelect: rideElevator,
   onClose: () => closePanel(false),
 });
 $('chooseFloors').addEventListener('click', showFloors);
@@ -86,6 +86,7 @@ cinemaPanel.setProgramme([
 overlay.setCollectionSize(library.size);
 
 function showFloors() {
+  if (mode === 'riding') return;
   if (mode === 'touring') {
     tour.stop();
     hud.setTour(false);
@@ -94,7 +95,36 @@ function showFloors() {
   }
   activePanel?.close();
   overlay.hide();
+  lobby.openDoors();
   openPanel(floorPanel);
+}
+
+function placeInElevator() {
+  player.standUp();
+  player.velocity.set(0, 0, 0);
+  player.keys.clear();
+  app.camera.position.fromArray(lobby.cabinPosition);
+  player.euler.set(0, 0, 0); // face out of the cabin, towards the entrance
+  app.camera.quaternion.setFromEuler(player.euler);
+}
+
+function rideElevator(index) {
+  if (mode === 'riding' || !floors[index]) return;
+  if (index === currentFloor) { closePanel(true); return; }
+  closePanel(true); // Request pointer lock while the selection still has a user gesture.
+  mode = 'riding';
+  player.enabled = false;
+  placeInElevator();
+  hud.toast(`Elevator · ${floors[index].label}`, 2600);
+  lobby.travelTo(index, () => {
+    switchFloor(index);
+    placeInElevator();
+  }, () => {
+    mode = 'explore';
+    player.enabled = true;
+    hud.toast(`Arrived · ${floors[index].label}`);
+    if (!player.locked) overlay.showPaused();
+  });
 }
 
 /** Replace only floor-owned resources; lobby, cinema and atmosphere persist. */
@@ -130,7 +160,8 @@ function switchFloor(index, initial = false) {
   player.standUp();
   player.velocity.set(0, 0, 0);
   player.keys.clear();
-  player.collides = createCollisionChecker(layout.colliders, CONFIG.player.radius);
+  const collides = createCollisionChecker(layout.colliders, CONFIG.player.radius);
+  player.collides = position => collides(position) || lobby.blocksDoor(position, CONFIG.player.radius);
   app.camera.position.fromArray(layout.start.position);
   player.euler.set(0, layout.start.yaw, 0);
   app.camera.quaternion.setFromEuler(player.euler);
@@ -229,7 +260,7 @@ app.start();
 
 // Handy for poking at the scene from devtools during development.
 if (import.meta.env.DEV) Object.assign(window, { museum: {
-  app, library, floors, tour, cinema, player, switchFloor,
+  app, library, floors, tour, cinema, player, lobby, switchFloor, rideElevator,
   get layout() { return layout; }, get frames() { return frames; },
   get curator() { return curator; }, get currentFloor() { return currentFloor; },
 } });
