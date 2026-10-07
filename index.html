@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Interactive Three.js media gallery" />
-  <title>Media Gallery</title>
+  <title>Hertha 03 Zehlendorf · 2014er Museum</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -14,24 +14,36 @@
 
   <div id="overlay">
     <div class="panel">
-      <p class="eyebrow">A personal museum</p>
-      <h1>Media Gallery</h1>
-      <p class="sub">Wander a quiet exhibition of photographs and moving images, hung at random from the collection. Aim at any frame to recurate it, or step through the door for a film.</p>
+      <img class="club-logo" src="/media/logo.svg" alt="Hertha 03 Zehlendorf" />
+      <p class="eyebrow">F.C. Hertha 03 Zehlendorf · 2014er</p>
+      <h1>Our memories,<br />one season at a time.</h1>
+      <p class="sub">Explore every photograph and film from the archive. Choose a season at the lobby escalator, wander its monthly galleries, or step into the cinema.</p>
       <p class="count" id="collectionCount">Loading collection…</p>
       <div class="actions">
         <button class="primary" id="enter">Enter the gallery</button>
         <button class="secondary" id="startTour">Guided tour</button>
+        <button class="secondary" id="chooseFloors">Choose a time period</button>
       </div>
       <dl class="keys">
         <div><dt>WASD</dt><dd>walk · Shift to hurry</dd></div>
         <div><dt>Click</dt><dd>curate a frame</dd></div>
         <div><dt>C</dt><dd>guided tour</dd></div>
+        <div><dt>M</dt><dd>choose a time period</dd></div>
         <div><dt>R</dt><dd>rehang the gallery</dd></div>
         <div><dt>Space</dt><dd>pause the film</dd></div>
         <div><dt>Seat</dt><dd>click to sit, move to stand</dd></div>
       </dl>
     </div>
   </div>
+
+  <button id="floorButton" class="pill">Choose a time period</button>
+  <aside id="floorPanel" role="dialog" aria-labelledby="floorHeading">
+    <button class="close" id="closeFloors" aria-label="Close period directory">×</button>
+    <p class="eyebrow">Lobby escalator</p>
+    <h2 id="floorHeading">Choose a time period</h2>
+    <p class="sub">One season per floor. Every work has a place; images and films load as you approach.</p>
+    <div id="floorList"></div>
+  </aside>
 
   <div id="hud">
     <div id="crosshair"></div>

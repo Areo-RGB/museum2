@@ -1,107 +1,194 @@
-// Declarative description of the building. Environment geometry, colliders and
-// frame placement are all derived from this data, so adding a wall or a frame
-// is a one-line change here.
+// Declarative description of the building. Each floor is one time period of
+// the collection and shows every work from it: one section per month, oldest
+// at the entrance, a featured piece at the far end. Every floor shares the same
+// lobby (entrance zone) with the cinema door and the escalator between floors.
+// Environment geometry, colliders, frame slots and signage are all derived
+// from the object createLayout() returns.
+//
+// Orientation: the visitor enters at the hall's minimum z and walks towards +z,
+// so +x is on their LEFT and -x on their right.
 
-export const ROOM = { width: 18, depth: 24, height: 5.4, wall: 0.24 };
+export const ROOM = { width: 14, height: 5.4, wall: 0.24 };
 
-const hx = ROOM.width / 2;
-const hz = ROOM.depth / 2;
 const T = ROOM.wall;
-const face = T / 2; // distance from wall centre line to its inner face
+const FACE = T / 2; // distance from wall centre line to its inner face
+const HX = ROOM.width / 2;
 
-/** Opening in the gallery's front wall that leads into the cinema. */
+/** Opening in the hall wall that leads into the cinema. */
 export const DOOR = { halfWidth: 1.1, height: 2.9 };
 
+/** Rhythm of the hall along its length (metres). */
+export const SPACING = {
+  pitch: 4.4,        // distance between neighbouring frames on one wall
+  sectionGap: 2.8,   // room for the period label before each section's frames
+  entrance: 9.5,     // back wall → first section (holds the cinema door)
+  exit: 7,           // last section → end wall with the featured piece
+};
+
 /**
- * The cinema hall behind the gallery's front wall (z = hz). The screen hangs
- * on the far wall and faces back towards the door.
+ * Lobby fixtures on the visitor's right (-x) side of the entrance zone: an
+ * escalator running up towards the ceiling, and a floor directory facing the
+ * entrance.
+ */
+export const LOBBY = {
+  escalator: { x: -5.6, width: 1.4, bottomZ: 1.2, topZ: 8.6 },
+  directory: { position: [-3.6, 0, 6.2], width: 1.1, height: 1.9 },
+};
+
+/**
+ * The cinema, in its own local coordinates: the door wall is the plane z = 0
+ * (shared with the hall wall), the room extends towards +z and the screen
+ * hangs on the far wall facing back towards the door. createLayout() decides
+ * where this local frame sits in the world.
  */
 export const CINEMA = {
-  bounds: { minX: -7, maxX: 7, minZ: hz, maxZ: hz + 16 },
+  bounds: { minX: -7, maxX: 7, minZ: 0, maxZ: 16 },
   height: ROOM.height,
   screen: { width: 8.4, height: 3.6, y: 3.0 },
   stage: { depth: 1.3, height: 0.45 },
-  rows: [22.5, 21.1, 19.7, 18.3, 16.9], // seat row centres (z), front to back
+  rows: [10.5, 9.1, 7.7, 6.3, 4.9], // seat row centres (local z), front to back
   seatsPerSide: 7,
   seatPitch: 0.68,
   aisleHalfWidth: 0.75,
 };
 
-const C = CINEMA.bounds;
-const cinemaCx = (C.minX + C.maxX) / 2;
-const cinemaCz = (C.minZ + C.maxZ) / 2;
-const frontSegment = hx + face - DOOR.halfWidth; // width of each wall piece beside the door
-
-/**
- * Axis-aligned wall boxes: centre (x, z), size (w along x, d along z) and an
- * optional vertical span [y0, y1]. `room` decides the finish.
- */
-export const WALLS = [
-  { room: 'gallery', accent: true, x: 0, z: -hz, w: ROOM.width + T, d: T },
-  { room: 'gallery', x: -hx, z: 0, w: T, d: ROOM.depth },
-  { room: 'gallery', x: hx, z: 0, w: T, d: ROOM.depth },
-  // Front wall, split around the door, plus a lintel above it.
-  { room: 'gallery', x: -(DOOR.halfWidth + frontSegment / 2), z: hz, w: frontSegment, d: T },
-  { room: 'gallery', x: DOOR.halfWidth + frontSegment / 2, z: hz, w: frontSegment, d: T },
-  { room: 'gallery', x: 0, z: hz, w: DOOR.halfWidth * 2, d: T, y0: DOOR.height },
-  // Cinema shell.
-  { room: 'cinema', x: C.minX, z: cinemaCz, w: T, d: C.maxZ - C.minZ },
-  { room: 'cinema', x: C.maxX, z: cinemaCz, w: T, d: C.maxZ - C.minZ },
-  { room: 'cinema', x: cinemaCx, z: C.maxZ, w: C.maxX - C.minX + T, d: T },
-];
-
-/** Benches (also used as colliders). Long axis runs along z. */
-export const BENCHES = [
-  { x: 0, z: -3.2, w: 0.62, d: 2.6 },
-  { x: 0, z: 3.8, w: 0.62, d: 2.6 },
-];
-
-// Facing directions expressed as rotation around Y (frame front is local +z).
-const FACING = { east: Math.PI / 2, west: -Math.PI / 2, south: 0, north: Math.PI };
-
-const STANDARD = { maxWidth: 3.1, maxHeight: 2.15, y: 2.3 };
-const HERO = { maxWidth: 4.6, maxHeight: 2.9, y: 2.55 };
-
-/**
- * Frame slots. `position` is the point on the wall surface the frame hangs on.
- * Each slot id is the persistence key for user uploads, so keep ids stable.
- */
-export const SLOTS = [
-  ...[-8, -3, 2, 7].map((z, i) => ({
-    id: `left-${i + 1}`, ...STANDARD, position: [-hx + face, STANDARD.y, z], rotationY: FACING.east,
-  })),
-  ...[-8, -3, 2, 7].map((z, i) => ({
-    id: `right-${i + 1}`, ...STANDARD, position: [hx - face, STANDARD.y, z], rotationY: FACING.west,
-  })),
-  { id: 'hero', ...HERO, position: [0, HERO.y, -hz + face], rotationY: FACING.south, hero: true },
-  ...[-5.7, 5.7].map((x, i) => ({
-    id: `back-${i + 1}`, ...STANDARD, position: [x, STANDARD.y, -hz + face], rotationY: FACING.south,
-  })),
-  ...[-4.6, 4.6].map((x, i) => ({
-    id: `front-${i + 1}`, ...STANDARD, position: [x, STANDARD.y, hz - face], rotationY: FACING.north,
-  })),
-];
-
-/** Seats derived from CINEMA: position of the cushion centre, all facing the screen (+z). */
+/** Seats in cinema-local coordinates: cushion centre, all facing the screen (+z). */
 export const SEATS = CINEMA.rows.flatMap((z, row) =>
   [-1, 1].flatMap((side) => Array.from({ length: CINEMA.seatsPerSide }, (_, i) => ({
     row, x: side * (CINEMA.aisleHalfWidth + CINEMA.seatPitch * (i + 0.5)), z,
   }))));
 
-const seatBlockOuter = CINEMA.aisleHalfWidth + CINEMA.seatPitch * CINEMA.seatsPerSide;
+const STANDARD = { maxWidth: 3.1, maxHeight: 2.15, y: 2.3 };
+const HERO = { maxWidth: 4.6, maxHeight: 2.9, y: 2.55 };
+// Frame front is local +z; these rotations make frames face into the hall.
+const FACING = { towardsMinusX: -Math.PI / 2, towardsPlusX: Math.PI / 2, towardsEntrance: Math.PI };
 
 const toRect = ({ x, z, w, d }) => ({ minX: x - w / 2, maxX: x + w / 2, minZ: z - d / 2, maxZ: z + d / 2 });
 
-/** Collision rectangles in the XZ plane (only things that reach the floor). */
-export const COLLIDERS = [
-  ...WALLS.filter((w) => !w.y0).map(toRect),
-  ...BENCHES.map(toRect),
-  // Seat rows, one block either side of the centre aisle.
-  ...CINEMA.rows.flatMap((z) => [-1, 1].map((side) => ({
-    minX: side < 0 ? -seatBlockOuter : CINEMA.aisleHalfWidth,
-    maxX: side < 0 ? -CINEMA.aisleHalfWidth : seatBlockOuter,
-    minZ: z - 0.45, maxZ: z + 0.35,
-  }))),
-  // Stage in front of the screen.
-  { minX: C.minX, maxX: C.maxX, minZ: C.maxZ - CINEMA.stage.depth, maxZ: C.maxZ },
-];
+/** Map a point from a placed room's local space into the world (rotation about Y). */
+function placePoint(x, z, { position: [px, , pz], rotationY }) {
+  const c = Math.cos(rotationY), s = Math.sin(rotationY);
+  return [px + x * c + z * s, pz - x * s + z * c];
+}
+
+/** Map a local axis-aligned rectangle into the world (rotations must be multiples of 90°). */
+function placeRect(rect, placement) {
+  const corners = [[rect.minX, rect.minZ], [rect.maxX, rect.maxZ]].map(([x, z]) => placePoint(x, z, placement));
+  const xs = corners.map((c) => c[0]), zs = corners.map((c) => c[1]);
+  return { minX: Math.min(...xs), maxX: Math.max(...xs), minZ: Math.min(...zs), maxZ: Math.max(...zs) };
+}
+
+/** Same for a wall box {x, z, w, d, ...}. */
+function placeBox(box, placement) {
+  const r = placeRect(toRect(box), placement);
+  return { ...box, x: (r.minX + r.maxX) / 2, z: (r.minZ + r.maxZ) / 2, w: r.maxX - r.minX, d: r.maxZ - r.minZ };
+}
+
+/**
+ * Layout for one floor.
+ * @param {ReturnType<import('../media/library.js').MediaLibrary['floors']>[number] | null} floor
+ */
+export function createLayout(floor) {
+  const months = floor?.months.length
+    ? floor.months
+    : [{ key: 'empty', label: 'The Collection', items: [] }];
+  const floorKey = floor?.key ?? 'empty';
+
+  // One section per month, oldest first from the entrance. Every item gets a frame.
+  const plan = months.map((month) => {
+    const frames = month.items.length || 2; // an empty floor still shows two placeholders
+    const perSide = Math.ceil(frames / 2);
+    const label = { label: month.label, range: floor?.label ?? '', count: month.items.length };
+    return { month, label, frames, perSide, length: SPACING.sectionGap + perSide * SPACING.pitch };
+  });
+  const length = SPACING.entrance + plan.reduce((sum, s) => sum + s.length, 0) + SPACING.exit;
+  const minZ = 0;
+  const maxZ = length;
+  const hall = { minX: -HX, maxX: HX, minZ, maxZ, length, height: ROOM.height };
+
+  // The cinema opens off the visitor's left (+x) wall, right inside the entrance.
+  // Its 14 m wide shell must sit entirely alongside the hall wall, hence the offset.
+  const cinemaHalfWidth = (CINEMA.bounds.maxX - CINEMA.bounds.minX) / 2;
+  const doorZ = minZ + cinemaHalfWidth + 0.2;
+  const cinema = { position: [HX, 0, doorZ], rotationY: Math.PI / 2 };
+
+  const sections = [];
+  const allItems = months.flatMap((m) => m.items);
+  const featured = allItems[Math.floor(Math.random() * allItems.length)];
+  const slots = [{
+    id: `${floorKey}:hero`, ...HERO, position: [0, HERO.y, maxZ - FACE], rotationY: FACING.towardsEntrance,
+    hero: true, period: floorKey, itemId: featured?.id ?? null,
+  }];
+  const benches = [];
+
+  let z = minZ + SPACING.entrance;
+  for (const { month, label, frames, perSide, length: sectionLength } of plan) {
+    const section = { period: label, startZ: z, endZ: z + sectionLength, labelZ: z + SPACING.sectionGap / 2 };
+    sections.push(section);
+    for (let i = 0; i < frames; i++) {
+      // Alternate walls so consecutive works face each other across the hall.
+      const side = i % 2 === 0 ? 'left' : 'right';
+      const index = Math.floor(i / 2);
+      const fz = z + SPACING.sectionGap + SPACING.pitch * (index + 0.5);
+      slots.push({
+        id: `${floorKey}:${month.key}:${i + 1}`, ...STANDARD, period: floorKey, itemId: month.items[i]?.id ?? null,
+        position: [side === 'left' ? HX - FACE : -HX + FACE, STANDARD.y, fz],
+        rotationY: side === 'left' ? FACING.towardsMinusX : FACING.towardsPlusX,
+      });
+    }
+    // A bench roughly every three frames along the section.
+    const benchCount = Math.max(1, Math.round(perSide / 3));
+    const framesStart = z + SPACING.sectionGap;
+    for (let b = 0; b < benchCount; b++) {
+      benches.push({ x: 0, z: framesStart + (perSide * SPACING.pitch) * (b + 0.5) / benchCount, w: 0.62, d: 2.6 });
+    }
+    z += sectionLength;
+  }
+
+  const C = CINEMA.bounds;
+  const cinemaWalls = [
+    { room: 'cinema', x: C.minX, z: (C.minZ + C.maxZ) / 2, w: T, d: C.maxZ - C.minZ },
+    { room: 'cinema', x: C.maxX, z: (C.minZ + C.maxZ) / 2, w: T, d: C.maxZ - C.minZ },
+    { room: 'cinema', x: 0, z: C.maxZ, w: C.maxX - C.minX + T, d: T },
+  ].map((w) => placeBox(w, cinema));
+
+  const doorLow = doorZ - DOOR.halfWidth, doorHigh = doorZ + DOOR.halfWidth;
+  /** Axis-aligned wall boxes: centre (x, z), size (w along x, d along z), optional vertical span [y0, y1]. */
+  const walls = [
+    { room: 'hall', x: 0, z: minZ, w: ROOM.width + T, d: T },
+    { room: 'hall', accent: true, x: 0, z: maxZ, w: ROOM.width + T, d: T },
+    { room: 'hall', x: -HX, z: (minZ + maxZ) / 2, w: T, d: length },
+    // Left (+x) wall, split around the cinema door, plus a lintel above it.
+    { room: 'hall', x: HX, z: (minZ + doorLow) / 2, w: T, d: doorLow - minZ },
+    { room: 'hall', x: HX, z: (doorHigh + maxZ) / 2, w: T, d: maxZ - doorHigh },
+    { room: 'hall', x: HX, z: doorZ, w: T, d: DOOR.halfWidth * 2, y0: DOOR.height },
+    ...cinemaWalls,
+  ];
+
+  const seatBlockOuter = CINEMA.aisleHalfWidth + CINEMA.seatPitch * CINEMA.seatsPerSide;
+  const cinemaColliders = [
+    // Seat rows, one block either side of the centre aisle.
+    ...CINEMA.rows.flatMap((rz) => [-1, 1].map((side) => ({
+      minX: side < 0 ? -seatBlockOuter : CINEMA.aisleHalfWidth,
+      maxX: side < 0 ? -CINEMA.aisleHalfWidth : seatBlockOuter,
+      minZ: rz - 0.45, maxZ: rz + 0.35,
+    }))),
+    // Stage.
+    { minX: C.minX, maxX: C.maxX, minZ: C.maxZ - CINEMA.stage.depth, maxZ: C.maxZ },
+  ].map((r) => placeRect(r, cinema));
+
+  const { escalator, directory } = LOBBY;
+  /** Collision rectangles in the XZ plane (only things that reach the floor). */
+  const colliders = [
+    ...walls.filter((w) => !w.y0).map(toRect),
+    ...benches.map(toRect),
+    ...cinemaColliders,
+    { minX: -HX, maxX: escalator.x + escalator.width / 2 + 0.15, minZ: escalator.bottomZ, maxZ: escalator.topZ + 1 },
+    toRect({ x: directory.position[0], z: directory.position[2], w: directory.width, d: 0.4 }),
+  ];
+
+  // Enter at the oldest end, looking down the hall; the cinema door is just ahead on the left.
+  const start = { position: [0, 1.65, minZ + 3.2], yaw: Math.PI };
+
+  return { hall, sections, slots, benches, walls, colliders, cinema, start };
+}

@@ -3,7 +3,7 @@
   --muted: #6e685e;
   --paper: rgba(250, 248, 243, 0.94);
   --line: rgba(27, 26, 23, 0.12);
-  --accent: #2c3a35;
+  --accent: #163b68;
   --serif: 'Cormorant Garamond', Georgia, serif;
   --sans: Inter, system-ui, sans-serif;
 }
@@ -136,3 +136,18 @@ h1 { margin: 0 0 12px; font: 600 44px/1 var(--serif); letter-spacing: 0.01em; }
 .film-card .poster { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #000; display: block; margin-bottom: 6px; }
 .film-card strong { padding: 0 10px; font: 600 17px/1.15 var(--serif); }
 .film-card span { padding: 0 10px; font-size: 11.5px; color: rgba(241, 232, 216, 0.55); }
+.club-logo { width: 64px; height: 64px; object-fit: contain; margin-bottom: 18px; }
+#floorButton { position: fixed; left: 20px; top: 20px; z-index: 3; background: var(--paper); color: var(--ink); border: 1px solid var(--line); cursor: pointer; }
+#floorPanel { display: none; position: fixed; inset: 0 0 0 auto; width: min(460px, 100%); z-index: 20; padding: 46px 32px 32px; background: var(--paper); overflow-y: auto; backdrop-filter: blur(20px); }
+#floorPanel.open { display: block; }
+#floorPanel h2 { font: 600 38px var(--serif); margin: 8px 0 12px; }
+#floorPanel .sub { color: var(--muted); font-size: 13px; line-height: 1.6; }
+#floorList { display: grid; gap: 8px; margin-top: 24px; }
+.floor-choice { display: flex; align-items: center; gap: 16px; text-align: left; padding: 16px; border: 1px solid var(--line); background: transparent; border-radius: 12px; cursor: pointer; color: var(--ink); }
+.floor-choice:hover, .floor-choice[aria-current=true] { background: #e5edf5; border-color: #163b68; }
+.floor-choice strong, .floor-choice small { display: block; }
+.floor-choice small { color: var(--muted); margin-top: 5px; }
+.floor-number { font: 600 28px var(--serif); width: 36px; text-align: center; color: var(--accent); }
+#overlay .panel { max-height: 92vh; overflow-y: auto; }
+#overlay .actions { flex-wrap: wrap; }
+@media (max-width: 600px) { #floorButton { left: 12px; top: 12px; font-size: 11px; } #floorPanel { padding: 46px 22px 24px; } }

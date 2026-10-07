@@ -39,6 +39,11 @@ export class Interactions {
     }
   }
 
+  clear() {
+    this.targets.clear();
+    this.meshes.length = 0;
+  }
+
   /** @returns {{ target: Interactable, hit: THREE.Intersection } | null} */
   pick() {
     this.raycaster.setFromCamera(CENTER, this.camera);

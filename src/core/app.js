@@ -16,7 +16,7 @@ export class App {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(CONFIG.render.fov, innerWidth / innerHeight, 0.05, 80);
+    this.camera = new THREE.PerspectiveCamera(CONFIG.render.fov, innerWidth / innerHeight, 0.05, 220);
     this.timer = new THREE.Timer();
     this.timer.connect(document);
     this.systems = [];

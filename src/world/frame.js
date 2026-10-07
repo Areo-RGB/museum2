@@ -6,6 +6,7 @@ const UNIT_PLANE = new THREE.PlaneGeometry(1, 1);
 const MOULDING = new THREE.MeshStandardMaterial({ color: 0x1c1915, roughness: 0.42, metalness: 0.25 });
 const MATTE = new THREE.MeshStandardMaterial({ color: 0xf5f2ea, roughness: 0.95 });
 const PLAQUE_BACK = new THREE.MeshStandardMaterial({ color: 0xb59a6a, roughness: 0.35, metalness: 0.7 });
+let washMaterial; // created on first use (needs a canvas)
 
 const BAR = 0.075;
 const DEPTH = 0.07;
@@ -22,8 +23,9 @@ function containBox(aspect, maxW, maxH) {
 
 /**
  * A framed artwork: moulding, passe-partout, media surface, caption plaque and
- * picture light. Knows nothing about where its media comes from — the curator
- * drives it through beginLoad()/finishLoad().
+ * a pool of light on the wall. Knows nothing about where its media comes from —
+ * the curator drives it: assign() an item, then beginLoad()/finishLoad() the
+ * texture when the visitor is near, and unload() it again when they leave.
  */
 export class MediaFrame {
   constructor(slot) {
@@ -31,7 +33,10 @@ export class MediaFrame {
     this.fit = 'auto';
     this.item = null;
     this.loaded = null;
+    /** @type {'idle'|'loading'|'loaded'|'failed'} */
+    this.state = 'idle';
     this.loadToken = 0;
+    this.knownAspect = null; // survives unload() so the frame doesn't change size
     this.brightness = 0;
     this.targetBrightness = DIMMED;
 
@@ -50,10 +55,13 @@ export class MediaFrame {
     this.plaque = createPlaque();
     this.plaque.mesh.position.y = PLAQUE_Y - slot.position[1];
 
-    this.light = new THREE.SpotLight(0xffe9c7, slot.hero ? 55 : 32, 9, Math.PI / 7, 0.65, 1.4);
-    this.group.add(this.light.target);
+    // Painted-on light pool instead of a real spotlight: dozens of frames
+    // would otherwise mean dozens of per-pixel lights.
+    this.wash = new THREE.Mesh(UNIT_PLANE, getWashMaterial());
+    this.wash.position.z = 0.004;
+    this.wash.renderOrder = -1;
 
-    this.group.add(...this.bars, this.matte, this.screen, this.plaque.mesh, this.light);
+    this.group.add(this.wash, ...this.bars, this.matte, this.screen, this.plaque.mesh);
     this.layout();
   }
 
@@ -61,14 +69,22 @@ export class MediaFrame {
   get hitTargets() { return [this.screen, this.matte, ...this.bars]; }
 
   get aspect() {
-    return this.loaded ? this.loaded.width / this.loaded.height : this.slot.maxWidth / this.slot.maxHeight;
+    return this.knownAspect ?? this.slot.maxWidth / this.slot.maxHeight;
   }
 
-  /** Start swapping to `item`; returns a token that finishLoad() must present. */
-  beginLoad(item) {
+  /** Hang `item` here. Its texture is loaded separately (see beginLoad). */
+  assign(item) {
+    this.unload();
     this.item = item;
-    this.targetBrightness = DIMMED;
+    this.knownAspect = null;
     this.plaque.draw(item?.title ?? '', item?.subtitle ?? '');
+  }
+
+  /** Mark the current item as loading; returns a token finishLoad() must present. */
+  beginLoad() {
+    this.loadController = new AbortController();
+    this.state = 'loading';
+    this.targetBrightness = DIMMED;
     return ++this.loadToken;
   }
 
@@ -77,12 +93,47 @@ export class MediaFrame {
     if (token !== this.loadToken) { loaded.dispose(); return false; }
     this.loaded?.dispose();
     this.loaded = loaded;
+    this.state = 'loaded';
+    this.plaque.draw(this.item?.title ?? '', this.item?.subtitle ?? '');
+    this.knownAspect = loaded.width / loaded.height;
     this.screen.material.map = loaded.texture;
     this.screen.material.needsUpdate = true;
     this.brightness = 0;
     this.targetBrightness = 1;
     this.layout();
     return true;
+  }
+
+  failLoad(token) {
+    if (token === this.loadToken) {
+      this.state = 'failed';
+      this.plaque.draw(this.item?.title ?? '', 'Unavailable · retrying…');
+    }
+  }
+
+  /** Free the texture (e.g. the visitor walked away); the item stays assigned. */
+  unload() {
+    this.loadToken++;
+    this.loadController?.abort();
+    this.loaded?.dispose();
+    this.loaded = null;
+    this.state = 'idle';
+    this.screen.material.map = null;
+    this.screen.material.needsUpdate = true;
+    this.brightness = 0;
+    this.targetBrightness = DIMMED;
+    this.screen.material.color.setScalar(0);
+  }
+
+  dispose() {
+    this.unload();
+    this.group.removeFromParent();
+    this.screen.material.dispose();
+    // All other geometry/materials are shared across floors; only the plaque
+    // face texture and screen material belong to this frame.
+    const face = this.plaque.mesh.material[4];
+    face.map.dispose();
+    face.dispose();
   }
 
   setFit(fit) {
@@ -123,12 +174,9 @@ export class MediaFrame {
     this.plaque.mesh.position.x = outerW / 2 + 0.32;
     this.plaque.mesh.position.z = 0.006;
 
-    // Picture light: above and in front, cone just wide enough for the frame.
-    this.light.position.set(0, outerH / 2 + 1.4, 1.9);
-    const dist = this.light.position.length();
-    // Range ends just past the wall so the beam doesn't leak into the next room.
-    this.light.distance = dist * 1.35;
-    this.light.angle = Math.min(Math.PI / 3, Math.atan((Math.max(outerW, outerH) / 2 + 0.25) / dist));
+    // Light pool slightly larger than the frame, biased upwards like a ceiling spot.
+    this.wash.scale.set(outerW * 1.75, outerH * 1.7, 1);
+    this.wash.position.y = outerH * 0.12;
     this.outerSize = [outerW, outerH];
   }
 
@@ -148,6 +196,25 @@ export class MediaFrame {
       else if (!visible && !video.paused) video.pause();
     }
   }
+}
+
+function getWashMaterial() {
+  if (washMaterial) return washMaterial;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 256;
+  const ctx = canvas.getContext('2d');
+  const g = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+  g.addColorStop(0, 'rgba(255,255,255,1)');
+  g.addColorStop(0.45, 'rgba(255,255,255,0.55)');
+  g.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, 256, 256);
+  const map = new THREE.CanvasTexture(canvas);
+  washMaterial = new THREE.MeshBasicMaterial({
+    map, color: 0xffd9a8, transparent: true, opacity: 0.28,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  });
+  return washMaterial;
 }
 
 function createPlaque() {

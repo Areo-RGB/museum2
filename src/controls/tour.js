@@ -8,8 +8,8 @@ export class CinematicTour {
     this.camera = camera;
     this.options = { secondsPerStop, viewDistance, eyeHeight };
     this.active = false;
-    // Walk the room in angular order so the path circles the gallery.
-    this.frames = [...frames].sort((a, b) => Math.atan2(a.center.x, a.center.z) - Math.atan2(b.center.x, b.center.z));
+    // Walk the hall front to back, i.e. in chronological order.
+    this.frames = [...frames].sort((a, b) => a.center.z - b.center.z || a.center.x - b.center.x);
     this._from = { position: new THREE.Vector3(), quaternion: new THREE.Quaternion() };
     this._to = { position: new THREE.Vector3(), quaternion: new THREE.Quaternion() };
     this._dummy = new THREE.Object3D();
@@ -26,6 +26,11 @@ export class CinematicTour {
   }
 
   stop() { this.active = false; }
+
+  setFrames(frames) {
+    this.stop();
+    this.frames = [...frames].sort((a, b) => a.center.z - b.center.z || a.center.x - b.center.x);
+  }
 
   beginLeg() {
     this.elapsed = 0;

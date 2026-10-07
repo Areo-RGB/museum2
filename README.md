@@ -1,10 +1,17 @@
-# Media Gallery — Personal Museum derivative
+# Hertha 03 Zehlendorf · 2014er Museum
 
-A walkable Three.js gallery. On every visit, frames are filled at random from a media collection
-in a Cloudflare R2 bucket (described by `public/media-manifest.json`). Any frame can be recurated:
-hang another random piece, or upload your own image or video (stored locally in IndexedDB).
+A walkable Three.js museum of the 111 images and videos described by
+`public/media-manifest.json`, hosted in Cloudflare R2. Choose among nine seasonal
+floors (including the undated archive) using the animated lobby escalator, its
+directory, the welcome screen, or `M`. Every asset has its own ordinary frame; a
+featured duplicate closes each floor. Month sections run in date order. Only the
+selected floor exists, and textures stream in by distance. Switching floors
+cancels pending media loads and disposes floor-owned GPU resources.
 
-Through the door in the front wall is **The Little Cinema**: rows of velvet seats, a big screen
+Upload your own image or video to any frame (saved locally in IndexedDB).
+Rehanging swaps works while keeping the floor's complete collection represented.
+
+Through a door on the left, right inside the entrance, is **The Little Cinema**: rows of velvet seats, a big screen
 between drapes, a projector beam and a starry ceiling. Click the screen to open the programme and
 pick a film. The house lights dim while it plays, the screen's colour spills onto the room, and the
 soundtrack is positional, so it fades as you walk out.
@@ -18,6 +25,18 @@ npm install
 npm run dev
 ```
 
+## Deploy
+
+Hosted on Cloudflare Workers (static assets) at **https://gallery.h03.uk**.
+
+```bash
+npm run deploy   # = cf deploy: builds with Vite and uploads to the Worker
+```
+
+`cloudflare.config.ts` holds the Worker settings; `domains: ["gallery.h03.uk"]` attaches the custom
+domain on the `h03.uk` zone (Cloudflare manages the DNS record and certificate). Build output goes
+to `.cloudflare/output/` (git-ignored).
+
 ## Controls
 
 | Input | Action |
@@ -25,6 +44,7 @@ npm run dev
 | `WASD` / arrows | walk (`Shift` to hurry) |
 | Mouse | look |
 | Click a frame | open the curator panel |
+| `M` / click the lobby escalator | choose a time period |
 | `C` | guided tour (click or `C` again to take over) |
 | `R` | rehang every frame with new random pieces (uploads stay) |
 | Click the cinema screen | open the film programme |
@@ -41,15 +61,19 @@ src/
   styles.css
   core/app.js          Renderer, scene, camera, frame loop; features plug in as systems { update(dt, app) }
   world/
-    layout.js          Declarative room: walls, benches, frame slots, colliders — edit this to change the gallery
-    environment.js     Builds architecture + lighting from layout.js
+    layout.js          createLayout(floor): hall, month sections, frame slots, walls, colliders, cinema placement
+                       (the cinema is defined in its own local coordinates and placed via a transform)
+    environment.js     One-time atmosphere and disposable per-floor architecture
+    lobby.js           Animated escalator and floor directory
+    signage.js         Canvas-drawn signs and period wall text
     frame.js           MediaFrame: moulding, mat, media surface, caption plaque, picture light, fit modes
     cinema.js          CinemaHall: seats, screen, drapes, projector, house lights, playback API
     textures.js        Procedural textures (wood floor)
   media/
-    library.js         Loads the R2 manifest, derives captions, deals items like a shuffled deck
+    library.js         Loads the R2 manifest, derives dates/captions/periods, deals items like a shuffled deck
     loader.js          Image/video → texture (downscaled, EXIF-aware), concurrency limiter
-    curator.js         Decides what hangs where: upload → random collection item → fallback
+    curator.js         What hangs where (upload → assigned manifest item → fallback),
+                       and streams textures in/out by distance
   cinema/
     programme.js       What the cinema can show: placeholder films + videos from the collection
     films.js           GeneratedFilm (canvas) and VideoFilm (video + positional audio), one shared interface
@@ -64,13 +88,15 @@ src/
 
 Common extensions:
 
-- **Add/move frames or walls** — edit `world/layout.js`; colliders and lighting follow automatically.
+- **Hall rhythm** — `SPACING` in `world/layout.js` controls frame spacing; each month gets
+  exactly one ordinary slot per item. Colliders, lights and signage follow automatically.
+- **Different periods** (months, years, ...) — change `periodFor()` in `media/library.js`.
 - **Real films for the cinema** — add entries to `PLACEHOLDER_FILMS` in `cinema/programme.js` with
   `source: { type: 'video', url }` (the host must send CORS headers, e.g. upload them to the R2 bucket).
 - **Something clickable** — `interactions.add(meshes, { caption: () => ({ title, subtitle }), activate })`.
 - **Another media source** — produce `MediaItem`s (see `media/library.js`) and hand them to the curator.
 - **A new per-frame behaviour** — add an object with `update(dt, app)` via `app.addSystem()`.
-- In dev builds, `window.museum` exposes `{ app, frames, curator, library, tour }` for poking around in devtools.
+- In dev builds, `window.museum` exposes `{ app, layout, frames, curator, library, tour, cinema, player }` for poking around in devtools.
 
 ## Media collection
 
@@ -89,5 +115,13 @@ WebGL needs CORS to sample cross-origin media. The bucket has this CORS rule app
 Collection URLs get a `?cors=1` suffix: R2 doesn't send `Vary: Origin`, so this keeps CORS responses
 in their own browser-cache entry (R2 ignores the query string).
 
-Images are downscaled to 2048 px before upload to the GPU; at most 3 videos hang at once and they
-only play while you're nearby (see `config.js`).
+Images are downscaled to 2048 px before upload to the GPU. Textures are only loaded within
+`loadDistance` of the visitor and freed beyond `unloadDistance`; the nearest six video textures can load at once, and videos only play while you're
+nearby (see `config.js`).
+
+## Verification and workflow
+
+Run `npm test` and `npm run build` before shipping. `CLAUDE.md` records the requested
+automatic commit, push-to-main and Cloudflare deployment workflow. Browser checks
+cover all-floor manifest coverage, repeated switching, real R2 media and controls.
+Transient media failures show a retry caption and retry after five seconds.

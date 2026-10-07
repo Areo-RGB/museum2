@@ -133,15 +133,43 @@ export class MediaLibrary {
 
   /** Time periods present in the collection, oldest first, undated last. @returns {Period[]} */
   periods() {
+    return this.floors().map(({ months, items, ...p }) => p);
+  }
+
+  /**
+   * The building's floors: one per period, each with all of its items in
+   * chronological order, grouped by month.
+   * @returns {(Period & { items: MediaItem[], months: { key: string, label: string, items: MediaItem[] }[] })[]}
+   */
+  floors() {
     const groups = new Map();
     for (const item of this.items) {
       const p = periodFor(item.date);
       if (!groups.has(p.key)) groups.set(p.key, { ...p, items: [] });
       groups.get(p.key).items.push(item);
     }
+    const byDate = (a, b) => (a.date ?? 0) - (b.date ?? 0) || a.id.localeCompare(b.id);
     return [...groups.values()]
       .sort((a, b) => a.order - b.order)
-      .map(({ items, ...p }) => ({ ...p, count: items.length, range: formatRange(items.flatMap((i) => i.date ?? [])) }));
+      .map((floor) => {
+        const items = floor.items.sort(byDate);
+        const months = new Map();
+        for (const item of items) {
+          const key = item.date ? `${item.date.getFullYear()}-${item.date.getMonth()}` : UNDATED;
+          const label = item.date ? MONTHS[item.date.getMonth()] : 'Undated';
+          if (!months.has(key)) months.set(key, { key, label, items: [] });
+          months.get(key).items.push(item);
+        }
+        return {
+          ...floor, items, count: items.length, months: [...months.values()],
+          range: formatRange(items.flatMap((i) => i.date ?? [])),
+        };
+      });
+  }
+
+  byId(id) {
+    this._index ??= new Map(this.items.map((i) => [i.id, i]));
+    return this._index.get(id) ?? null;
   }
 
   /**

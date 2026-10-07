@@ -3,6 +3,7 @@ import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUnifo
 import { CINEMA, SEATS, DOOR, ROOM } from './layout.js';
 import { createCarpetTexture, createVelvetTexture } from './textures.js';
 import { GeneratedFilm, VideoFilm } from '../cinema/films.js';
+import { signMesh } from './signage.js';
 
 const B = CINEMA.bounds;
 const FACE = ROOM.wall / 2;
@@ -23,17 +24,25 @@ const PALETTE = {
 
 /**
  * The cinema hall: architecture, seating, projector and the film currently on
- * screen. UI talks to it through project()/stop()/togglePause()/setVolume()
- * and listens via `onChange`.
+ * screen. Built in CINEMA's local coordinates and placed in the world by
+ * `placement` (from the layout). UI talks to it through project()/stop()/
+ * togglePause()/setVolume() and listens via `onChange`.
  */
 export class CinemaHall {
-  /** @param {{ setAmbient(factor: number): void }} hooks */
-  constructor(app, { setAmbient }) {
+  /**
+   * @param {{ position: number[], rotationY: number }} placement
+   * @param {{ setAmbient(factor: number): void }} hooks
+   */
+  constructor(app, placement, { setAmbient }) {
     this.app = app;
     this.setAmbient = setAmbient;
     this.onChange = () => {};
     this.group = new THREE.Group();
     this.group.name = 'cinema';
+    this.group.position.fromArray(placement.position);
+    this.group.rotation.y = placement.rotationY;
+    this.group.updateMatrixWorld();
+    this._local = new THREE.Vector3();
 
     this.film = null;
     this.nowPlaying = null;
@@ -67,8 +76,10 @@ export class CinemaHall {
   get activeFilm() { return this.film ?? this.idleFilm; }
   get isPlaying() { return !!this.film && !this.film.paused; }
 
+  /** Is a world-space point inside the hall? */
   contains(p) {
-    return p.x > B.minX && p.x < B.maxX && p.z > B.minZ && p.z < B.maxZ;
+    const l = this.group.worldToLocal(this._local.copy(p));
+    return l.x > B.minX && l.x < B.maxX && l.z > B.minZ && l.z < B.maxZ;
   }
 
   /** @param {import('../cinema/programme.js').Film} entry */
@@ -128,7 +139,10 @@ export class CinemaHall {
       caption: () => ({ title: 'Take a seat', subtitle: 'Click to sit · move to stand up' }),
       activate: (hit) => {
         const seat = SEATS[hit.instanceId];
-        if (seat) onSeat({ position: new THREE.Vector3(seat.x, SEATED_EYE, seat.z - 0.08), yaw: Math.PI });
+        if (!seat) return;
+        const position = this.group.localToWorld(new THREE.Vector3(seat.x, SEATED_EYE, seat.z - 0.08));
+        // Camera yaw 0 looks down -z; face the screen (local +z).
+        onSeat({ position, yaw: this.group.rotation.y + Math.PI });
       },
     });
   }
@@ -387,29 +401,6 @@ export class CinemaHall {
     marquee.rotation.y = Math.PI;
     this.group.add(exit, marquee);
   }
-}
-
-function signMesh(text, { width, height, bg, fg, font, spacing = 0.1 }) {
-  const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = Math.round(1024 * height / width);
-  const ctx = canvas.getContext('2d');
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  const draw = () => {
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = fg;
-    ctx.font = font;
-    ctx.letterSpacing = `${spacing}em`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(text, canvas.width / 2, canvas.height / 2 + 6);
-    texture.needsUpdate = true;
-  };
-  draw();
-  document.fonts?.ready.then(draw); // redraw once web fonts arrive
-  return new THREE.Mesh(new THREE.PlaneGeometry(width, height), new THREE.MeshBasicMaterial({ map: texture, toneMapped: false }));
 }
 
 function approach(value, target, step) {

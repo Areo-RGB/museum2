@@ -1,8 +1,9 @@
 import './styles.css';
 import { CONFIG } from './config.js';
 import { App } from './core/app.js';
-import { COLLIDERS, SLOTS } from './world/layout.js';
-import { buildEnvironment } from './world/environment.js';
+import { createLayout } from './world/layout.js';
+import { buildHall, setupAtmosphere } from './world/environment.js';
+import { Lobby } from './world/lobby.js';
 import { MediaFrame } from './world/frame.js';
 import { CinemaHall } from './world/cinema.js';
 import { MediaLibrary } from './media/library.js';
@@ -16,20 +17,29 @@ import { Hud } from './ui/hud.js';
 import { EditorPanel } from './ui/editor.js';
 import { CinemaPanel } from './ui/cinemaPanel.js';
 import { Overlay } from './ui/overlay.js';
+import { FloorPanel } from './ui/floorPanel.js';
 import { $ } from './ui/dom.js';
 
 // ─── World ───────────────────────────────────────────────────────────────────
+// The hall is generated from the collection's time periods, so read the
+// manifest (a small local JSON file) before building anything.
 const app = new App($('canvas'));
-const environment = buildEnvironment(app);
-app.scene.add(environment.group);
+const library = await MediaLibrary.load(CONFIG.media.manifestUrl);
+const floors = library.floors();
+if (!floors.length) floors.push({ key: 'empty', label: 'The Collection', range: 'Collection offline', count: 0, items: [], months: [] });
+let currentFloor = 0;
+let layout = createLayout(floors[currentFloor]);
+let environment = buildHall(app, layout);
+let frames = [];
+let curator;
+const atmosphere = setupAtmosphere(app);
+const lobby = app.addSystem(new Lobby(floors));
+app.scene.add(environment.group, lobby.group);
 
-const frames = SLOTS.map((slot) => new MediaFrame(slot));
-for (const frame of frames) app.scene.add(frame.group);
-
-const ambientBase = { hemisphere: environment.hemisphere.intensity, env: app.scene.environmentIntensity };
-const cinema = app.addSystem(new CinemaHall(app, {
+const ambientBase = { hemisphere: atmosphere.hemisphere.intensity, env: app.scene.environmentIntensity };
+const cinema = app.addSystem(new CinemaHall(app, layout.cinema, {
   setAmbient(factor) {
-    environment.hemisphere.intensity = ambientBase.hemisphere * factor;
+    atmosphere.hemisphere.intensity = ambientBase.hemisphere * factor;
     app.scene.environmentIntensity = ambientBase.env * factor;
   },
 }));
@@ -39,28 +49,16 @@ app.scene.add(cinema.group);
 const hud = new Hud();
 const player = new PlayerController(app.camera, app.canvas, {
   ...CONFIG.player,
-  collides: createCollisionChecker(COLLIDERS, CONFIG.player.radius),
+  start: layout.start,
+  collides: createCollisionChecker(layout.colliders, CONFIG.player.radius),
 });
 const tour = new CinematicTour(app.camera, frames, { ...CONFIG.tour, eyeHeight: CONFIG.player.eyeHeight });
 const interactions = new Interactions(app.camera);
-interactions.addOccluders(environment.walls);
-
-for (const frame of frames) {
-  interactions.add(frame.hitTargets, {
-    caption: () => frame.item && { title: frame.item.title, subtitle: `${frame.item.subtitle} · click to curate` },
-    activate: () => openPanel(editor, frame),
-  });
-}
-cinema.registerInteractions(interactions, {
-  onScreen: () => openPanel(cinemaPanel),
-  onSeat: (seat) => player.sit(seat),
-});
 
 // ─── UI & input modes ────────────────────────────────────────────────────────
 /** @type {'intro'|'explore'|'panel'|'touring'} */
 let mode = 'intro';
 let activePanel = null;
-let curator;
 
 const overlay = new Overlay({
   onEnter: () => { overlay.hide(); mode = 'explore'; player.lock(); },
@@ -75,20 +73,90 @@ const editor = new EditorPanel({
   onClose: () => closePanel(true),
 });
 const cinemaPanel = new CinemaPanel(cinema, { onClose: () => closePanel(true) });
-cinemaPanel.setProgramme([{ heading: 'Now showing', films: PLACEHOLDER_FILMS }]);
+const floorPanel = new FloorPanel(floors, {
+  onSelect: (index) => { switchFloor(index); closePanel(true); },
+  onClose: () => closePanel(false),
+});
+$('chooseFloors').addEventListener('click', showFloors);
+$('floorButton').addEventListener('click', showFloors);
+cinemaPanel.setProgramme([
+  { heading: 'Now showing', films: PLACEHOLDER_FILMS },
+  { heading: 'Home movies', films: collectionFilms(library) },
+]);
+overlay.setCollectionSize(library.size);
+
+function showFloors() {
+  if (mode === 'touring') {
+    tour.stop();
+    hud.setTour(false);
+    player.enabled = true;
+    player.syncFromCamera();
+  }
+  activePanel?.close();
+  overlay.hide();
+  openPanel(floorPanel);
+}
+
+/** Replace only floor-owned resources; lobby, cinema and atmosphere persist. */
+function switchFloor(index, initial = false) {
+  if (!floors[index] || (!initial && index === currentFloor)) return;
+  curator?.dispose();
+  for (const frame of frames) frame.dispose();
+  if (!initial) {
+    environment.dispose();
+    layout = createLayout(floors[index]);
+    environment = buildHall(app, layout);
+    app.scene.add(environment.group);
+  }
+  currentFloor = index;
+  frames = layout.slots.map(slot => new MediaFrame(slot));
+  for (const frame of frames) app.scene.add(frame.group);
+  curator = new Curator(frames, library, {
+    media: CONFIG.media,
+    anisotropy: Math.min(8, app.maxAnisotropy),
+    onProgress: p => { hud.setProgress(p); if (editor.isOpen) editor.refresh(); },
+  });
+  interactions.clear();
+  interactions.addOccluders(environment.walls);
+  for (const frame of frames) interactions.add(frame.hitTargets, {
+    caption: () => frame.item && { title: frame.item.title, subtitle: `${frame.item.subtitle} · click to curate` },
+    activate: () => openPanel(editor, frame),
+  });
+  lobby.registerInteractions(interactions, showFloors);
+  cinema.registerInteractions(interactions, {
+    onScreen: () => openPanel(cinemaPanel),
+    onSeat: seat => player.sit(seat),
+  });
+  player.standUp();
+  player.velocity.set(0, 0, 0);
+  player.keys.clear();
+  player.collides = createCollisionChecker(layout.colliders, CONFIG.player.radius);
+  app.camera.position.fromArray(layout.start.position);
+  player.euler.set(0, layout.start.yaw, 0);
+  app.camera.quaternion.setFromEuler(player.euler);
+  tour.setFrames(frames);
+  lobby.setCurrent(index);
+  floorPanel.setCurrent(index);
+  $('floorButton').textContent = `${floors[index].label} · M to change period`;
+  hud.setProgress({ pending: 0, done: 0 });
+  curator.hangAll();
+}
 
 function openPanel(panel, ...args) {
   mode = 'panel';
   activePanel = panel;
   hud.setHovered(null);
   player.unlock();
+  player.enabled = false;
   panel.open(...args);
 }
 
 function closePanel(resume) {
   activePanel?.close();
   activePanel = null;
+  curator.preferredFrame = null;
   mode = 'explore';
+  player.enabled = true;
   if (resume) player.lock(); else overlay.showPaused();
 }
 
@@ -127,13 +195,14 @@ app.canvas.addEventListener('click', () => {
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.target instanceof HTMLInputElement && e.target.type !== 'range') return;
+  if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
+  if (e.code === 'KeyM') { showFloors(); return; }
   if (e.code === 'Escape' && mode === 'panel') closePanel(false);
   if (e.code === 'Escape' && mode === 'touring') { stopTour(); return; }
   if (e.code === 'KeyC' && (mode === 'explore' || mode === 'touring')) {
     if (mode === 'touring') stopTour(); else { overlay.hide(); startTour(); }
   }
-  if (e.code === 'KeyR' && curator && mode !== 'panel') {
+  if (e.code === 'KeyR' && (mode === 'explore' || mode === 'touring')) {
     curator.shuffleAll();
     hud.toast('Rehanging the gallery…');
   }
@@ -154,21 +223,13 @@ app.addSystem({
   },
 });
 
+app.addSystem({ update: (dt, app) => curator.update(dt, app) });
+switchFloor(0, true);
 app.start();
 
-// ─── Content ─────────────────────────────────────────────────────────────────
-const library = await MediaLibrary.load(CONFIG.media.manifestUrl);
-overlay.setCollectionSize(library.size);
-cinemaPanel.setProgramme([
-  { heading: 'Now showing', films: PLACEHOLDER_FILMS },
-  { heading: 'Home movies', films: collectionFilms(library) },
-]);
-curator = app.addSystem(new Curator(frames, library, {
-  media: CONFIG.media,
-  anisotropy: Math.min(8, app.maxAnisotropy),
-  onProgress: (p) => { hud.setProgress(p); if (editor.isOpen) editor.refresh(); },
-}));
-curator.hangAll();
-
 // Handy for poking at the scene from devtools during development.
-if (import.meta.env.DEV) Object.assign(window, { museum: { app, frames, curator, library, tour, cinema, player } });
+if (import.meta.env.DEV) Object.assign(window, { museum: {
+  app, library, floors, tour, cinema, player, switchFloor,
+  get layout() { return layout; }, get frames() { return frames; },
+  get curator() { return curator; }, get currentFloor() { return currentFloor; },
+} });

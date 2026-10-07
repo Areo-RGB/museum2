@@ -7,8 +7,12 @@ export const CONFIG = {
     // Phone photos are 12+ MP; downscale before upload to the GPU.
     maxTextureSize: 2048,
     loadConcurrency: 4,
-    // Keep the number of simultaneously streaming videos sane.
-    maxVideos: 3,
+    // Nearest video textures loaded at once; every video still gets a frame.
+    maxVideos: 6,
+    // Textures stream in when the visitor gets this close and are freed beyond
+    // the second distance, so a long hall doesn't hold every photo in memory.
+    loadDistance: 26,
+    unloadDistance: 38,
     // Videos only play while the visitor is this close (metres).
     videoPlayDistance: 13,
   },
@@ -18,7 +22,6 @@ export const CONFIG = {
     eyeHeight: 1.65,
     radius: 0.4,
     sensitivity: 0.0021,
-    start: { position: [0, 1.65, 9.2], yaw: 0 },
   },
   tour: {
     secondsPerStop: 7,

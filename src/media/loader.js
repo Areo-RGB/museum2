@@ -17,7 +17,7 @@ export function createLimiter(n) {
     if (active >= n || !queue.length) return;
     active++;
     const { task, resolve, reject } = queue.shift();
-    task().then(resolve, reject).finally(() => { active--; next(); });
+    Promise.resolve().then(task).then(resolve, reject).finally(() => { active--; next(); });
   };
   return (task) => new Promise((resolve, reject) => { queue.push({ task, resolve, reject }); next(); });
 }
@@ -27,14 +27,14 @@ export function createLimiter(n) {
  * @param {import('./library.js').MediaItem} item
  * @returns {Promise<LoadedMedia>}
  */
-export function loadMedia(item, { maxTextureSize, anisotropy }) {
+export function loadMedia(item, { maxTextureSize, anisotropy, signal }) {
   return item.kind === 'video'
-    ? loadVideo(item)
-    : loadImage(item, maxTextureSize, anisotropy);
+    ? loadVideo(item, signal)
+    : loadImage(item, maxTextureSize, anisotropy, signal);
 }
 
-async function loadImage(item, maxSize, anisotropy) {
-  const blob = item.blob ?? await fetch(item.url, { mode: 'cors' }).then((r) => {
+async function loadImage(item, maxSize, anisotropy, signal) {
+  const blob = item.blob ?? await fetch(item.url, { mode: 'cors', signal }).then((r) => {
     if (!r.ok) throw new Error(`${r.status} for ${item.url}`);
     return r.blob();
   });
@@ -58,7 +58,7 @@ async function loadImage(item, maxSize, anisotropy) {
   };
 }
 
-function loadVideo(item) {
+function loadVideo(item, signal) {
   const video = document.createElement('video');
   const objectUrl = item.blob ? URL.createObjectURL(item.blob) : null;
   if (!objectUrl) video.crossOrigin = 'anonymous';
@@ -66,9 +66,11 @@ function loadVideo(item) {
   video.src = objectUrl ?? item.url;
 
   return new Promise((resolve, reject) => {
+    const abort = () => { cleanup(); reject(new DOMException('Media load cancelled', 'AbortError')); };
     const fail = () => { cleanup(); reject(new Error(`video failed: ${item.id}`)); };
     const ready = () => {
       video.removeEventListener('error', fail);
+      signal?.removeEventListener('abort', abort);
       const texture = new THREE.VideoTexture(video);
       texture.colorSpace = THREE.SRGBColorSpace;
       resolve({
@@ -77,6 +79,9 @@ function loadVideo(item) {
       });
     };
     const cleanup = () => {
+      signal?.removeEventListener('abort', abort);
+      video.removeEventListener('loadeddata', ready);
+      video.removeEventListener('error', fail);
       video.pause();
       video.removeAttribute('src');
       video.load();
@@ -84,5 +89,7 @@ function loadVideo(item) {
     };
     video.addEventListener('loadeddata', ready, { once: true });
     video.addEventListener('error', fail, { once: true });
+    signal?.addEventListener('abort', abort, { once: true });
+    if (signal?.aborted) abort();
   });
 }
