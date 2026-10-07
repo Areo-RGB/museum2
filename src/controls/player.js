@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 
-const SPEED = 3.2;
+const SPEED = 3.6;
 const HEIGHT = 1.65;
-const SENS = 0.002;
-const PITCH_LIMIT = Math.PI * 0.47;
+const SENS = 0.0022;
+const PITCH_LIMIT = Math.PI * 0.46;
 
 export class PlayerController {
   constructor(camera, canvas) {
@@ -20,9 +20,17 @@ export class PlayerController {
     document.addEventListener('pointerlockchange', this._lock);
   }
 
-  lock() { if (this.enabled) this.canvas.requestPointerLock(); }
-  unlock() { if (document.pointerLockElement) document.exitPointerLock(); }
-  get locked() { return document.pointerLockElement === this.canvas; }
+  lock() {
+    if (this.enabled) this.canvas.requestPointerLock();
+  }
+
+  unlock() {
+    if (document.pointerLockElement) document.exitPointerLock();
+  }
+
+  get locked() {
+    return document.pointerLockElement === this.canvas;
+  }
 
   onLockChange() {
     if (this.locked) {
@@ -45,6 +53,12 @@ export class PlayerController {
     this.camera.quaternion.setFromEuler(this.euler);
   }
 
+  teleportTo(x, z, yaw = 0) {
+    this.camera.position.set(x, HEIGHT, z);
+    this.euler.set(0, yaw, 0, 'YXZ');
+    this.camera.quaternion.setFromEuler(this.euler);
+  }
+
   update(dt, collisionCheck) {
     if (!this.locked || !this.enabled) return;
     let x = 0, z = 0;
@@ -52,17 +66,35 @@ export class PlayerController {
     if (this.keys.has('KeyS') || this.keys.has('ArrowDown')) z += 1;
     if (this.keys.has('KeyA') || this.keys.has('ArrowLeft')) x -= 1;
     if (this.keys.has('KeyD') || this.keys.has('ArrowRight')) x += 1;
+
     this.dir.set(x, 0, z);
     if (!this.dir.lengthSq()) return;
     this.dir.normalize();
+
     const yaw = this.euler.y;
     const world = new THREE.Vector3(
       this.dir.x * Math.cos(yaw) + this.dir.z * Math.sin(yaw),
       0,
       -this.dir.x * Math.sin(yaw) + this.dir.z * Math.cos(yaw)
     ).multiplyScalar(SPEED * dt);
-    const next = this.camera.position.clone().add(world);
-    next.y = HEIGHT;
-    if (!collisionCheck || !collisionCheck(next)) this.camera.position.copy(next);
+
+    // Sliding collision along X and Z separately
+    const curPos = this.camera.position.clone();
+    
+    // Try X movement
+    const testX = curPos.clone();
+    testX.x += world.x;
+    if (!collisionCheck || !collisionCheck(testX)) {
+      this.camera.position.x = testX.x;
+    }
+
+    // Try Z movement
+    const testZ = this.camera.position.clone();
+    testZ.z += world.z;
+    if (!collisionCheck || !collisionCheck(testZ)) {
+      this.camera.position.z = testZ.z;
+    }
+
+    this.camera.position.y = HEIGHT;
   }
 }

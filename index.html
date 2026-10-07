@@ -3,26 +3,384 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Interactive Three.js media gallery" />
-  <title>Media Gallery</title>
+  <meta name="description" content="Chronological 3D soccer team museum with timeline hallways and tournament wings" />
+  <title>Soccer Team Museum & Hall of Fame</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
   <style>
-    *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#e9e6df;font-family:Inter,system-ui,sans-serif}button,input,select{font:inherit}
-    #canvas{display:block;width:100%;height:100%}
-    #start{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.55),rgba(218,215,207,.95))}
-    #start.hidden{display:none}.panel{width:min(440px,calc(100vw - 32px));padding:34px;background:rgba(255,255,255,.9);border:1px solid rgba(0,0,0,.12);box-shadow:0 20px 60px rgba(0,0,0,.12);backdrop-filter:blur(12px)}
-    h1{margin:0 0 8px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;font-size:26px}.sub{color:#656565;line-height:1.5;margin:0 0 24px}
-    .primary,.secondary{width:100%;padding:12px 16px;border-radius:8px;cursor:pointer}.primary{border:0;background:#111;color:#fff}.secondary{border:1px solid #c9c9c9;background:white;color:#111}
-    #hud{position:fixed;inset:0;z-index:10;pointer-events:none}.tip{position:absolute;top:18px;left:50%;transform:translateX(-50%);padding:8px 12px;border-radius:999px;background:rgba(20,20,20,.72);color:white;font-size:13px}.crosshair{position:absolute;left:50%;top:50%;width:8px;height:8px;border:1px solid rgba(255,255,255,.95);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 1px rgba(0,0,0,.3)}
-    #editor{position:fixed;right:18px;top:18px;z-index:30;width:min(340px,calc(100vw - 36px));padding:18px;background:rgba(255,255,255,.96);border:1px solid rgba(0,0,0,.12);box-shadow:0 14px 40px rgba(0,0,0,.18);display:none}.editor-title{font-weight:650;margin-bottom:12px}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.field{margin-top:10px}.field label{display:block;font-size:12px;color:#666;margin-bottom:5px}.field select{width:100%;padding:9px;border:1px solid #ccc;border-radius:7px;background:#fff}.upload{display:block;width:100%;padding:12px;border:1px dashed #aaa;text-align:center;border-radius:8px;cursor:pointer;background:#fafafa}.upload input{display:none}.status{font-size:12px;color:#666;margin:10px 0 0}.danger{border-color:#d0a0a0}.close{position:absolute;top:8px;right:10px;border:0;background:transparent;font-size:22px;cursor:pointer}
-    #cinematicBadge{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:11;padding:8px 12px;border-radius:999px;background:rgba(20,20,20,.75);color:white;font-size:13px;display:none}
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%; margin: 0; overflow: hidden;
+      background: #141312; color: #ede8df;
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, select, textarea { font: inherit; }
+    #canvas { display: block; width: 100%; height: 100%; }
+
+    /* Top HUD Bar */
+    #topBar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 15;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px; pointer-events: none;
+      background: linear-gradient(180deg, rgba(16, 15, 14, 0.85) 0%, rgba(16, 15, 14, 0) 100%);
+    }
+    .brand-title {
+      font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase; color: #f4eee2;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+    .location-strip {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: #d4a362; letter-spacing: 0.04em;
+      background: rgba(22, 20, 18, 0.75); padding: 6px 14px;
+      border: 1px solid rgba(212, 163, 98, 0.25); border-radius: 4px;
+      backdrop-filter: blur(8px);
+    }
+    .hud-actions { pointer-events: auto; display: flex; gap: 10px; }
+    .btn-hud {
+      background: rgba(26, 24, 22, 0.85); color: #ede8df;
+      border: 1px solid rgba(255, 255, 255, 0.16); padding: 6px 14px;
+      border-radius: 4px; font-size: 12px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s; backdrop-filter: blur(8px);
+    }
+    .btn-hud:hover {
+      background: rgba(40, 36, 32, 0.95); border-color: #d4a362; color: #f4eee2;
+    }
+
+    /* Crosshair */
+    .crosshair {
+      position: fixed; left: 50%; top: 50%; width: 6px; height: 6px;
+      border: 1.5px solid rgba(255, 255, 255, 0.85); border-radius: 50%;
+      transform: translate(-50%, -50%); pointer-events: none; z-index: 12;
+      box-shadow: 0 0 4px rgba(0,0,0,0.8);
+    }
+
+    /* Aimed Frame Plaque HUD */
+    #plaqueHud {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      z-index: 15; pointer-events: none; display: none;
+      width: min(520px, calc(100vw - 32px));
+      background: rgba(18, 16, 14, 0.92);
+      border: 1px solid rgba(212, 163, 98, 0.4); border-radius: 4px;
+      padding: 14px 20px; box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+      backdrop-filter: blur(12px); text-align: center;
+    }
+    #plaqueYear {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #d4a362; margin-bottom: 4px;
+    }
+    #plaqueTitle {
+      font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700;
+      color: #fcf9f2; margin: 0 0 4px; letter-spacing: 0.04em;
+    }
+    #plaqueDesc {
+      font-size: 13px; color: #b5ada1; margin: 0 0 8px; font-style: italic;
+    }
+    .plaque-hint {
+      font-size: 11px; color: #8c8273; letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Cinematic Banner */
+    #cinematicBadge {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      z-index: 16; padding: 10px 20px; background: rgba(14, 12, 10, 0.9);
+      border: 1px solid rgba(212, 163, 98, 0.5); border-radius: 4px;
+      color: #f7f3ea; font-size: 13px; display: none; backdrop-filter: blur(8px);
+    }
+
+    /* Start / Welcome Modal */
+    #start {
+      position: fixed; inset: 0; z-index: 30; display: grid; place-items: center;
+      background: radial-gradient(circle at 50% 40%, rgba(26, 23, 20, 0.88), rgba(10, 9, 8, 0.98));
+      backdrop-filter: blur(8px);
+    }
+    #start.hidden { display: none; }
+    .panel-welcome {
+      width: min(520px, calc(100vw - 32px)); padding: 40px;
+      background: rgba(22, 20, 18, 0.95); border: 1px solid rgba(212, 163, 98, 0.35);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.7); border-radius: 4px;
+      text-align: center;
+    }
+    .kicker {
+      font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: #d4a362; margin-bottom: 12px; font-weight: 600;
+    }
+    h1 {
+      margin: 0 0 14px; font-family: 'Cinzel', serif; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; font-size: 26px;
+      color: #f7f3ea; line-height: 1.25;
+    }
+    .sub {
+      color: #aba193; line-height: 1.6; margin: 0 0 28px; font-size: 14px;
+    }
+    .primary {
+      width: 100%; padding: 14px 20px; border-radius: 4px; cursor: pointer;
+      border: 1px solid #d4a362; background: #d4a362; color: #120f0a;
+      font-weight: 600; font-size: 14px; letter-spacing: 0.06em;
+      text-transform: uppercase; transition: all 0.2s;
+    }
+    .primary:hover {
+      background: #e2b677; box-shadow: 0 4px 20px rgba(212, 163, 98, 0.35);
+    }
+    .status-text {
+      font-size: 12px; color: #887d6e; margin: 20px 0 0; line-height: 1.6;
+    }
+
+    /* Museum Directory / Fast-Travel Modal */
+    #directoryModal {
+      position: fixed; inset: 0; z-index: 35; display: none;
+      background: rgba(10, 9, 8, 0.75); backdrop-filter: blur(8px);
+    }
+    .directory-card {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: min(560px, calc(100vw - 32px)); max-height: 90vh; overflow-y: auto;
+      background: rgba(22, 20, 18, 0.98); border: 1px solid rgba(212, 163, 98, 0.4);
+      padding: 32px; border-radius: 4px; box-shadow: 0 24px 60px rgba(0,0,0,0.8);
+    }
+    .directory-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 16px;
+    }
+    .directory-header h2 {
+      margin: 0; font-family: 'Cinzel', serif; font-size: 20px; color: #f7f3ea;
+      letter-spacing: 0.06em;
+    }
+    .directory-header p {
+      margin: 4px 0 0; font-size: 13px; color: #9c9182;
+    }
+    .close-btn {
+      background: transparent; border: 0; color: #8e8374; font-size: 24px;
+      cursor: pointer; padding: 0 6px; line-height: 1;
+    }
+    .close-btn:hover { color: #f7f3ea; }
+    .room-list { display: flex; flex-direction: column; gap: 8px; }
+    .room-btn {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; padding: 12px 16px; text-align: left;
+      background: rgba(30, 27, 24, 0.7); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px; color: #e5ded3; cursor: pointer; transition: all 0.2s;
+    }
+    .room-btn:hover {
+      background: rgba(45, 40, 35, 0.9); border-color: #d4a362; color: #f7f3ea;
+      transform: translateX(3px);
+    }
+    .room-btn-title { font-weight: 600; font-size: 14px; color: #f7f3ea; }
+    .room-btn-desc { font-size: 12px; color: #9e9383; margin-top: 2px; }
+    .room-btn-arrow { font-size: 12px; color: #d4a362; letter-spacing: 0.05em; font-weight: 600; }
+
+    /* Frame Editor Modal */
+    #editor {
+      position: fixed; right: 24px; top: 72px; bottom: 24px; z-index: 30;
+      width: min(380px, calc(100vw - 32px)); overflow-y: auto;
+      padding: 24px; background: rgba(20, 18, 16, 0.98);
+      border: 1px solid rgba(212, 163, 98, 0.35); border-radius: 4px;
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.8); display: none;
+      backdrop-filter: blur(12px);
+    }
+    .editor-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 12px;
+    }
+    .editor-era {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em;
+      color: #d4a362; font-weight: 600;
+    }
+    .editor-title {
+      font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700;
+      color: #f7f3ea; margin: 4px 0 0;
+    }
+    .editor-curatorial {
+      font-size: 13px; color: #aba193; line-height: 1.5; margin-bottom: 18px;
+      font-style: italic;
+    }
+    .field { margin-top: 14px; }
+    .field label {
+      display: block; font-size: 12px; font-weight: 500; color: #9c9182;
+      margin-bottom: 6px; letter-spacing: 0.03em;
+    }
+    .field select, .field input, .field textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 4px; background: #161412; color: #ede8df;
+    }
+    .field select:focus, .field input:focus, .field textarea:focus {
+      outline: none; border-color: #d4a362;
+    }
+    .upload-label {
+      display: block; width: 100%; padding: 16px; border: 1px dashed rgba(212, 163, 98, 0.45);
+      text-align: center; border-radius: 4px; cursor: pointer;
+      background: rgba(28, 25, 22, 0.6); transition: all 0.2s;
+    }
+    .upload-label:hover {
+      background: rgba(38, 34, 30, 0.9); border-color: #d4a362;
+    }
+    .upload-title { font-size: 13px; font-weight: 600; color: #f7f3ea; }
+    .upload-sub { font-size: 11px; color: #8e8374; margin-top: 3px; }
+    .upload-label input { display: none; }
+    .editor-actions {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;
+    }
+    .secondary-btn {
+      padding: 10px 12px; border-radius: 4px; cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.18); background: rgba(30,27,24,0.8);
+      color: #ede8df; font-size: 13px; font-weight: 500; transition: all 0.2s;
+    }
+    .secondary-btn:hover {
+      background: rgba(45,41,36,0.95); border-color: #d4a362; color: #f7f3ea;
+    }
+    .editor-status {
+      font-size: 12px; color: #8c8172; margin: 16px 0 0; line-height: 1.5;
+    }
   </style>
 </head>
 <body>
   <canvas id="canvas"></canvas>
-  <div id="start"><div class="panel"><h1>Media Gallery</h1><p class="sub">Walk through a fixed 3D exhibition and replace any frame with your own image or video. Everything stays in this browser.</p><button class="primary" id="enter">Enter Gallery</button><p class="status">WASD + mouse · aim at a frame and click · C for cinematic tour</p></div></div>
-  <div id="hud"><div class="tip" id="tip">Aim at a frame and click to edit</div><div class="crosshair"></div></div>
-  <div id="cinematicBadge">Cinematic tour — press C to stop</div>
-  <aside id="editor"><button class="close" id="closeEditor">×</button><div class="editor-title" id="editorTitle">Frame</div><label class="upload">Choose image or video<input id="mediaInput" type="file" accept="image/*,video/*" /></label><div class="field"><label>Fit</label><select id="fit"><option value="cover">Cover</option><option value="contain">Contain</option></select></div><div class="row"><button class="secondary" id="resetFrame">Reset frame</button><button class="secondary" id="resume">Resume tour</button></div><p class="status" id="editorStatus">Uploads are stored locally in IndexedDB.</p></aside>
+
+  <!-- Top Navigation & Location Strip -->
+  <div id="topBar">
+    <div class="brand-title">Club Museum & Hall of Fame</div>
+    <div class="location-strip" id="locationBadge">Central Hallway · 1980s Era</div>
+    <div class="hud-actions">
+      <button class="btn-hud" id="openDirectoryBtn">Floor Directory (M)</button>
+    </div>
+  </div>
+
+  <!-- Center Aim Reticle -->
+  <div class="crosshair"></div>
+
+  <!-- Exhibit Plaque HUD (aiming at frame) -->
+  <div id="plaqueHud">
+    <div id="plaqueYear">1982 · Central Hallway</div>
+    <h3 id="plaqueTitle">The Founding Squad</h3>
+    <div id="plaqueDesc">Mud, passion, and the debut season on home turf.</div>
+    <div class="plaque-hint">Click frame to inspect & customize</div>
+  </div>
+
+  <!-- Cinematic Tour Banner -->
+  <div id="cinematicBadge">Cinematic Museum Tour — press C or Esc to resume walking</div>
+
+  <!-- Start Welcome Modal -->
+  <div id="start">
+    <div class="panel-welcome">
+      <div class="kicker">Official Exhibition</div>
+      <h1>Club Museum &amp; Hall of Fame</h1>
+      <p class="sub">
+        A chronological retrospective honoring four decades of history. Walk down the central timeline hallway, explore side wings for Trophies, Rivalries, Continental Nights, and Legends, or personalize any frame with your own team's photographs and videos.
+      </p>
+      <button class="primary" id="enter">Enter Museum Gallery</button>
+      <p class="status-text">
+        WASD + Mouse to walk · Click frame to inspect &amp; edit · C for Cinematic Tour · M for Floor Directory
+      </p>
+    </div>
+  </div>
+
+  <!-- Floor Directory / Fast Travel Modal -->
+  <div id="directoryModal">
+    <div class="directory-card">
+      <div class="directory-header">
+        <div>
+          <h2>Museum Directory</h2>
+          <p>Select any era or wing to fast travel</p>
+        </div>
+        <button class="close-btn" id="closeDirectoryBtn">&times;</button>
+      </div>
+      <div class="room-list">
+        <button class="room-btn" data-teleport="entrance">
+          <div>
+            <div class="room-btn-title">1980s: The Early Era (Grand Entrance)</div>
+            <div class="room-btn-desc">Founding years, promotion triumphs, vintage matchdays</div>
+          </div>
+          <span class="room-btn-arrow">&rarr;</span>
+        </button>
+        <button class="room-btn" data-teleport="trophy">
+          <div>
+            <div class="room-btn-title">Wing I (West): Trophy &amp; Silverware Hall</div>
+            <div class="room-btn-desc">League Cups, the Invincibles golden trophy, domestic doubles</div>
+          </div>
+          <span class="room-btn-arrow">&rarr;</span>
+        </button>
+        <button class="room-btn" data-teleport="derby">
+          <div>
+            <div class="room-btn-title">Wing I (East): Epic Derbies &amp; Rivalry Clashes</div>
+            <div class="room-btn-desc">Stoppage-time winners, stadium tifos, dramatic comebacks</div>
+          </div>
+          <span class="room-btn-arrow">&rarr;</span>
+        </button>
+        <button class="room-btn" data-teleport="golden">
+          <div>
+            <div class="room-btn-title">1990s-2000s: The Golden Generation</div>
+            <div class="room-btn-desc">The famous academy class, continental away days, farewell to old ground</div>
+          </div>
+          <span class="room-btn-arrow">&rarr;</span>
+        </button>
+        <button class="room-btn" data-teleport="continental">
+          <div>
+            <div class="room-btn-title">Wing II (West): Continental Tournaments</div>
+            <div class="room-btn-desc">European Cup in Moscow, 4-0 comeback miracles, Club World Cup</div>
+          </div>
+          <span class="room-btn-arrow">&rarr;</span>
+        </button>
+        <button class="room-btn" data-teleport="legends">
+          <div>
+            <div class="room-btn-title">Wing II (East): Club Legends &amp; Ballon d'Or</div>
+            <div class="room-btn-desc">The Captain #6, The Maestro #10, Flying Winger #7, The Gaffer</div>
+          </div>
+          <span class="room-btn-arrow">&rarr;</span>
+        </button>
+        <button class="room-btn" data-teleport="rotunda">
+          <div>
+            <div class="room-btn-title">Champions Rotunda: Centenary Pavilion</div>
+            <div class="room-btn-desc">100-year treble hero celebration, youth academy, global supporters</div>
+          </div>
+          <span class="room-btn-arrow">&rarr;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exhibit Frame Customizer / Editor Drawer -->
+  <aside id="editor">
+    <div class="editor-top">
+      <div>
+        <div class="editor-era" id="editorRoom">Central Hallway · 1980s</div>
+        <div class="editor-title" id="editorTitle">Exhibit Title</div>
+      </div>
+      <button class="close-btn" id="closeEditor">&times;</button>
+    </div>
+
+    <p class="editor-curatorial" id="editorDesc">Curatorial notes about this historical team moment.</p>
+
+    <label class="upload-label">
+      <div class="upload-title">Upload Image or Video</div>
+      <div class="upload-sub">Stored locally in your browser</div>
+      <input id="mediaInput" type="file" accept="image/*,video/*" />
+    </label>
+
+    <div class="field">
+      <label>Display Framing</label>
+      <select id="fit">
+        <option value="cover">Cover (Fill Frame)</option>
+        <option value="contain">Contain (Fit Entire Image)</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Personal Team Caption / Notes</label>
+      <textarea id="customNote" rows="3" placeholder="Add custom notes about your own match, player, or tournament..."></textarea>
+    </div>
+
+    <div class="editor-actions">
+      <button class="secondary-btn" id="resetFrame">Reset to Default</button>
+      <button class="secondary-btn" id="resume">Resume Walk</button>
+    </div>
+
+    <p class="editor-status" id="editorStatus">Displaying official historical archive artwork.</p>
+  </aside>
+
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
