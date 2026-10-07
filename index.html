@@ -5,24 +5,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Interactive Three.js media gallery" />
   <title>Media Gallery</title>
-  <style>
-    *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#e9e6df;font-family:Inter,system-ui,sans-serif}button,input,select{font:inherit}
-    #canvas{display:block;width:100%;height:100%}
-    #start{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.55),rgba(218,215,207,.95))}
-    #start.hidden{display:none}.panel{width:min(440px,calc(100vw - 32px));padding:34px;background:rgba(255,255,255,.9);border:1px solid rgba(0,0,0,.12);box-shadow:0 20px 60px rgba(0,0,0,.12);backdrop-filter:blur(12px)}
-    h1{margin:0 0 8px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;font-size:26px}.sub{color:#656565;line-height:1.5;margin:0 0 24px}
-    .primary,.secondary{width:100%;padding:12px 16px;border-radius:8px;cursor:pointer}.primary{border:0;background:#111;color:#fff}.secondary{border:1px solid #c9c9c9;background:white;color:#111}
-    #hud{position:fixed;inset:0;z-index:10;pointer-events:none}.tip{position:absolute;top:18px;left:50%;transform:translateX(-50%);padding:8px 12px;border-radius:999px;background:rgba(20,20,20,.72);color:white;font-size:13px}.crosshair{position:absolute;left:50%;top:50%;width:8px;height:8px;border:1px solid rgba(255,255,255,.95);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 1px rgba(0,0,0,.3)}
-    #editor{position:fixed;right:18px;top:18px;z-index:30;width:min(340px,calc(100vw - 36px));padding:18px;background:rgba(255,255,255,.96);border:1px solid rgba(0,0,0,.12);box-shadow:0 14px 40px rgba(0,0,0,.18);display:none}.editor-title{font-weight:650;margin-bottom:12px}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.field{margin-top:10px}.field label{display:block;font-size:12px;color:#666;margin-bottom:5px}.field select{width:100%;padding:9px;border:1px solid #ccc;border-radius:7px;background:#fff}.upload{display:block;width:100%;padding:12px;border:1px dashed #aaa;text-align:center;border-radius:8px;cursor:pointer;background:#fafafa}.upload input{display:none}.status{font-size:12px;color:#666;margin:10px 0 0}.danger{border-color:#d0a0a0}.close{position:absolute;top:8px;right:10px;border:0;background:transparent;font-size:22px;cursor:pointer}
-    #cinematicBadge{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:11;padding:8px 12px;border-radius:999px;background:rgba(20,20,20,.75);color:white;font-size:13px;display:none}
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 </head>
 <body>
   <canvas id="canvas"></canvas>
-  <div id="start"><div class="panel"><h1>Media Gallery</h1><p class="sub">Walk through a fixed 3D exhibition and replace any frame with your own image or video. Everything stays in this browser.</p><button class="primary" id="enter">Enter Gallery</button><p class="status">WASD + mouse · aim at a frame and click · C for cinematic tour</p></div></div>
-  <div id="hud"><div class="tip" id="tip">Aim at a frame and click to edit</div><div class="crosshair"></div></div>
-  <div id="cinematicBadge">Cinematic tour — press C to stop</div>
-  <aside id="editor"><button class="close" id="closeEditor">×</button><div class="editor-title" id="editorTitle">Frame</div><label class="upload">Choose image or video<input id="mediaInput" type="file" accept="image/*,video/*" /></label><div class="field"><label>Fit</label><select id="fit"><option value="cover">Cover</option><option value="contain">Contain</option></select></div><div class="row"><button class="secondary" id="resetFrame">Reset frame</button><button class="secondary" id="resume">Resume tour</button></div><p class="status" id="editorStatus">Uploads are stored locally in IndexedDB.</p></aside>
+
+  <div id="overlay">
+    <div class="panel">
+      <p class="eyebrow">A personal museum</p>
+      <h1>Media Gallery</h1>
+      <p class="sub">Wander a quiet exhibition of photographs and moving images, hung at random from the collection. Aim at any frame to recurate it, or step through the door for a film.</p>
+      <p class="count" id="collectionCount">Loading collection…</p>
+      <div class="actions">
+        <button class="primary" id="enter">Enter the gallery</button>
+        <button class="secondary" id="startTour">Guided tour</button>
+      </div>
+      <dl class="keys">
+        <div><dt>WASD</dt><dd>walk · Shift to hurry</dd></div>
+        <div><dt>Click</dt><dd>curate a frame</dd></div>
+        <div><dt>C</dt><dd>guided tour</dd></div>
+        <div><dt>R</dt><dd>rehang the gallery</dd></div>
+        <div><dt>Space</dt><dd>pause the film</dd></div>
+        <div><dt>Seat</dt><dd>click to sit, move to stand</dd></div>
+      </dl>
+    </div>
+  </div>
+
+  <div id="hud">
+    <div id="crosshair"></div>
+    <div id="hoverCaption"><strong id="hoverTitle"></strong><span id="hoverSub"></span></div>
+    <div id="loading"><div id="loadingBar"></div></div>
+    <div id="tourBadge">Guided tour · press C or click to take over</div>
+    <div id="toast"></div>
+  </div>
+
+  <aside id="editor">
+    <button class="close" id="closeEditor" aria-label="Close">×</button>
+    <p class="eyebrow" id="editorMeta"></p>
+    <h2 id="editorTitle">Frame</h2>
+    <button class="primary" id="shuffleFrame">Hang another piece</button>
+    <label class="upload">Upload your own image or video<input id="mediaInput" type="file" accept="image/*,video/*" /></label>
+    <div class="field">
+      <span>Framing</span>
+      <div class="segmented">
+        <button data-fit="auto">Fit frame</button>
+        <button data-fit="contain">Matted</button>
+        <button data-fit="cover">Fill</button>
+      </div>
+    </div>
+    <button class="secondary danger" id="resetFrame">Remove upload</button>
+    <p class="status" id="editorStatus"></p>
+  </aside>
+
+  <aside id="cinemaPanel">
+    <button class="close" id="closeCinema" aria-label="Close">×</button>
+    <p class="eyebrow">The Little Cinema</p>
+    <div class="now">
+      <div>
+        <h2 id="nowTitle">Nothing showing</h2>
+        <p id="nowMeta"></p>
+      </div>
+      <div class="transport">
+        <button class="pill" id="filmToggle">Play</button>
+        <button class="pill ghost" id="filmStop">Stop</button>
+        <label class="volume">Vol <input id="filmVolume" type="range" min="0" max="1" step="0.01" value="0.8" /></label>
+      </div>
+    </div>
+    <div class="progress"><div id="filmProgress"></div></div>
+    <div id="filmList"></div>
+  </aside>
+
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

@@ -1,136 +1,174 @@
-import * as THREE from 'three';
+import './styles.css';
+import { CONFIG } from './config.js';
+import { App } from './core/app.js';
+import { COLLIDERS, SLOTS } from './world/layout.js';
+import { buildEnvironment } from './world/environment.js';
+import { MediaFrame } from './world/frame.js';
+import { CinemaHall } from './world/cinema.js';
+import { MediaLibrary } from './media/library.js';
+import { Curator } from './media/curator.js';
+import { PLACEHOLDER_FILMS, collectionFilms } from './cinema/programme.js';
 import { PlayerController } from './controls/player.js';
 import { createCollisionChecker } from './controls/collision.js';
-import { buildGallery, applyMedia, updateFit, defaultMediaFor } from './scene/gallery.js';
-import { saveSlotMedia, deleteSlotMedia } from './storage/db.js';
+import { Interactions } from './controls/interactions.js';
+import { CinematicTour } from './controls/tour.js';
+import { Hud } from './ui/hud.js';
+import { EditorPanel } from './ui/editor.js';
+import { CinemaPanel } from './ui/cinemaPanel.js';
+import { Overlay } from './ui/overlay.js';
+import { $ } from './ui/dom.js';
 
-const canvas = document.getElementById('canvas');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-renderer.setSize(innerWidth, innerHeight);
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.12;
-renderer.shadowMap.enabled = true;
+// ─── World ───────────────────────────────────────────────────────────────────
+const app = new App($('canvas'));
+const environment = buildEnvironment(app);
+app.scene.add(environment.group);
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xe4e1da);
-scene.fog = new THREE.Fog(0xe4e1da, 18, 38);
+const frames = SLOTS.map((slot) => new MediaFrame(slot));
+for (const frame of frames) app.scene.add(frame.group);
 
-const camera = new THREE.PerspectiveCamera(68, innerWidth/innerHeight, 0.1, 100);
-camera.position.set(0,1.65,8.6);
-const player = new PlayerController(camera, canvas);
-const clock = new THREE.Clock();
-const raycaster = new THREE.Raycaster();
-raycaster.far = 7;
+const ambientBase = { hemisphere: environment.hemisphere.intensity, env: app.scene.environmentIntensity };
+const cinema = app.addSystem(new CinemaHall(app, {
+  setAmbient(factor) {
+    environment.hemisphere.intensity = ambientBase.hemisphere * factor;
+    app.scene.environmentIntensity = ambientBase.env * factor;
+  },
+}));
+app.scene.add(cinema.group);
 
-let gallery, collisionCheck, selectedFrame = null, cinematic = false, cinematicStart = 0;
+// ─── Controls ────────────────────────────────────────────────────────────────
+const hud = new Hud();
+const player = new PlayerController(app.camera, app.canvas, {
+  ...CONFIG.player,
+  collides: createCollisionChecker(COLLIDERS, CONFIG.player.radius),
+});
+const tour = new CinematicTour(app.camera, frames, { ...CONFIG.tour, eyeHeight: CONFIG.player.eyeHeight });
+const interactions = new Interactions(app.camera);
+interactions.addOccluders(environment.walls);
 
-const start = document.getElementById('start');
-const editor = document.getElementById('editor');
-const editorTitle = document.getElementById('editorTitle');
-const mediaInput = document.getElementById('mediaInput');
-const fit = document.getElementById('fit');
-const badge = document.getElementById('cinematicBadge');
+for (const frame of frames) {
+  interactions.add(frame.hitTargets, {
+    caption: () => frame.item && { title: frame.item.title, subtitle: `${frame.item.subtitle} · click to curate` },
+    activate: () => openPanel(editor, frame),
+  });
+}
+cinema.registerInteractions(interactions, {
+  onScreen: () => openPanel(cinemaPanel),
+  onSeat: (seat) => player.sit(seat),
+});
 
-async function init() {
-  gallery = await buildGallery(renderer);
-  scene.add(gallery.group);
-  collisionCheck = createCollisionChecker(gallery.collisionMeshes);
-  animate();
+// ─── UI & input modes ────────────────────────────────────────────────────────
+/** @type {'intro'|'explore'|'panel'|'touring'} */
+let mode = 'intro';
+let activePanel = null;
+let curator;
+
+const overlay = new Overlay({
+  onEnter: () => { overlay.hide(); mode = 'explore'; player.lock(); },
+  onTour: () => { overlay.hide(); startTour(); },
+});
+
+const editor = new EditorPanel({
+  onUpload: (file) => curator.upload(editor.frame, file),
+  onShuffle: () => curator.shuffle(editor.frame),
+  onReset: () => curator.reset(editor.frame),
+  onFit: (fit) => curator.setFit(editor.frame, fit),
+  onClose: () => closePanel(true),
+});
+const cinemaPanel = new CinemaPanel(cinema, { onClose: () => closePanel(true) });
+cinemaPanel.setProgramme([{ heading: 'Now showing', films: PLACEHOLDER_FILMS }]);
+
+function openPanel(panel, ...args) {
+  mode = 'panel';
+  activePanel = panel;
+  hud.setHovered(null);
+  player.unlock();
+  panel.open(...args);
 }
 
-document.getElementById('enter').addEventListener('click', () => { start.classList.add('hidden'); player.lock(); });
-document.getElementById('resume').addEventListener('click', closeEditorAndResume);
-document.getElementById('closeEditor').addEventListener('click', closeEditorAndResume);
+function closePanel(resume) {
+  activePanel?.close();
+  activePanel = null;
+  mode = 'explore';
+  if (resume) player.lock(); else overlay.showPaused();
+}
 
-document.getElementById('resetFrame').addEventListener('click', async () => {
-  if (!selectedFrame) return;
-  await deleteSlotMedia(selectedFrame.slot.id);
-  selectedFrame.fit = 'cover';
-  await applyMedia(selectedFrame, { url:defaultMediaFor(selectedFrame.slot), type:'image', fit:'cover' }, renderer, gallery.videoElements);
-  fit.value = 'cover';
-  document.getElementById('editorStatus').textContent = 'Frame reset to its default photograph.';
+function startTour() {
+  mode = 'touring';
+  player.standUp();
+  player.enabled = false;
+  player.unlock();
+  hud.setHovered(null);
+  hud.setTour(true);
+  tour.start();
+}
+
+function stopTour() {
+  tour.stop();
+  hud.setTour(false);
+  player.syncFromCamera();
+  player.enabled = true;
+  mode = 'explore';
+  player.lock();
+}
+
+document.addEventListener('pointerlockchange', () => {
+  if (!player.locked && mode === 'explore') {
+    hud.setHovered(null);
+    overlay.showPaused();
+  }
 });
 
-fit.addEventListener('change', async () => {
-  if (!selectedFrame) return;
-  selectedFrame.fit = fit.value;
-  updateFit(selectedFrame);
-  const file = mediaInput.files?.[0];
-  if (file) await saveSlotMedia({ slotId:selectedFrame.slot.id, blob:file, type:file.type, fit:fit.value, name:file.name });
-});
-
-mediaInput.addEventListener('change', async () => {
-  const file = mediaInput.files?.[0];
-  if (!file || !selectedFrame) return;
-  const url = URL.createObjectURL(file);
-  gallery.transientUrls.push(url);
-  await applyMedia(selectedFrame, { url, type:file.type, fit:fit.value, persistent:true }, renderer, gallery.videoElements);
-  await saveSlotMedia({ slotId:selectedFrame.slot.id, blob:file, type:file.type, fit:fit.value, name:file.name });
-  document.getElementById('editorStatus').textContent = `${file.name} saved locally to this frame.`;
-  mediaInput.value = '';
-});
-
-canvas.addEventListener('click', () => {
-  if (!player.locked || cinematic) return;
-  const frame = aimedFrame();
-  if (frame) openEditor(frame);
+app.canvas.addEventListener('click', () => {
+  if (mode === 'touring') return stopTour();
+  if (mode !== 'explore') return;
+  if (!player.locked) { overlay.hide(); return player.lock(); }
+  const picked = interactions.pick();
+  picked?.target.activate(picked.hit);
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.code === 'KeyC' && !editorIsOpen()) toggleCinematic();
+  if (e.target instanceof HTMLInputElement && e.target.type !== 'range') return;
+  if (e.code === 'Escape' && mode === 'panel') closePanel(false);
+  if (e.code === 'Escape' && mode === 'touring') { stopTour(); return; }
+  if (e.code === 'KeyC' && (mode === 'explore' || mode === 'touring')) {
+    if (mode === 'touring') stopTour(); else { overlay.hide(); startTour(); }
+  }
+  if (e.code === 'KeyR' && curator && mode !== 'panel') {
+    curator.shuffleAll();
+    hud.toast('Rehanging the gallery…');
+  }
+  if (e.code === 'Space' && cinema.film && (cinema.contains(app.camera.position) || activePanel === cinemaPanel)) {
+    e.preventDefault();
+    cinema.togglePause();
+  }
 });
 
-function aimedFrame() {
-  raycaster.setFromCamera(new THREE.Vector2(0,0), camera);
-  const screens = gallery.frames.map(f => f.screen);
-  const hit = raycaster.intersectObjects(screens, false)[0];
-  return hit ? gallery.frames.find(f => f.screen === hit.object) : null;
-}
-
-function openEditor(frame) {
-  selectedFrame = frame;
-  player.unlock();
-  editorTitle.textContent = `Edit ${frame.slot.id}`;
-  fit.value = frame.fit || 'cover';
-  document.getElementById('editorStatus').textContent = 'Choose an image or video. It stays in this browser.';
-  editor.style.display = 'block';
-}
-
-function closeEditorAndResume() {
-  editor.style.display = 'none'; selectedFrame = null; player.lock();
-}
-function editorIsOpen() { return editor.style.display === 'block'; }
-
-function toggleCinematic() {
-  cinematic = !cinematic;
-  player.enabled = !cinematic;
-  badge.style.display = cinematic ? 'block' : 'none';
-  if (cinematic) { player.unlock(); cinematicStart = performance.now(); }
-  else player.lock();
-}
-
-function updateCinematic() {
-  if (!cinematic) return;
-  const t = ((performance.now() - cinematicStart) / 1000) % 24;
-  const a = (t / 24) * Math.PI * 2;
-  const z = 7.5 * Math.cos(a);
-  const x = 5.2 * Math.sin(a);
-  camera.position.set(x, 1.8 + Math.sin(a*2)*0.18, z);
-  const target = new THREE.Vector3(Math.sin(a+0.55)*4.5, 2.1, Math.cos(a+0.55)*7.5);
-  camera.lookAt(target);
-}
-
-function animate() {
-  requestAnimationFrame(animate);
-  const dt = Math.min(clock.getDelta(), 0.05);
-  player.update(dt, collisionCheck);
-  updateCinematic();
-  renderer.render(scene, camera);
-}
-
-addEventListener('resize', () => {
-  camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight);
+// ─── Systems ────────────────────────────────────────────────────────────────
+app.addSystem(player);
+app.addSystem(tour);
+app.addSystem({
+  update() {
+    if (mode !== 'explore' || !player.locked) return;
+    const picked = interactions.pick();
+    hud.setHovered(picked ? picked.target.caption(picked.hit) : null);
+  },
 });
 
-init();
+app.start();
+
+// ─── Content ─────────────────────────────────────────────────────────────────
+const library = await MediaLibrary.load(CONFIG.media.manifestUrl);
+overlay.setCollectionSize(library.size);
+cinemaPanel.setProgramme([
+  { heading: 'Now showing', films: PLACEHOLDER_FILMS },
+  { heading: 'Home movies', films: collectionFilms(library) },
+]);
+curator = app.addSystem(new Curator(frames, library, {
+  media: CONFIG.media,
+  anisotropy: Math.min(8, app.maxAnisotropy),
+  onProgress: (p) => { hud.setProgress(p); if (editor.isOpen) editor.refresh(); },
+}));
+curator.hangAll();
+
+// Handy for poking at the scene from devtools during development.
+if (import.meta.env.DEV) Object.assign(window, { museum: { app, frames, curator, library, tour, cinema, player } });

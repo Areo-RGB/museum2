@@ -1,14 +1,13 @@
-import * as THREE from 'three';
-
-export function createCollisionChecker(meshes, radius = 0.42) {
-  const raycaster = new THREE.Raycaster();
-  raycaster.far = radius;
-  const dirs = Array.from({ length: 8 }, (_, i) => {
-    const a = i / 8 * Math.PI * 2;
-    return new THREE.Vector3(Math.cos(a), 0, Math.sin(a));
-  });
-  return (position) => dirs.some((d) => {
-    raycaster.set(position, d);
-    return raycaster.intersectObjects(meshes, true).length > 0;
+/**
+ * Circle-vs-rectangle collision in the XZ plane. Much cheaper and more
+ * predictable than raycasting against meshes.
+ * @param {{minX:number,maxX:number,minZ:number,maxZ:number}[]} rects
+ */
+export function createCollisionChecker(rects, radius) {
+  const r2 = radius * radius;
+  return (position) => rects.some((r) => {
+    const dx = position.x - Math.max(r.minX, Math.min(position.x, r.maxX));
+    const dz = position.z - Math.max(r.minZ, Math.min(position.z, r.maxZ));
+    return dx * dx + dz * dz < r2;
   });
 }
