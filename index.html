@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="3D Erinnerungsmuseum für das Jugendteam von F.C. Hertha 03 Zehlendorf (Jahrgang 2014)" />
   <title>Hertha 03 Zehlendorf · 2014er Team-Museum</title>
+  <link rel="icon" type="image/svg+xml" href="/media/logo.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
@@ -23,8 +24,15 @@
     #topBar {
       position: fixed; top: 0; left: 0; right: 0; z-index: 15;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 24px; pointer-events: none;
+      padding: 14px 24px; pointer-events: none;
       background: linear-gradient(180deg, rgba(7, 18, 36, 0.94) 0%, rgba(7, 18, 36, 0) 100%);
+    }
+    .brand-zone {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .h03-nav-logo {
+      width: 36px; height: 36px; object-fit: contain;
+      filter: drop-shadow(0 2px 8px rgba(0, 102, 173, 0.7));
     }
     .brand-title {
       font-family: 'Cinzel', serif; font-size: 15px; font-weight: 700;
@@ -104,12 +112,9 @@
       box-shadow: 0 24px 70px rgba(0, 0, 0, 0.75); border-radius: 6px;
       text-align: center;
     }
-    .club-crest-mini {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 44px; height: 44px; margin-bottom: 12px;
-      background: #004b93; border: 2px solid #ffffff; border-radius: 50%;
-      font-family: 'Cinzel', serif; font-weight: 800; font-size: 15px; color: #ffffff;
-      box-shadow: 0 0 16px rgba(96, 165, 250, 0.6);
+    .welcome-crest {
+      width: 86px; height: 86px; object-fit: contain; margin-bottom: 12px;
+      filter: drop-shadow(0 4px 16px rgba(0, 102, 173, 0.8));
     }
     .kicker {
       font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
@@ -263,7 +268,10 @@
 
   <!-- Top Navigation & Location Strip -->
   <div id="topBar">
-    <div class="brand-title brand-team-name">F.C. Hertha 03 Zehlendorf · 2014er</div>
+    <div class="brand-zone">
+      <img src="/media/logo.svg" alt="F.C. Hertha 03 Zehlendorf" class="h03-nav-logo" />
+      <div class="brand-title brand-team-name">F.C. Hertha 03 Zehlendorf · 2014er</div>
+    </div>
     <div class="location-strip" id="locationBadge">Zeitstrahl · 2018–2020: Minis &amp; F-Jugend</div>
     <div class="hud-actions">
       <button class="btn-hud" id="openDirectoryBtn">Raum-Übersicht (M)</button>
@@ -287,7 +295,7 @@
   <!-- Start Welcome Modal -->
   <div id="start">
     <div class="panel-welcome">
-      <div class="club-crest-mini">H03</div>
+      <img src="/media/logo.svg" alt="F.C. Hertha 03 Zehlendorf" class="welcome-crest" />
       <div class="kicker">F.C. Hertha 03 Zehlendorf e.V. (h03.de)</div>
       <h1 class="brand-team-name">F.C. Hertha 03 Zehlendorf · 2014er</h1>
       <p class="sub">

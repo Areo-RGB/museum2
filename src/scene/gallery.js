@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { EXHIBITS, getExhibitById, generateExhibitCanvas } from './artworks.js';
+import { EXHIBITS, getExhibitById, generateExhibitCanvas, preloadClubLogo, getClubLogoImage } from './artworks.js';
 import { getSlotMedia } from '../storage/db.js';
 
 function createBox(w, h, d, material) {
@@ -26,19 +26,26 @@ function createTextCanvas(text, subtext = '', width = 512, height = 128, bgColor
   ctx.lineWidth = 1.5;
   ctx.strokeRect(12, 12, width - 24, height - 24);
 
+  // Draw small official Hertha 03 logo on the left if available
+  const logoImg = getClubLogoImage();
+  const textOffset = logoImg ? 26 : 0;
+  if (logoImg && logoImg.complete && logoImg.naturalWidth > 0) {
+    ctx.drawImage(logoImg, 22, 28, 72, 72);
+  }
+
   // Main text
-  ctx.font = '700 22px "Cinzel", Georgia, serif';
+  ctx.font = '700 21px "Cinzel", Georgia, serif';
   ctx.fillStyle = textColor;
   ctx.textAlign = 'center';
   ctx.letterSpacing = '1.5px';
-  ctx.fillText(text.toUpperCase(), width / 2, subtext ? 50 : 72);
+  ctx.fillText(text.toUpperCase(), width / 2 + textOffset, subtext ? 49 : 72);
 
   // Subtext if present
   if (subtext) {
     ctx.font = '500 13px Inter, sans-serif';
     ctx.fillStyle = borderColor;
     ctx.letterSpacing = '1px';
-    ctx.fillText(subtext.toUpperCase(), width / 2, 84);
+    ctx.fillText(subtext.toUpperCase(), width / 2 + textOffset, 83);
   }
 
   const texture = new THREE.CanvasTexture(canvas);
@@ -47,6 +54,9 @@ function createTextCanvas(text, subtext = '', width = 512, height = 128, bgColor
 }
 
 export async function buildGallery(renderer) {
+  // Preload official Hertha 03 Zehlendorf SVG Logo before building frames
+  await preloadClubLogo();
+
   const group = new THREE.Group();
   const collisionMeshes = [];
   const frames = [];
@@ -67,19 +77,19 @@ export async function buildGallery(renderer) {
   const sidelineFloorMat = new THREE.MeshStandardMaterial({ color: 0x152136, roughness: 0.25, metalness: 0.08 });
   const rotundaFloorMat = new THREE.MeshStandardMaterial({ color: 0x0d1f3b, roughness: 0.18, metalness: 0.12 });
 
-  const H = 5.0; // Wall height
-  const T = 0.3; // Wall thickness
+  const H = 5.0;
+  const T = 0.3;
 
   // -------------------------------------------------------------------------
   // 1. FLOORS & CEILINGS
   // -------------------------------------------------------------------------
 
-  // A. Main Central Hallway Floor (Z: +26 to -34, X: -4 to 4)
+  // Central Hallway Floor
   const hallFloor = createBox(8, 0.12, 60, hallwayFloorMat);
   hallFloor.position.set(0, -0.06, -4);
   group.add(hallFloor);
 
-  // Central Blau-Weiß Runner Carpet down the hallway (Width 3.2m)
+  // Central Blau-Weiß Runner Carpet down the hallway
   const runner = createBox(3.2, 0.02, 59.8, runnerMat);
   runner.position.set(0, 0.01, -4);
   group.add(runner);
@@ -89,35 +99,35 @@ export async function buildGallery(renderer) {
   hallCeiling.position.set(0, H + 0.06, -4);
   group.add(hallCeiling);
 
-  // B. Wing I West: Turniere & Berliner Pokal (X: -18 to -4, Z: 1 to 15)
+  // Wing I West: Turniere & Berliner Pokal
   const tourFloor = createBox(14, 0.12, 14, tournamentFloorMat);
   tourFloor.position.set(-11, -0.06, 8);
   const tourCeil = createBox(14, 0.12, 14, ceilingMat);
   tourCeil.position.set(-11, H + 0.06, 8);
   group.add(tourFloor, tourCeil);
 
-  // C. Wing I East: Ausflüge, Camps & Feste (X: 4 to 18, Z: 1 to 15)
+  // Wing I East: Ausflüge, Camps & Feste
   const tripsFloor = createBox(14, 0.12, 14, tripsFloorMat);
   tripsFloor.position.set(11, -0.06, 8);
   const tripsCeil = createBox(14, 0.12, 14, ceilingMat);
   tripsCeil.position.set(11, H + 0.06, 8);
   group.add(tripsFloor, tripsCeil);
 
-  // D. Wing II West: Pokalschrank & Ehrungen (X: -18 to -4, Z: -21 to -7)
+  // Wing II West: Pokalschrank & Ehrungen
   const cabinetFloor = createBox(14, 0.12, 14, cabinetFloorMat);
   cabinetFloor.position.set(-11, -0.06, -14);
   const cabinetCeil = createBox(14, 0.12, 14, ceilingMat);
   cabinetCeil.position.set(-11, H + 0.06, -14);
   group.add(cabinetFloor, cabinetCeil);
 
-  // E. Wing II East: Trainer & Eltern (X: 4 to 18, Z: -21 to -7)
+  // Wing II East: Trainer & Eltern
   const sidelineFloor = createBox(14, 0.12, 14, sidelineFloorMat);
   sidelineFloor.position.set(11, -0.06, -14);
   const sidelineCeil = createBox(14, 0.12, 14, ceilingMat);
   sidelineCeil.position.set(11, H + 0.06, -14);
   group.add(sidelineFloor, sidelineCeil);
 
-  // F. Die 2014er Ehrenhalle (Rotunde: X: -9 to 9, Z: -46 to -34)
+  // Die 2014er Ehrenhalle (Rotunde)
   const rotundaFloor = createBox(18, 0.12, 12, rotundaFloorMat);
   rotundaFloor.position.set(0, -0.06, -40);
   const rotundaCeil = createBox(18, 0.12, 12, ceilingMat);
@@ -261,11 +271,11 @@ export async function buildGallery(renderer) {
 
   // Side Room Ambient Lights
   const roomLights = [
-    { x: -11, z: 8, col: 0xfff0db },   // Turniere
-    { x: 11, z: 8, col: 0xe6f2ff },    // Ausflüge
-    { x: -11, z: -14, col: 0xfffae6 }, // Pokalschrank
-    { x: 11, z: -14, col: 0xeef5ff },  // Trainer & Eltern
-    { x: 0, z: -40, col: 0xfffae6 },   // Rotunde
+    { x: -11, z: 8, col: 0xfff0db },
+    { x: 11, z: 8, col: 0xe6f2ff },
+    { x: -11, z: -14, col: 0xfffae6 },
+    { x: 11, z: -14, col: 0xeef5ff },
+    { x: 0, z: -40, col: 0xfffae6 },
   ];
   roomLights.forEach(rl => {
     const light = new THREE.PointLight(rl.col, 18, 18, 1.6);
@@ -386,13 +396,21 @@ async function createMuseumFrame(exhibit, cfg, renderer, videoElements, transien
   pCtx.strokeStyle = '#60a5fa';
   pCtx.lineWidth = 3;
   pCtx.strokeRect(4, 4, 504, 92);
+
+  // Draw mini logo on plaque if available
+  const logoImg = getClubLogoImage();
+  const textOffset = logoImg ? 20 : 0;
+  if (logoImg && logoImg.complete && logoImg.naturalWidth > 0) {
+    pCtx.drawImage(logoImg, 18, 18, 64, 64);
+  }
+
   pCtx.font = '600 19px "Cinzel", Georgia, serif';
   pCtx.fillStyle = '#ffffff';
   pCtx.textAlign = 'center';
-  pCtx.fillText(exhibit.title, 256, 40);
+  pCtx.fillText(exhibit.title, 256 + textOffset, 40);
   pCtx.font = '400 13px Inter, sans-serif';
   pCtx.fillStyle = '#93c5fd';
-  pCtx.fillText(exhibit.subtitle, 256, 72);
+  pCtx.fillText(exhibit.subtitle, 256 + textOffset, 72);
   const plaqueTex = new THREE.CanvasTexture(plaqueCanvas);
   plaqueTex.colorSpace = THREE.SRGBColorSpace;
   const plaqueMesh = new THREE.Mesh(new THREE.PlaneGeometry(Math.min(W * 0.7, 1.8), 0.35), new THREE.MeshBasicMaterial({ map: plaqueTex }));

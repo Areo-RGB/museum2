@@ -314,7 +314,7 @@ export const EXHIBITS = [
     aspect: '16:9',
     theme: 'h03_hero',
     badge: 'HERTHA 03 · 2014er',
-    icon: 'graduation'
+    icon: 'crest'
   },
   {
     id: 'rotunda-left',
@@ -356,6 +356,33 @@ export function getExhibitById(id) {
   };
 }
 
+// Preload the official Hertha 03 Zehlendorf SVG logo
+let clubLogoImage = null;
+let logoLoadPromise = null;
+
+export function preloadClubLogo() {
+  if (clubLogoImage) return Promise.resolve(clubLogoImage);
+  if (logoLoadPromise) return logoLoadPromise;
+
+  logoLoadPromise = new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      clubLogoImage = img;
+      resolve(img);
+    };
+    img.onerror = () => {
+      resolve(null);
+    };
+    img.src = '/media/logo.svg';
+  });
+  return logoLoadPromise;
+}
+
+export function getClubLogoImage() {
+  return clubLogoImage;
+}
+
 /**
  * Procedurally generates Hertha 03 Zehlendorf branded canvas graphics
  */
@@ -369,25 +396,24 @@ export function generateExhibitCanvas(exhibit) {
   canvas.height = height;
   const ctx = canvas.getContext('2d');
 
-  // Hertha 03 Zehlendorf Blue & White theme colors
   const themes = {
     h03_blue: {
-      bg1: '#0d2b5c', bg2: '#051329', // Hertha 03 Deep Royal Blue
+      bg1: '#0d2b5c', bg2: '#051329',
       accent: '#60a5fa', text: '#ffffff', sub: '#bfdbfe',
       border: 'rgba(96, 165, 250, 0.6)', badgeBg: 'rgba(96, 165, 250, 0.25)'
     },
     h03_grassroots: {
-      bg1: '#0e3820', bg2: '#061a0f', // Ernst-Reuter Rasen grün mit Blau
+      bg1: '#0e3820', bg2: '#061a0f',
       accent: '#4ade80', text: '#f0fdf4', sub: '#bbf7d0',
       border: 'rgba(74, 222, 128, 0.5)', badgeBg: 'rgba(74, 222, 128, 0.22)'
     },
     h03_gold: {
-      bg1: '#1e2438', bg2: '#0a0d18', // Pokalblau mit edlem Gold
+      bg1: '#1e2438', bg2: '#0a0d18',
       accent: '#facc15', text: '#ffffff', sub: '#fef08a',
       border: 'rgba(250, 204, 21, 0.65)', badgeBg: 'rgba(250, 204, 21, 0.25)'
     },
     h03_trips: {
-      bg1: '#1a2238', bg2: '#0a0e1c', // Ausflugsblau
+      bg1: '#1a2238', bg2: '#0a0e1c',
       accent: '#38bdf8', text: '#ffffff', sub: '#bae6fd',
       border: 'rgba(56, 189, 248, 0.55)', badgeBg: 'rgba(56, 189, 248, 0.22)'
     },
@@ -427,7 +453,7 @@ export function generateExhibitCanvas(exhibit) {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, width, height);
 
-  // Subtle Hertha 03 Blue-White vertical stripes overlay in the background
+  // Subtle Hertha 03 Blue-White vertical stripes overlay
   ctx.save();
   for (let x = 0; x < width; x += 110) {
     ctx.fillStyle = (Math.floor(x / 110) % 2 === 0) ? 'rgba(255, 255, 255, 0.025)' : 'rgba(0, 75, 147, 0.06)';
@@ -525,13 +551,25 @@ function drawHertha03Art(ctx, w, h, exhibit, style) {
 
   ctx.save();
 
+  // If central hero exhibit, draw the official Hertha 03 Zehlendorf SVG logo in all its glory!
+  if (exhibit.icon === 'crest' || exhibit.id === 'rotunda-hero') {
+    if (clubLogoImage && clubLogoImage.complete && clubLogoImage.naturalWidth > 0) {
+      // Glow backing
+      ctx.shadowColor = '#60a5fa';
+      ctx.shadowBlur = 28;
+      const logoSize = 180;
+      ctx.drawImage(clubLogoImage, cx - logoSize / 2, cy - logoSize / 2 - 15, logoSize, logoSize);
+      ctx.restore();
+      return;
+    }
+  }
+
   if (exhibit.icon === 'kids' || exhibit.icon === 'celebration') {
     // Blau-Weiße Hertha 03 Jungs im Torjubel
     ctx.fillStyle = style.accent;
     ctx.shadowColor = style.accent;
     ctx.shadowBlur = 18;
 
-    // Drei Zehlendorfer Spieler im Arm
     ctx.beginPath(); ctx.arc(cx, cy - 65, 17, 0, Math.PI * 2); ctx.fill();
     ctx.fillRect(cx - 15, cy - 45, 30, 60);
 
@@ -545,12 +583,10 @@ function drawHertha03Art(ctx, w, h, exhibit, style) {
     ctx.moveTo(cx + 35, cy - 40); ctx.lineTo(cx + 65, cy - 40);
     ctx.lineTo(cx + 60, cy + 15); ctx.lineTo(cx + 30, cy + 15); ctx.closePath(); ctx.fill();
 
-    // Arme um die Schultern
     ctx.lineWidth = 8; ctx.strokeStyle = style.accent;
     ctx.beginPath(); ctx.moveTo(cx - 45, cy - 35); ctx.lineTo(cx - 10, cy - 35);
     ctx.moveTo(cx + 10, cy - 35); ctx.lineTo(cx + 45, cy - 35); ctx.stroke();
 
-    // Fußball am Fuß
     ctx.beginPath(); ctx.arc(cx, cy + 50, 18, 0, Math.PI * 2);
     ctx.fillStyle = '#ffffff'; ctx.fill();
     ctx.strokeStyle = '#051329'; ctx.lineWidth = 2.5; ctx.stroke();
@@ -571,7 +607,6 @@ function drawHertha03Art(ctx, w, h, exhibit, style) {
     ctx.fillRect(cx - 50, cy + 60, 100, 16);
     ctx.fillRect(cx - 70, cy + 76, 140, 14);
 
-    // H03 Aufschrift auf Sockel
     ctx.fillStyle = '#051329';
     ctx.font = '700 13px Inter, sans-serif';
     ctx.textAlign = 'center';
@@ -596,45 +631,48 @@ function drawHertha03Art(ctx, w, h, exhibit, style) {
     ctx.beginPath(); ctx.arc(cx - 45, cy + 35, 10, 0, Math.PI * 2); ctx.fill();
     ctx.beginPath(); ctx.arc(cx + 45, cy + 35, 10, 0, Math.PI * 2); ctx.fill();
 
-    // H03 Zehlendorf Logo auf Bus
     ctx.fillStyle = '#ffffff';
     ctx.font = '800 14px "Cinzel", sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('HERTHA 03', cx + 2, cy + 12);
   } else {
-    // Das Hertha 03 Zehlendorf Wappen (H03 - 1903)
-    ctx.fillStyle = style.accent; ctx.shadowColor = style.accent; ctx.shadowBlur = 20;
+    // Official Logo or Crest
+    if (clubLogoImage && clubLogoImage.complete && clubLogoImage.naturalWidth > 0) {
+      ctx.shadowColor = style.accent;
+      ctx.shadowBlur = 22;
+      const logoSize = 150;
+      ctx.drawImage(clubLogoImage, cx - logoSize / 2, cy - logoSize / 2 - 10, logoSize, logoSize);
+    } else {
+      ctx.fillStyle = style.accent; ctx.shadowColor = style.accent; ctx.shadowBlur = 20;
 
-    // Blau-Weißes Schild
-    ctx.beginPath();
-    ctx.moveTo(cx - 65, cy - 75); ctx.lineTo(cx + 65, cy - 75);
-    ctx.lineTo(cx + 65, cy + 10);
-    ctx.quadraticCurveTo(cx, cy + 90, cx, cy + 90);
-    ctx.quadraticCurveTo(cx - 65, cy + 10, cx - 65, cy + 10);
-    ctx.closePath();
-    ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(cx - 65, cy - 75); ctx.lineTo(cx + 65, cy - 75);
+      ctx.lineTo(cx + 65, cy + 10);
+      ctx.quadraticCurveTo(cx, cy + 90, cx, cy + 90);
+      ctx.quadraticCurveTo(cx - 65, cy + 10, cx - 65, cy + 10);
+      ctx.closePath();
+      ctx.fill();
 
-    // Innerer Kern
-    ctx.fillStyle = '#051329';
-    ctx.beginPath();
-    ctx.moveTo(cx - 52, cy - 65); ctx.lineTo(cx + 52, cy - 65);
-    ctx.lineTo(cx + 52, cy + 6);
-    ctx.quadraticCurveTo(cx, cy + 74, cx, cy + 74);
-    ctx.quadraticCurveTo(cx - 52, cy + 6, cx - 52, cy + 6);
-    ctx.closePath();
-    ctx.fill();
+      ctx.fillStyle = '#051329';
+      ctx.beginPath();
+      ctx.moveTo(cx - 52, cy - 65); ctx.lineTo(cx + 52, cy - 65);
+      ctx.lineTo(cx + 52, cy + 6);
+      ctx.quadraticCurveTo(cx, cy + 74, cx, cy + 74);
+      ctx.quadraticCurveTo(cx - 52, cy + 6, cx - 52, cy + 6);
+      ctx.closePath();
+      ctx.fill();
 
-    // "H03" Schriftzug
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '800 32px "Cinzel", Georgia, serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('H 03', cx, cy - 14);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '800 32px "Cinzel", Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('H 03', cx, cy - 14);
 
-    ctx.fillStyle = style.accent;
-    ctx.font = '600 12px Inter, sans-serif';
-    ctx.fillText('ZEHLENDORF', cx, cy + 18);
-    ctx.fillText('1903', cx, cy + 38);
+      ctx.fillStyle = style.accent;
+      ctx.font = '600 12px Inter, sans-serif';
+      ctx.fillText('ZEHLENDORF', cx, cy + 18);
+      ctx.fillText('1903', cx, cy + 38);
+    }
   }
 
   ctx.restore();
@@ -643,21 +681,28 @@ function drawHertha03Art(ctx, w, h, exhibit, style) {
 function drawHertha03Seal(ctx, x, y, color) {
   ctx.save();
   ctx.translate(x, y);
-  ctx.rotate(-0.08);
 
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1.6;
-  ctx.beginPath(); ctx.arc(0, 0, 36, 0, Math.PI * 2); ctx.stroke();
-  ctx.beginPath(); ctx.arc(0, 0, 30, 0, Math.PI * 2); ctx.stroke();
+  if (clubLogoImage && clubLogoImage.complete && clubLogoImage.naturalWidth > 0) {
+    const size = 66;
+    ctx.shadowColor = '#0066ad';
+    ctx.shadowBlur = 10;
+    ctx.drawImage(clubLogoImage, -size / 2, -size / 2, size, size);
+  } else {
+    ctx.rotate(-0.08);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.arc(0, 0, 36, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 30, 0, Math.PI * 2); ctx.stroke();
 
-  ctx.font = '700 7px Inter, sans-serif';
-  ctx.fillStyle = color;
-  ctx.textAlign = 'center';
-  ctx.fillText('HERTHA 03', 0, -10);
-  ctx.font = '800 11px Inter, sans-serif';
-  ctx.fillText('2014er', 0, 3);
-  ctx.font = '600 6.5px Inter, sans-serif';
-  ctx.fillText('ZEHLENDORF', 0, 15);
+    ctx.font = '700 7px Inter, sans-serif';
+    ctx.fillStyle = color;
+    ctx.textAlign = 'center';
+    ctx.fillText('HERTHA 03', 0, -10);
+    ctx.font = '800 11px Inter, sans-serif';
+    ctx.fillText('2014er', 0, 3);
+    ctx.font = '600 6.5px Inter, sans-serif';
+    ctx.fillText('ZEHLENDORF', 0, 15);
+  }
 
   ctx.restore();
 }
