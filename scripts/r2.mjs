@@ -7,10 +7,11 @@
 //   node scripts/r2.mjs manifest [--upload]       Rebuild public/media-manifest.json from the bucket
 //
 // The mirror defaults to ~/R2/<bucket>; override with R2_MIRROR.
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { createReadStream } from 'node:fs';
+import { createReadStream, createWriteStream } from 'node:fs';
 import { copyFile, mkdir, readdir, rename, rm, rmdir, stat, writeFile } from 'node:fs/promises';
+import { pipeline } from 'node:stream/promises';
 import { homedir } from 'node:os';
 import { dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -70,12 +71,20 @@ async function removeEmptyDirs(dir) {
   if (dir !== MIRROR && !(await readdir(dir)).length) await rmdir(dir);
 }
 
+/** `cf r2 objects get` writes the raw object to stdout; stream it to disk. */
+async function cfDownload(key, file) {
+  const child = spawn(process.execPath, [CF, 'r2', 'objects', 'get', key, '--bucket-name', BUCKET],
+    { stdio: ['ignore', 'pipe', 'inherit'] });
+  const exited = new Promise((resolve, reject) => child.on('error', reject).on('close', resolve));
+  await pipeline(child.stdout, createWriteStream(file));
+  const code = await exited;
+  if (code) throw new Error(`${key}: cf exited with ${code}`);
+}
+
 async function download(object, path) {
-  const res = await fetch(publicUrl(MEDIA_BASE, object.key));
-  if (!res.ok) throw new Error(`${object.key}: HTTP ${res.status}`);
   await mkdir(dirname(path), { recursive: true });
   const partial = `${path}.part`;
-  await writeFile(partial, Buffer.from(await res.arrayBuffer()));
+  await cfDownload(object.key, partial);
   if (!(await matches(partial, object))) throw new Error(`${object.key}: download does not match its etag`);
   await rename(partial, path);
 }

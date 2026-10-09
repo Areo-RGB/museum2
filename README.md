@@ -146,7 +146,7 @@ music/Twelve_White_Walls.mp3                    background music
 manifest.json                                   copy of public/media-manifest.json
 ```
 
-`scripts/r2.mjs` keeps it that way using the `cf` login:
+`scripts/r2.mjs` keeps it that way, entirely through the `cf` CLI (list, get, put, delete) and its login:
 
 ```bash
 npm run r2:mirror                       # sync the bucket to ~/R2/<bucket> (R2_MIRROR overrides); MD5-verified, moves instead of re-downloading
