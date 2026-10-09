@@ -141,7 +141,7 @@ async function organize({ apply = false, deleteOld = false } = {}) {
     const copied = to && byKey.get(to)?.etag === object.etag;
     if (deleteOld) {
       if (to && !copied) { console.log(`keep   ${object.key} (no verified copy at ${to} yet)`); continue; }
-      cf('r2', 'objects', 'delete', object.key);
+      cf('r2', 'objects', 'delete', object.key, '--force');
       console.log(`delete ${object.key}`);
     } else if (!to) {
       console.log(`obsolete ${object.key} (removed by --delete-old)`);
@@ -161,7 +161,12 @@ async function organize({ apply = false, deleteOld = false } = {}) {
     if (missing.length) throw new Error(`Copies not verified: ${missing.map((m) => m.to).join(', ')}`);
     console.log(`All ${moves.filter((m) => m.to).length} copies verified. Old keys stay until --delete-old.`);
   }
-  if (deleteOld) await mirror();
+  if (deleteOld) {
+    const left = new Set(listBucket().map((o) => o.key));
+    const stuck = moves.filter((m) => (!m.to || left.has(m.to)) && left.has(m.object.key));
+    if (stuck.length) throw new Error(`Still in the bucket: ${stuck.map((m) => m.object.key).join(', ')}`);
+    await mirror();
+  }
 }
 
 async function manifest({ upload = false } = {}) {
