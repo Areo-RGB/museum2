@@ -1,894 +1,894 @@
 {
   "manifestVersion": 1,
-  "createdAtUtc": "2026-10-07T12:40:13.243Z",
+  "createdAtUtc": "2026-10-09T14:14:32.583Z",
   "bucket": "museum2-2014-1-001",
   "publicBaseUrl": "https://pub-00ae264180144f48be81477925c676be.r2.dev",
   "totalAssets": 111,
   "totalBytes": 281200807,
   "assets": [
     {
-      "key": "2014/1714232544469.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/1714232544469.jpg",
-      "sizeBytes": 4000053,
-      "contentType": "image/jpeg",
-      "sha256": "88720158026d6535a9c138f589149acd846a072fdc93e74a1253d62100990edb",
-      "etag": "fc354f173bf13b3b8e15e61a4c67c713"
-    },
-    {
-      "key": "2014/IMG_20230115_105410.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230115_105410.jpg",
+      "key": "floors/2023-0-winter/IMG_20230115_105410.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230115_105410.jpg",
       "sizeBytes": 2734661,
       "contentType": "image/jpeg",
       "sha256": "b3ad5af73809ef5cf49daa1e54637ee876be5ff8f982072a417efe518e363184",
       "etag": "dae18657f4e3a31bf9817701dbf3171a"
     },
     {
-      "key": "2014/IMG_20230115_105414.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230115_105414.jpg",
+      "key": "floors/2023-0-winter/IMG_20230115_105414.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230115_105414.jpg",
       "sizeBytes": 2824823,
       "contentType": "image/jpeg",
       "sha256": "48f4ffb7d6b2008833c892342dd13b2466cb7b4cef65750621a689ff32946ee1",
       "etag": "46bef2c5fc81550a11336ca5fa54bd58"
     },
     {
-      "key": "2014/IMG_20230115_105505.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230115_105505.jpg",
+      "key": "floors/2023-0-winter/IMG_20230115_105505.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230115_105505.jpg",
       "sizeBytes": 5171672,
       "contentType": "image/jpeg",
       "sha256": "c16cb5f0f59e2a15c0714cabbd8282381d5f835f0a8c924c2e16922b857e0e70",
       "etag": "541d5c70883a0a1aaf00e60ff2486d67"
     },
     {
-      "key": "2014/IMG_20230115_112543.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230115_112543.jpg",
+      "key": "floors/2023-0-winter/IMG_20230115_112543.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230115_112543.jpg",
       "sizeBytes": 3005294,
       "contentType": "image/jpeg",
       "sha256": "07226a8104e94fece4a2a9599d2f326a9015788f260d308979aca410a2cdf745",
       "etag": "b7a05ad44502fc1220a906c180857aa7"
     },
     {
-      "key": "2014/IMG_20230115_114131.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230115_114131.jpg",
+      "key": "floors/2023-0-winter/IMG_20230115_114131.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230115_114131.jpg",
       "sizeBytes": 4539774,
       "contentType": "image/jpeg",
       "sha256": "3fa062f90cdca71a6150311e7557dc97f0ee3a0e2cd72631936ef7de950ec770",
       "etag": "c9c22fe65efb41592ddff125f2ba5fe6"
     },
     {
-      "key": "2014/IMG_20230115_114135.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230115_114135.jpg",
+      "key": "floors/2023-0-winter/IMG_20230115_114135.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230115_114135.jpg",
       "sizeBytes": 4479254,
       "contentType": "image/jpeg",
       "sha256": "f09f4c01539e5087d35851af38840faf41bd0ddd93dc86566542def7f8f0538d",
       "etag": "8f8ce2dde4447b6037502943e85b7e42"
     },
     {
-      "key": "2014/IMG_20230115_114222.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230115_114222.jpg",
+      "key": "floors/2023-0-winter/IMG_20230115_114222.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230115_114222.jpg",
       "sizeBytes": 4671330,
       "contentType": "image/jpeg",
       "sha256": "151b00e56c16701a20daa74fe512e42e80f5f46b414e547426560f3508d4ce89",
       "etag": "5b9238ce847bbafa871fe5b16b2c52e0"
     },
     {
-      "key": "2014/IMG_20230115_134833.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230115_134833.jpg",
+      "key": "floors/2023-0-winter/IMG_20230115_134833.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230115_134833.jpg",
       "sizeBytes": 2223566,
       "contentType": "image/jpeg",
       "sha256": "324e72171ed040100953b87defb4eb495d23ca43567f912022b46d2db61e4655",
       "etag": "e679d8841fb448b07a73c635d30d4516"
     },
     {
-      "key": "2014/IMG_20230115_141753.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230115_141753.jpg",
+      "key": "floors/2023-0-winter/IMG_20230115_141753.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230115_141753.jpg",
       "sizeBytes": 2394885,
       "contentType": "image/jpeg",
       "sha256": "4131727761432f4912fe95c9d1226507d63ca73dab7ab8e0d8ff86be12c7516e",
       "etag": "249d56a577f7d0257f98e445e286847c"
     },
     {
-      "key": "2014/IMG_20230115_141834.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230115_141834.jpg",
+      "key": "floors/2023-0-winter/IMG_20230115_141834.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230115_141834.jpg",
       "sizeBytes": 2910356,
       "contentType": "image/jpeg",
       "sha256": "741d559abe1eb1172eabf8377a5de83c5d29e26bb1a5d09f7c9f3ede1a59010f",
       "etag": "714b9052bb1405fe153e752881ad5cc5"
     },
     {
-      "key": "2014/IMG_20230115_141843.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230115_141843.jpg",
+      "key": "floors/2023-0-winter/IMG_20230115_141843.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230115_141843.jpg",
       "sizeBytes": 3107861,
       "contentType": "image/jpeg",
       "sha256": "438bdc41f1980bc1233e09ef6a1eefdac23ada6be36bcfbd43592d950c3e37cf",
       "etag": "f3d4f6cee53db713fcc3bcd31137992d"
     },
     {
-      "key": "2014/IMG_20230129_154847.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230129_154847.jpg",
+      "key": "floors/2023-0-winter/IMG_20230129_154847.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230129_154847.jpg",
       "sizeBytes": 4059991,
       "contentType": "image/jpeg",
       "sha256": "5ba34075ba75dbc9c6066d410f2d755e82a8e02227f26dc398f7fdcdf4f97601",
       "etag": "6295393cd95f8873c18b242fbdaff85d"
     },
     {
-      "key": "2014/IMG_20230129_163224.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230129_163224.jpg",
+      "key": "floors/2023-0-winter/IMG_20230129_163224.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230129_163224.jpg",
       "sizeBytes": 4462439,
       "contentType": "image/jpeg",
       "sha256": "2effd27af1dc89e9d6e6b00bed6c2f5c3eb3dcb1483f946129c4db789e335059",
       "etag": "a1dcf63a318ca9e67a9b316065dba904"
     },
     {
-      "key": "2014/IMG_20230129_163229.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230129_163229.jpg",
+      "key": "floors/2023-0-winter/IMG_20230129_163229.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230129_163229.jpg",
       "sizeBytes": 4889785,
       "contentType": "image/jpeg",
       "sha256": "f9b1950d11e537df9de6eb2a901074d7529dce49f09cd839c7e3633c339c1579",
       "etag": "6704c0c24dcaabe9d318ae6bcfd90576"
     },
     {
-      "key": "2014/IMG_20230129_163235.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230129_163235.jpg",
+      "key": "floors/2023-0-winter/IMG_20230129_163235.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230129_163235.jpg",
       "sizeBytes": 4883816,
       "contentType": "image/jpeg",
       "sha256": "808bd13310a2ec08a3ef0f6b2b113c8f7fd1fb575d476ab4307ea27e12f905c2",
       "etag": "0662e4900023e91054a335cb4438c932"
     },
     {
-      "key": "2014/IMG_20230129_164256.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230129_164256.jpg",
+      "key": "floors/2023-0-winter/IMG_20230129_164256.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230129_164256.jpg",
       "sizeBytes": 4837784,
       "contentType": "image/jpeg",
       "sha256": "b9badaa8576b2cadd27e715393463d40aba64e06e87d032cc92c296ad3666858",
       "etag": "044d8e91a10755804d22098f7cf3a36b"
     },
     {
-      "key": "2014/IMG_20230129_164349.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230129_164349.jpg",
+      "key": "floors/2023-0-winter/IMG_20230129_164349.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230129_164349.jpg",
       "sizeBytes": 3855089,
       "contentType": "image/jpeg",
       "sha256": "e62953e956665fb37e9518f6d562c3271437a584caf12870bfdcb334daa5ff0e",
       "etag": "2fa4aae268709cfb5332a88786cec6aa"
     },
     {
-      "key": "2014/IMG_20230129_171912.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230129_171912.jpg",
+      "key": "floors/2023-0-winter/IMG_20230129_171912.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230129_171912.jpg",
       "sizeBytes": 3985232,
       "contentType": "image/jpeg",
       "sha256": "bf786c7f73aeed139754c2b9f74c9b2337d2fe81d6cb38bdf82ae4db32aec8a6",
       "etag": "e832b50e0b916bcfb28c6b26cc299716"
     },
     {
-      "key": "2014/IMG_20230129_192959.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230129_192959.jpg",
+      "key": "floors/2023-0-winter/IMG_20230129_192959.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230129_192959.jpg",
       "sizeBytes": 4306990,
       "contentType": "image/jpeg",
       "sha256": "98774bd35d890791075e355081a31c26def88325e1ef9081dd91740c052d3787",
       "etag": "1977c3e51f755edcadee696c045b8ffa"
     },
     {
-      "key": "2014/IMG_20230129_193018.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230129_193018.jpg",
+      "key": "floors/2023-0-winter/IMG_20230129_193018.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230129_193018.jpg",
       "sizeBytes": 2743581,
       "contentType": "image/jpeg",
       "sha256": "50764cb7bf6de38c64a304fbe6dfa1561c83276bd1dbfa6d0e989a3e4d58288c",
       "etag": "a7bd3bc8677a9a8bacecd1d629112262"
     },
     {
-      "key": "2014/IMG_20230129_193825.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230129_193825.jpg",
+      "key": "floors/2023-0-winter/IMG_20230129_193825.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230129_193825.jpg",
       "sizeBytes": 2925084,
       "contentType": "image/jpeg",
       "sha256": "30c87549bea290e91523b581f4b081288925cec94fe0333fa8ed9fe827c823de",
       "etag": "46918a6756d46e79ef29534451df078a"
     },
     {
-      "key": "2014/IMG_20230129_193836.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230129_193836.jpg",
+      "key": "floors/2023-0-winter/IMG_20230129_193836.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230129_193836.jpg",
       "sizeBytes": 2531366,
       "contentType": "image/jpeg",
       "sha256": "0a01a4f28f23c6a26fb278f3f9b63630ecfda0480d9e33bea4e356e4837d76bd",
       "etag": "8d2199603b8f7a354b2a985733d141d4"
     },
     {
-      "key": "2014/IMG_20230129_193927.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230129_193927.jpg",
+      "key": "floors/2023-0-winter/IMG_20230129_193927.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230129_193927.jpg",
       "sizeBytes": 2935367,
       "contentType": "image/jpeg",
       "sha256": "d60c83623255c35d98c966665e5188d20ce9628f57b29420b916cbded4125217",
       "etag": "2c63ec6b3b782e4a1c0ce29f143f74e5"
     },
     {
-      "key": "2014/IMG_20230129_193931.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230129_193931.jpg",
+      "key": "floors/2023-0-winter/IMG_20230129_193931.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230129_193931.jpg",
       "sizeBytes": 3396292,
       "contentType": "image/jpeg",
       "sha256": "f3b8ad84a1146957c8f79330c2b50e5341afa8382f22f7d1fe3c51235c0d468a",
       "etag": "27983f3f0c0d4f557dc44f59ca5b8fca"
     },
     {
-      "key": "2014/IMG_20230204_125307.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230204_125307.jpg",
+      "key": "floors/2023-0-winter/IMG_20230204_125307.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230204_125307.jpg",
       "sizeBytes": 3326319,
       "contentType": "image/jpeg",
       "sha256": "727be3c3af1b4b5b26ea40c51c1dca9144f7b96cc65bad4946cc25da74da74e1",
       "etag": "e916bf22e5e617cb37654b00011f45f0"
     },
     {
-      "key": "2014/IMG_20230204_130315.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230204_130315.jpg",
+      "key": "floors/2023-0-winter/IMG_20230204_130315.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230204_130315.jpg",
       "sizeBytes": 3452772,
       "contentType": "image/jpeg",
       "sha256": "507b7c1884c3993e9c119825731b4bebff846d273d257cd8b00747406ab680fc",
       "etag": "ce163a641868e02c3e6b2ffe21463ca2"
     },
     {
-      "key": "2014/IMG_20230204_130321.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230204_130321.jpg",
+      "key": "floors/2023-0-winter/IMG_20230204_130321.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230204_130321.jpg",
       "sizeBytes": 3588359,
       "contentType": "image/jpeg",
       "sha256": "9b21ec328b05a8a7366718cd18c149d51cfd489160d47f1952efa700eb568f09",
       "etag": "646058bbecbfe38a1170afcb617c6f07"
     },
     {
-      "key": "2014/IMG_20230204_130335.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230204_130335.jpg",
+      "key": "floors/2023-0-winter/IMG_20230204_130335.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG_20230204_130335.jpg",
       "sizeBytes": 5203289,
       "contentType": "image/jpeg",
       "sha256": "a72cbef5d980a136f03ac11ea225bd41009b22c5bed5981c2f66ff3a3892e30f",
       "etag": "e9a34d5c5c3c2900f6e96efa27d89bc7"
     },
     {
-      "key": "2014/IMG_20230422_152335.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230422_152335.jpg",
-      "sizeBytes": 3935051,
-      "contentType": "image/jpeg",
-      "sha256": "3a7d38e58fdc8bc7ac7a154d038497af49b58f0b66abdabff28e54627dd441b1",
-      "etag": "846bf344c46ba39a25f8f107ef3e6667"
-    },
-    {
-      "key": "2014/IMG_20230422_152339.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230422_152339.jpg",
-      "sizeBytes": 3872656,
-      "contentType": "image/jpeg",
-      "sha256": "9162a3e2ea157ccd203ddab4a0469adf855fa2da3bf9258c2f1bf0b5c3834525",
-      "etag": "079b7f25a3c12ac50fa1b51a8b3821a9"
-    },
-    {
-      "key": "2014/IMG_20230422_152347.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230422_152347.jpg",
-      "sizeBytes": 4093872,
-      "contentType": "image/jpeg",
-      "sha256": "6572aa15b7a3c6da3b47f34d4ea916dfdee65bc37c5f736ed5921b117bdf3bf9",
-      "etag": "c1a6a9721cc35ab61abdc31cda772a66"
-    },
-    {
-      "key": "2014/IMG_20230422_152856.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230422_152856.jpg",
-      "sizeBytes": 3940014,
-      "contentType": "image/jpeg",
-      "sha256": "53050cb06c6db35db2ca26b3112d3d7f7e91b8735325e5ae732d5002be500791",
-      "etag": "5ea1a0c02117326ae82f9babd823c19c"
-    },
-    {
-      "key": "2014/IMG_20230422_152859.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230422_152859.jpg",
-      "sizeBytes": 4854528,
-      "contentType": "image/jpeg",
-      "sha256": "93dd4edda8f40c43225275278e002fcfc4be46e4d675e967a932ff5725da73af",
-      "etag": "9b04c217cc92145675fa31557c3a579d"
-    },
-    {
-      "key": "2014/IMG_20230422_153238.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230422_153238.jpg",
-      "sizeBytes": 5009183,
-      "contentType": "image/jpeg",
-      "sha256": "95d2417b2d353f2154f1f28711fcfaedbd8358ff71d731b4816a665d91c0525c",
-      "etag": "a4cf8969465788ad633ef1038d92eae9"
-    },
-    {
-      "key": "2014/IMG_20230624_101938-ANIMATION.gif",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230624_101938-ANIMATION.gif",
-      "sizeBytes": 1695326,
-      "contentType": "image/gif",
-      "sha256": "54b7ca5961658e25f5008133581baa86eb55bb3ed2d1345420f3ebe741c30fdc",
-      "etag": "7de774d22a7a435a4e88e2e209d30c82"
-    },
-    {
-      "key": "2014/IMG_20230624_101938.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230624_101938.jpg",
-      "sizeBytes": 5204430,
-      "contentType": "image/jpeg",
-      "sha256": "98a4c0c7bfe5573160fe3aa7c4e78e2d31eda342a77ee6dfd08c28f30c044c6f",
-      "etag": "4f4644da7b541fae7238becd5eb36cef"
-    },
-    {
-      "key": "2014/IMG_20230624_110748.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230624_110748.jpg",
-      "sizeBytes": 3825044,
-      "contentType": "image/jpeg",
-      "sha256": "6b2fa4869062d12dfddfba7b10551133b26b808447881cc53d840b8083299f61",
-      "etag": "9e111d036a74d8db9a1cb9fea62f8c93"
-    },
-    {
-      "key": "2014/IMG_20230624_110956.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_20230624_110956.jpg",
-      "sizeBytes": 5240696,
-      "contentType": "image/jpeg",
-      "sha256": "11f60c0123740fb7a92d256494fa8a8a541ef107e7bed139ea8d0d018689f185",
-      "etag": "8d01ab5fa855e97e671232272dba2eeb"
-    },
-    {
-      "key": "2014/IMG_5760.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_5760.jpg",
-      "sizeBytes": 3532616,
-      "contentType": "image/jpeg",
-      "sha256": "5c44c1966d02e84b5ffde81a7625a84e032246e47a557c2512e2c0a209dbeb9a",
-      "etag": "9fd35b7345094aba38cad3cde693e10b"
-    },
-    {
-      "key": "2014/IMG_5762-scaled.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG_5762-scaled.jpg",
-      "sizeBytes": 823502,
-      "contentType": "image/jpeg",
-      "sha256": "6f8c09cbc73f71b16b8bab154e316465e1843bd93fcef24397c8ea7442117bb0",
-      "etag": "391246c3303cebd8c96a507e4b19c3cb"
-    },
-    {
-      "key": "2014/IMG-20230115-WA0008.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230115-WA0008.jpg",
+      "key": "floors/2023-0-winter/IMG-20230115-WA0008.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG-20230115-WA0008.jpg",
       "sizeBytes": 130267,
       "contentType": "image/jpeg",
       "sha256": "cfdb65da6edbbba95e6950c78540e6f08db08c1c4239a206ed7eaaec9e5e5ac4",
       "etag": "b7fd9c34f6094abbb770e8e44f73a2de"
     },
     {
-      "key": "2014/IMG-20230115-WA0009.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230115-WA0009.jpg",
+      "key": "floors/2023-0-winter/IMG-20230115-WA0009.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG-20230115-WA0009.jpg",
       "sizeBytes": 75144,
       "contentType": "image/jpeg",
       "sha256": "e894ce8f928e0a86180a8426da227c0eed6fbc03ea48cb3125cb07bb572b22b9",
       "etag": "6d0cfd26d05ca2f248585f1b5512f468"
     },
     {
-      "key": "2014/IMG-20230115-WA0010.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230115-WA0010.jpg",
+      "key": "floors/2023-0-winter/IMG-20230115-WA0010.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG-20230115-WA0010.jpg",
       "sizeBytes": 67048,
       "contentType": "image/jpeg",
       "sha256": "974df0e5b215af46b0f36d5a5abcda244c0582047cfd72d087549daacf7e647f",
       "etag": "7e47c76cfe102575ac2269107da20c1b"
     },
     {
-      "key": "2014/IMG-20230115-WA0011.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230115-WA0011.jpg",
+      "key": "floors/2023-0-winter/IMG-20230115-WA0011.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG-20230115-WA0011.jpg",
       "sizeBytes": 120518,
       "contentType": "image/jpeg",
       "sha256": "d73eaf04a545ad79f5e853065e8a786ae94089ae0122b07831ca33665e624c31",
       "etag": "a37866ab31874c61f6abc3350b17d5ec"
     },
     {
-      "key": "2014/IMG-20230115-WA0013.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230115-WA0013.jpg",
+      "key": "floors/2023-0-winter/IMG-20230115-WA0013.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG-20230115-WA0013.jpg",
       "sizeBytes": 415009,
       "contentType": "image/jpeg",
       "sha256": "aa4ffffb2a809a6753440c395ebf495141aea09d6ceea5b36553bf957b7912d4",
       "etag": "d34df71601d3701cefca5b516f7f9d44"
     },
     {
-      "key": "2014/IMG-20230129-WA0014.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230129-WA0014.jpg",
+      "key": "floors/2023-0-winter/IMG-20230129-WA0014.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG-20230129-WA0014.jpg",
       "sizeBytes": 273084,
       "contentType": "image/jpeg",
       "sha256": "176d7a251a580643650f96863b087a6cbca8f849e5810a33069453778c84d987",
       "etag": "f56c60d5454bae87cbcf32c89eb76c45"
     },
     {
-      "key": "2014/IMG-20230129-WA0015.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230129-WA0015.jpg",
+      "key": "floors/2023-0-winter/IMG-20230129-WA0015.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG-20230129-WA0015.jpg",
       "sizeBytes": 212416,
       "contentType": "image/jpeg",
       "sha256": "f51311ec837c8c75bb8269c5fcfe127743a4faf7d573c1c5c8c3ad16cc1161f5",
       "etag": "d5178b70e0846a40939552952960f1b5"
     },
     {
-      "key": "2014/IMG-20230129-WA0016.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230129-WA0016.jpg",
+      "key": "floors/2023-0-winter/IMG-20230129-WA0016.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG-20230129-WA0016.jpg",
       "sizeBytes": 232849,
       "contentType": "image/jpeg",
       "sha256": "62c98158129bfcd83819104b4b697b1e57a2da6aa0da59f0dad23637c69ec078",
       "etag": "9b2669b7f8d20683cafc81b5bf8c055c"
     },
     {
-      "key": "2014/IMG-20230204-WA0008.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230204-WA0008.jpg",
+      "key": "floors/2023-0-winter/IMG-20230204-WA0008.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG-20230204-WA0008.jpg",
       "sizeBytes": 1566691,
       "contentType": "image/jpeg",
       "sha256": "9abc705f101d4ddd3bab9f5fd35e667b740c3629f8a7b72e4508e5c16471f283",
       "etag": "efb0185e7943353eb7b78de0922b0c1f"
     },
     {
-      "key": "2014/IMG-20230204-WA0009.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230204-WA0009.jpg",
+      "key": "floors/2023-0-winter/IMG-20230204-WA0009.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG-20230204-WA0009.jpg",
       "sizeBytes": 1423369,
       "contentType": "image/jpeg",
       "sha256": "eddbf6d68a1bd904347feeb5aa86d78d65e25a12b9c9a47cfc5f1d10568f0354",
       "etag": "982ffcb86649c6e8c0f33f2dd54b2889"
     },
     {
-      "key": "2014/IMG-20230204-WA0010.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230204-WA0010.jpg",
+      "key": "floors/2023-0-winter/IMG-20230204-WA0010.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-0-winter/IMG-20230204-WA0010.jpg",
       "sizeBytes": 1538303,
       "contentType": "image/jpeg",
       "sha256": "0c84dc8bc2116c387f20ffa1e394426aef17e0b9273a4ec1c210042d6434c257",
       "etag": "a1503f417d357f5017d0b52363ed0db5"
     },
     {
-      "key": "2014/IMG-20230304-WA0002.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230304-WA0002.jpg",
+      "key": "floors/2023-1-spring/IMG_20230422_152335.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG_20230422_152335.jpg",
+      "sizeBytes": 3935051,
+      "contentType": "image/jpeg",
+      "sha256": "3a7d38e58fdc8bc7ac7a154d038497af49b58f0b66abdabff28e54627dd441b1",
+      "etag": "846bf344c46ba39a25f8f107ef3e6667"
+    },
+    {
+      "key": "floors/2023-1-spring/IMG_20230422_152339.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG_20230422_152339.jpg",
+      "sizeBytes": 3872656,
+      "contentType": "image/jpeg",
+      "sha256": "9162a3e2ea157ccd203ddab4a0469adf855fa2da3bf9258c2f1bf0b5c3834525",
+      "etag": "079b7f25a3c12ac50fa1b51a8b3821a9"
+    },
+    {
+      "key": "floors/2023-1-spring/IMG_20230422_152347.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG_20230422_152347.jpg",
+      "sizeBytes": 4093872,
+      "contentType": "image/jpeg",
+      "sha256": "6572aa15b7a3c6da3b47f34d4ea916dfdee65bc37c5f736ed5921b117bdf3bf9",
+      "etag": "c1a6a9721cc35ab61abdc31cda772a66"
+    },
+    {
+      "key": "floors/2023-1-spring/IMG_20230422_152856.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG_20230422_152856.jpg",
+      "sizeBytes": 3940014,
+      "contentType": "image/jpeg",
+      "sha256": "53050cb06c6db35db2ca26b3112d3d7f7e91b8735325e5ae732d5002be500791",
+      "etag": "5ea1a0c02117326ae82f9babd823c19c"
+    },
+    {
+      "key": "floors/2023-1-spring/IMG_20230422_152859.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG_20230422_152859.jpg",
+      "sizeBytes": 4854528,
+      "contentType": "image/jpeg",
+      "sha256": "93dd4edda8f40c43225275278e002fcfc4be46e4d675e967a932ff5725da73af",
+      "etag": "9b04c217cc92145675fa31557c3a579d"
+    },
+    {
+      "key": "floors/2023-1-spring/IMG_20230422_153238.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG_20230422_153238.jpg",
+      "sizeBytes": 5009183,
+      "contentType": "image/jpeg",
+      "sha256": "95d2417b2d353f2154f1f28711fcfaedbd8358ff71d731b4816a665d91c0525c",
+      "etag": "a4cf8969465788ad633ef1038d92eae9"
+    },
+    {
+      "key": "floors/2023-1-spring/IMG-20230304-WA0002.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG-20230304-WA0002.jpg",
       "sizeBytes": 145326,
       "contentType": "image/jpeg",
       "sha256": "a0cb4a9498e359a221a60a52ec499f5c53d588ebae4d454aa4ce2a51edb94d8c",
       "etag": "7cae1ab7041fe8c30c905d67afb56087"
     },
     {
-      "key": "2014/IMG-20230304-WA0003.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230304-WA0003.jpg",
+      "key": "floors/2023-1-spring/IMG-20230304-WA0003.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG-20230304-WA0003.jpg",
       "sizeBytes": 135817,
       "contentType": "image/jpeg",
       "sha256": "249205f0049102acd6be8f07d9600a4a352d849c2ca6c9aca31b9231c9fdbdb3",
       "etag": "54580c83463bdbc24a88f26861fecbc6"
     },
     {
-      "key": "2014/IMG-20230304-WA0004.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230304-WA0004.jpg",
+      "key": "floors/2023-1-spring/IMG-20230304-WA0004.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG-20230304-WA0004.jpg",
       "sizeBytes": 99162,
       "contentType": "image/jpeg",
       "sha256": "0b69e3500cd54d015b1908888aa5a582f38952d37a296090378d49c172ad0e14",
       "etag": "161a5b989dbc40c2bb4da35a636fd9fe"
     },
     {
-      "key": "2014/IMG-20230304-WA0006.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230304-WA0006.jpg",
+      "key": "floors/2023-1-spring/IMG-20230304-WA0006.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG-20230304-WA0006.jpg",
       "sizeBytes": 352229,
       "contentType": "image/jpeg",
       "sha256": "2d370e0b16da8f4b1f810c2ee8fcc576bc1344ea2767cad968ebc67f23e54c3d",
       "etag": "ce675d7571b843023b03ba73789414aa"
     },
     {
-      "key": "2014/IMG-20230304-WA0007.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230304-WA0007.jpg",
+      "key": "floors/2023-1-spring/IMG-20230304-WA0007.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG-20230304-WA0007.jpg",
       "sizeBytes": 348731,
       "contentType": "image/jpeg",
       "sha256": "3fc7ebb1fbff3e6b813b1611f9fd1f56cfcdf7dbf21782e8411d18d8dbe7e96b",
       "etag": "98b95b77fd5520b862c7dd4b8ca022bf"
     },
     {
-      "key": "2014/IMG-20230304-WA0009.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230304-WA0009.jpg",
+      "key": "floors/2023-1-spring/IMG-20230304-WA0009.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG-20230304-WA0009.jpg",
       "sizeBytes": 154312,
       "contentType": "image/jpeg",
       "sha256": "bffc4950f44e2627152c7c64617bda488aa5585d35db6f944691aa4fb7ebd606",
       "etag": "552df3cab7ddbb6e9cd383ce7e725518"
     },
     {
-      "key": "2014/IMG-20230424-WA0000.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230424-WA0000.jpg",
+      "key": "floors/2023-1-spring/IMG-20230424-WA0000.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG-20230424-WA0000.jpg",
       "sizeBytes": 445865,
       "contentType": "image/jpeg",
       "sha256": "50bef6a1957e02de3dbb5c56ef57d050a2d7f61f7cf5012d3c4fa1dd07c7876e",
       "etag": "78ce74550dae093ccd7a98ddabada52d"
     },
     {
-      "key": "2014/IMG-20230424-WA0001.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230424-WA0001.jpg",
+      "key": "floors/2023-1-spring/IMG-20230424-WA0001.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG-20230424-WA0001.jpg",
       "sizeBytes": 475328,
       "contentType": "image/jpeg",
       "sha256": "be70c71248baa51fa8b8767ba08675d65bf889e045e8eb5ca8f4716e06b94792",
       "etag": "af363021931392275a5e1314a5eea5a6"
     },
     {
-      "key": "2014/IMG-20230424-WA0002.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230424-WA0002.jpg",
+      "key": "floors/2023-1-spring/IMG-20230424-WA0002.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG-20230424-WA0002.jpg",
       "sizeBytes": 461759,
       "contentType": "image/jpeg",
       "sha256": "319c5636b463f48055ea14bc94436d4fba1c6fd25766ec39af60688dbeb6815a",
       "etag": "8547da5b6a7351fa387bb273b6371f99"
     },
     {
-      "key": "2014/IMG-20230506-WA0000.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230506-WA0000.jpg",
+      "key": "floors/2023-1-spring/IMG-20230506-WA0000.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG-20230506-WA0000.jpg",
       "sizeBytes": 154744,
       "contentType": "image/jpeg",
       "sha256": "7a62c0a4cf3e08e13de3cd88f95d80b4d00c96fe73360fe1bc53aa7ca48d79df",
       "etag": "5d37f389d8caba1041b944fd4227765b"
     },
     {
-      "key": "2014/IMG-20230506-WA0001.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230506-WA0001.jpg",
+      "key": "floors/2023-1-spring/IMG-20230506-WA0001.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG-20230506-WA0001.jpg",
       "sizeBytes": 139711,
       "contentType": "image/jpeg",
       "sha256": "e628696b98ddc134cb5d388adfba607f5f300650ec0eab687a51a68f0151d606",
       "etag": "b717521bb636fab8a394636d38d5ebaf"
     },
     {
-      "key": "2014/IMG-20230506-WA0003.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230506-WA0003.jpg",
+      "key": "floors/2023-1-spring/IMG-20230506-WA0003.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-1-spring/IMG-20230506-WA0003.jpg",
       "sizeBytes": 142928,
       "contentType": "image/jpeg",
       "sha256": "c5291267f687b931a4d540701354883e2b68fe4fb8cf6fc8b5578bcc70d126d9",
       "etag": "00cf0c51682431c88bb34b64fba8cd73"
     },
     {
-      "key": "2014/IMG-20230610-WA0008.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230610-WA0008.jpg",
+      "key": "floors/2023-2-summer/IMG_20230624_101938-ANIMATION.gif",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG_20230624_101938-ANIMATION.gif",
+      "sizeBytes": 1695326,
+      "contentType": "image/gif",
+      "sha256": "54b7ca5961658e25f5008133581baa86eb55bb3ed2d1345420f3ebe741c30fdc",
+      "etag": "7de774d22a7a435a4e88e2e209d30c82"
+    },
+    {
+      "key": "floors/2023-2-summer/IMG_20230624_101938.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG_20230624_101938.jpg",
+      "sizeBytes": 5204430,
+      "contentType": "image/jpeg",
+      "sha256": "98a4c0c7bfe5573160fe3aa7c4e78e2d31eda342a77ee6dfd08c28f30c044c6f",
+      "etag": "4f4644da7b541fae7238becd5eb36cef"
+    },
+    {
+      "key": "floors/2023-2-summer/IMG_20230624_110748.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG_20230624_110748.jpg",
+      "sizeBytes": 3825044,
+      "contentType": "image/jpeg",
+      "sha256": "6b2fa4869062d12dfddfba7b10551133b26b808447881cc53d840b8083299f61",
+      "etag": "9e111d036a74d8db9a1cb9fea62f8c93"
+    },
+    {
+      "key": "floors/2023-2-summer/IMG_20230624_110956.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG_20230624_110956.jpg",
+      "sizeBytes": 5240696,
+      "contentType": "image/jpeg",
+      "sha256": "11f60c0123740fb7a92d256494fa8a8a541ef107e7bed139ea8d0d018689f185",
+      "etag": "8d01ab5fa855e97e671232272dba2eeb"
+    },
+    {
+      "key": "floors/2023-2-summer/IMG-20230610-WA0008.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG-20230610-WA0008.jpg",
       "sizeBytes": 407467,
       "contentType": "image/jpeg",
       "sha256": "fa7c168e37ca872f0ef0e5aadf9a816541d3f0045e0d59a181d93d6b8338cef0",
       "etag": "175ccd5fbfb11644ca0ac3cbd1a67052"
     },
     {
-      "key": "2014/IMG-20230624-WA0011.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230624-WA0011.jpg",
+      "key": "floors/2023-2-summer/IMG-20230624-WA0011.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG-20230624-WA0011.jpg",
       "sizeBytes": 902494,
       "contentType": "image/jpeg",
       "sha256": "d2e3a3b07f39759489a2eb492d6587fc425c167675368e03348f4355025df452",
       "etag": "e4a497d6e81e06f099081939dd25f5bb"
     },
     {
-      "key": "2014/IMG-20230624-WA0012.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230624-WA0012.jpg",
+      "key": "floors/2023-2-summer/IMG-20230624-WA0012.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG-20230624-WA0012.jpg",
       "sizeBytes": 896083,
       "contentType": "image/jpeg",
       "sha256": "6f5560a7bc8fc47a5d62d7037f9c803136102a2db199a83528532ba2c0fe5836",
       "etag": "35f541dc112fdf066f16c7d1e936646c"
     },
     {
-      "key": "2014/IMG-20230624-WA0013.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230624-WA0013.jpg",
+      "key": "floors/2023-2-summer/IMG-20230624-WA0013.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG-20230624-WA0013.jpg",
       "sizeBytes": 937000,
       "contentType": "image/jpeg",
       "sha256": "66ee638302a966ad4008961ee7c56d6d225dc241036cfcc5100f920be10ce51e",
       "etag": "4b1955aedc0406c0fd6ac608e9070141"
     },
     {
-      "key": "2014/IMG-20230624-WA0014.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230624-WA0014.jpg",
+      "key": "floors/2023-2-summer/IMG-20230624-WA0014.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG-20230624-WA0014.jpg",
       "sizeBytes": 942226,
       "contentType": "image/jpeg",
       "sha256": "0fbd4e03de53a93e513dd304dd86096378e2bd9402bea4c8f0ef695ae11d7a7b",
       "etag": "106bb56f2f4318641c4c565bddbc9c5e"
     },
     {
-      "key": "2014/IMG-20230624-WA0015.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230624-WA0015.jpg",
+      "key": "floors/2023-2-summer/IMG-20230624-WA0015.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG-20230624-WA0015.jpg",
       "sizeBytes": 939706,
       "contentType": "image/jpeg",
       "sha256": "8bbf3219d67be30c6a8ea61e1092b316729d536f76b058ec9351953fa72d84ba",
       "etag": "23148c6893004dc0fae1d387e1639697"
     },
     {
-      "key": "2014/IMG-20230624-WA0016.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230624-WA0016.jpg",
+      "key": "floors/2023-2-summer/IMG-20230624-WA0016.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG-20230624-WA0016.jpg",
       "sizeBytes": 918867,
       "contentType": "image/jpeg",
       "sha256": "93e394f337418889fc44ebdc9c965caaa8196f4e0fe4ebcb74ccbbf180155f8d",
       "etag": "a66ec9ec98d609449e8bd0ac6d1db246"
     },
     {
-      "key": "2014/IMG-20230624-WA0017.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230624-WA0017.jpg",
+      "key": "floors/2023-2-summer/IMG-20230624-WA0017.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG-20230624-WA0017.jpg",
       "sizeBytes": 939015,
       "contentType": "image/jpeg",
       "sha256": "411a1ce5e07eb2651b00b13025dbb149c94b11cf46d3234b2559ea86f3aa2b71",
       "etag": "b50cc0e27d3c265505d317c3077e25aa"
     },
     {
-      "key": "2014/IMG-20230624-WA0018.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230624-WA0018.jpg",
+      "key": "floors/2023-2-summer/IMG-20230624-WA0018.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG-20230624-WA0018.jpg",
       "sizeBytes": 838203,
       "contentType": "image/jpeg",
       "sha256": "c9495c751e4568231b870b1fbf35912993f3f63bd4d4f1fc67703f3a6fb5fc38",
       "etag": "fe71fa37fcf782545d0ea6c386524a9f"
     },
     {
-      "key": "2014/IMG-20230624-WA0019.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230624-WA0019.jpg",
+      "key": "floors/2023-2-summer/IMG-20230624-WA0019.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG-20230624-WA0019.jpg",
       "sizeBytes": 762890,
       "contentType": "image/jpeg",
       "sha256": "8a74f8ce6d7a7400eb72bbc45e8612043c677237b47ed445cfc9a7253da608af",
       "etag": "9e99ef2261e197cdf11511c9c5b289df"
     },
     {
-      "key": "2014/IMG-20230624-WA0020.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230624-WA0020.jpg",
+      "key": "floors/2023-2-summer/IMG-20230624-WA0020.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG-20230624-WA0020.jpg",
       "sizeBytes": 876140,
       "contentType": "image/jpeg",
       "sha256": "f8d0e23b1698e0c84a26e6260ea5305b25fc608ab22288ff71d529b62e759b63",
       "etag": "041af66cd85696ddcafe5dd3f69d4e50"
     },
     {
-      "key": "2014/IMG-20230624-WA0021.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230624-WA0021.jpg",
+      "key": "floors/2023-2-summer/IMG-20230624-WA0021.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG-20230624-WA0021.jpg",
       "sizeBytes": 876259,
       "contentType": "image/jpeg",
       "sha256": "bf7e438809a7feb55d1e037b53c88ed0a8da2a2c5b3487ec02b437d562d5914a",
       "etag": "3b7752eb257c0f9b8fe7e234ba146583"
     },
     {
-      "key": "2014/IMG-20230624-WA0022.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230624-WA0022.jpg",
+      "key": "floors/2023-2-summer/IMG-20230624-WA0022.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-2-summer/IMG-20230624-WA0022.jpg",
       "sizeBytes": 870825,
       "contentType": "image/jpeg",
       "sha256": "3436ace0a0f861d9c73e70b8aa6a74dbdaad64a2840f3323c7f6f65899c3f64e",
       "etag": "5a255ce0ddb4d601e9ee9d93ca04a74a"
     },
     {
-      "key": "2014/IMG-20230929-WA0000.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20230929-WA0000.jpg",
+      "key": "floors/2023-3-autumn/IMG-20230929-WA0000.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-3-autumn/IMG-20230929-WA0000.jpg",
       "sizeBytes": 82303,
       "contentType": "image/jpeg",
       "sha256": "133229dfe6b0f62459f1945872c5ebb85c0d67439d0447ab1675779cfbc18f8b",
       "etag": "cc509cb96c1065b9699e91ecc9e46d2d"
     },
     {
-      "key": "2014/IMG-20231007-WA0002.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20231007-WA0002.jpg",
+      "key": "floors/2023-3-autumn/IMG-20231007-WA0002.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-3-autumn/IMG-20231007-WA0002.jpg",
       "sizeBytes": 176603,
       "contentType": "image/jpeg",
       "sha256": "a0d98b21d4ad7f47bed9892f3a1f4d7f0095abc2d71b1183ab49adc935b13067",
       "etag": "557d7ecca254cfca356b6189d98f4b6d"
     },
     {
-      "key": "2014/IMG-20231106-WA0002.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20231106-WA0002.jpg",
+      "key": "floors/2023-3-autumn/IMG-20231106-WA0002.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-3-autumn/IMG-20231106-WA0002.jpg",
       "sizeBytes": 107822,
       "contentType": "image/jpeg",
       "sha256": "d2ab69e7add422d04e0e882e4053e7367f4cc1cd90f601687d73428df6a1de7a",
       "etag": "e5876c630a7bc40d89c3541f88323174"
     },
     {
-      "key": "2014/IMG-20231209-WA0001.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20231209-WA0001.jpg",
-      "sizeBytes": 135553,
-      "contentType": "image/jpeg",
-      "sha256": "21b08c3eafba683b98f3e7709a8a5d01dae37b15d3a5304cbcc195037a381395",
-      "etag": "9874e7e233855a82f37629cdb0acd43f"
-    },
-    {
-      "key": "2014/IMG-20231209-WA0002.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20231209-WA0002.jpg",
-      "sizeBytes": 126952,
-      "contentType": "image/jpeg",
-      "sha256": "2b44a4462048323b6736157675fa79a17da318a3378d57d7df6d6aa9f447afa5",
-      "etag": "678f5ff4d82075a89cca083023dc605b"
-    },
-    {
-      "key": "2014/IMG-20240128-WA0004.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240128-WA0004.jpg",
-      "sizeBytes": 138143,
-      "contentType": "image/jpeg",
-      "sha256": "7bdf2f9f2107c66f899e6c60b63d5f3bc34cca85643eb5e608f2f6f016d44df8",
-      "etag": "b076032df9f7300352b59b4a3a4f8dd9"
-    },
-    {
-      "key": "2014/IMG-20240128-WA0010.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240128-WA0010.jpg",
-      "sizeBytes": 2677958,
-      "contentType": "image/jpeg",
-      "sha256": "1af8c6fb66d7a755dbd65dff7330183997f500d105a58f92322976f414adadef",
-      "etag": "865a0d4abb176ff79d5606d7e688e0c8"
-    },
-    {
-      "key": "2014/IMG-20240128-WA0012.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240128-WA0012.jpg",
-      "sizeBytes": 2661210,
-      "contentType": "image/jpeg",
-      "sha256": "ba645885cfb11aac6f6b6d101eff1d4b1942af9bad29342b854c6e42c7abe810",
-      "etag": "52cfa5e67ce4f2652d6b0c4cc398e78a"
-    },
-    {
-      "key": "2014/IMG-20240128-WA0014.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240128-WA0014.jpg",
-      "sizeBytes": 2682653,
-      "contentType": "image/jpeg",
-      "sha256": "91280ccde5e3db824da7171e38586766acb93f42b8d339d5487d7c1861bdcaa6",
-      "etag": "718c9da59e44cfe9ae5287d032d3aeb6"
-    },
-    {
-      "key": "2014/IMG-20240316-WA0004.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240316-WA0004.jpg",
-      "sizeBytes": 1418057,
-      "contentType": "image/jpeg",
-      "sha256": "393a45e946e5e2d23ef88e5d04e93b515e7a2cee14ee2085dffa9ae5c82b7e63",
-      "etag": "f0c778698886df66d40be8d34cc484ef"
-    },
-    {
-      "key": "2014/IMG-20240316-WA0006.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240316-WA0006.jpg",
-      "sizeBytes": 1389889,
-      "contentType": "image/jpeg",
-      "sha256": "5031f9fae44531c80ee0d372512aeb742b1641b880b9365c407504710f9e748e",
-      "etag": "352b2ee2345aa4c66c26e8c39fcbc516"
-    },
-    {
-      "key": "2014/IMG-20240316-WA0008.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240316-WA0008.jpg",
-      "sizeBytes": 2253053,
-      "contentType": "image/jpeg",
-      "sha256": "7dee3e447d0ea1774719fb65e93c1d6a366d664309503fe9d34db79bf264e7fc",
-      "etag": "3b7aca701bbee43d6665fb97f25c0d58"
-    },
-    {
-      "key": "2014/IMG-20240316-WA0010.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240316-WA0010.jpg",
-      "sizeBytes": 2259409,
-      "contentType": "image/jpeg",
-      "sha256": "688b4b4cb12c6267493dacdb2efd003458870b32fb656cd00cfba7344471e444",
-      "etag": "50650d3ec590240395d8ccd3cd1737b9"
-    },
-    {
-      "key": "2014/IMG-20240316-WA0012.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240316-WA0012.jpg",
-      "sizeBytes": 1394876,
-      "contentType": "image/jpeg",
-      "sha256": "4a3ebb5b5faebdac84d12170d7f6bd956fbd833e22ae3a00bbce47ca671d535b",
-      "etag": "b36863313fad6f475355f7b48887683d"
-    },
-    {
-      "key": "2014/IMG-20240318-WA0002.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240318-WA0002.jpg",
-      "sizeBytes": 352213,
-      "contentType": "image/jpeg",
-      "sha256": "5a34f7f4e21acfc53610e119d3357bce7c4df806e0792b7417f825afa451c3f6",
-      "etag": "063ac5cb36ab3ffe806195aa6b2f72ec"
-    },
-    {
-      "key": "2014/IMG-20240511-WA0002.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240511-WA0002.jpg",
-      "sizeBytes": 264266,
-      "contentType": "image/jpeg",
-      "sha256": "4ad2b7e1be7ec38f1d5600b814003ede6ee0a2e761bcf3965a909c07263d23d7",
-      "etag": "594eb407b3ca4a78ea387e075719742d"
-    },
-    {
-      "key": "2014/IMG-20240511-WA0003.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240511-WA0003.jpg",
-      "sizeBytes": 291213,
-      "contentType": "image/jpeg",
-      "sha256": "007a4d033ba06da22bff696a9f1e2b7c48daa5372e636be8a2bec9326d07557a",
-      "etag": "fdc85b059a1e39039397896dad22453f"
-    },
-    {
-      "key": "2014/IMG-20240511-WA0004.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240511-WA0004.jpg",
-      "sizeBytes": 267749,
-      "contentType": "image/jpeg",
-      "sha256": "bba69e6b8856105c9d91c53e5b462951080b1f3a86c29a69fd2273b96c0de063",
-      "etag": "0dd15344239813de695375281e50caf0"
-    },
-    {
-      "key": "2014/IMG-20240511-WA0005.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240511-WA0005.jpg",
-      "sizeBytes": 165013,
-      "contentType": "image/jpeg",
-      "sha256": "9af55f11e267988ec2f78c6f258cb9ea382d14f901d204360034db622481f10a",
-      "etag": "4ac2bdbef7d74908cad5643bd916d47c"
-    },
-    {
-      "key": "2014/IMG-20240519-WA0001.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240519-WA0001.jpg",
-      "sizeBytes": 370379,
-      "contentType": "image/jpeg",
-      "sha256": "819ef389e703d34353e7bb8c233bfba05406dc44ba79e17a44b92a76360ab30e",
-      "etag": "1c51bf7015e3b1c4876a0c206310234c"
-    },
-    {
-      "key": "2014/IMG-20240519-WA0002.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240519-WA0002.jpg",
-      "sizeBytes": 369667,
-      "contentType": "image/jpeg",
-      "sha256": "f84bd79a97d6de9380b7e649089411c663fdc542e57d0e4dd490f9a5cf3cef24",
-      "etag": "1737bbf0c38c5c0b87de4926ff194876"
-    },
-    {
-      "key": "2014/IMG-20240519-WA0003.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240519-WA0003.jpg",
-      "sizeBytes": 277177,
-      "contentType": "image/jpeg",
-      "sha256": "0f14e82138e047aa3690184b328fb31a37933db1ef9edc809d870eba3cab11ed",
-      "etag": "cc8cddc1c4a6199bedc9f93fa028b99e"
-    },
-    {
-      "key": "2014/IMG-20240626-WA0010.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240626-WA0010.jpg",
-      "sizeBytes": 406243,
-      "contentType": "image/jpeg",
-      "sha256": "d0ca2844d5a5aeec7f476f8c99c2daa827f6d38cf0d50bce1e60fe8c709375a5",
-      "etag": "0cd732004c15e6a4fd8848b5129010a4"
-    },
-    {
-      "key": "2014/IMG-20240626-WA0012.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/IMG-20240626-WA0012.jpg",
-      "sizeBytes": 540586,
-      "contentType": "image/jpeg",
-      "sha256": "4f58c9c7a3af0e892cdf86bb7919c055866408ab7d1c48ce76f884b20d964047",
-      "etag": "39e4ffa3b3f738ca83268b8d8b85f2b8"
-    },
-    {
-      "key": "2014/PXL_20240128_150155722.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/PXL_20240128_150155722.jpg",
-      "sizeBytes": 1488407,
-      "contentType": "image/jpeg",
-      "sha256": "07b0de5ab06fcd16fc9edf3da8f91f4b4a65c41bf626883098f1f3c948e4435f",
-      "etag": "d2ea14ef54a16177b4b59970feb4fa93"
-    },
-    {
-      "key": "2014/PXL_20240413_075458206.MP.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/PXL_20240413_075458206.MP.jpg",
-      "sizeBytes": 5113234,
-      "contentType": "image/jpeg",
-      "sha256": "6657cdfbb782c41c28cb3e4b8a16a61fb3449df59e69387309c8fb8043d3c72c",
-      "etag": "0b1dedbcbcfd732cabe8193241aa15c4"
-    },
-    {
-      "key": "2014/PXL_20240413_075508957.MP.jpg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/PXL_20240413_075508957.MP.jpg",
-      "sizeBytes": 5226661,
-      "contentType": "image/jpeg",
-      "sha256": "5caad1b67591f16a99ae24ae71ee8db5065b1505840f9b0e4d8835d9b8c04695",
-      "etag": "ae473a3736b94f81d8e0f67559ff5c48"
-    },
-    {
-      "key": "2014/VID_20230916_111113.mp4",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/VID_20230916_111113.mp4",
+      "key": "floors/2023-3-autumn/VID_20230916_111113.mp4",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-3-autumn/VID_20230916_111113.mp4",
       "sizeBytes": 3519298,
       "contentType": "video/mp4",
       "sha256": "5d691aba9f762d53309233c4f886229ac25ad2c853dbf57bed5815f8bde8fc43",
       "etag": "147541d8e82398f35c5cd0a428ecd993"
     },
     {
-      "key": "2014/VID_20230916_111318_HSR_120.mp4",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/VID_20230916_111318_HSR_120.mp4",
+      "key": "floors/2023-3-autumn/VID_20230916_111318_HSR_120.mp4",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-3-autumn/VID_20230916_111318_HSR_120.mp4",
       "sizeBytes": 4645778,
       "contentType": "video/mp4",
       "sha256": "000d4f3eab3dd2f4378ed1868f30b4119bcddc014592db8d9c1f4be4bc9ba754",
       "etag": "42e7b4d417bd2dfc57e3f4f7d8d9a2b5"
     },
     {
-      "key": "2014/VID_20230916_111440_HSR_120.mp4",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/VID_20230916_111440_HSR_120.mp4",
+      "key": "floors/2023-3-autumn/VID_20230916_111440_HSR_120.mp4",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2023-3-autumn/VID_20230916_111440_HSR_120.mp4",
       "sizeBytes": 4934849,
       "contentType": "video/mp4",
       "sha256": "b276776f616b120caeed4b416b5efdcf5380d69cc7ef39f86aec3e7686e749eb",
       "etag": "b4ad862defc982cd8d73f54ab7dd1e94"
     },
     {
-      "key": "2014/VID_20231209_164640.mp4",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/2014/VID_20231209_164640.mp4",
+      "key": "floors/2024-0-winter/IMG-20231209-WA0001.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-0-winter/IMG-20231209-WA0001.jpg",
+      "sizeBytes": 135553,
+      "contentType": "image/jpeg",
+      "sha256": "21b08c3eafba683b98f3e7709a8a5d01dae37b15d3a5304cbcc195037a381395",
+      "etag": "9874e7e233855a82f37629cdb0acd43f"
+    },
+    {
+      "key": "floors/2024-0-winter/IMG-20231209-WA0002.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-0-winter/IMG-20231209-WA0002.jpg",
+      "sizeBytes": 126952,
+      "contentType": "image/jpeg",
+      "sha256": "2b44a4462048323b6736157675fa79a17da318a3378d57d7df6d6aa9f447afa5",
+      "etag": "678f5ff4d82075a89cca083023dc605b"
+    },
+    {
+      "key": "floors/2024-0-winter/IMG-20240128-WA0004.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-0-winter/IMG-20240128-WA0004.jpg",
+      "sizeBytes": 138143,
+      "contentType": "image/jpeg",
+      "sha256": "7bdf2f9f2107c66f899e6c60b63d5f3bc34cca85643eb5e608f2f6f016d44df8",
+      "etag": "b076032df9f7300352b59b4a3a4f8dd9"
+    },
+    {
+      "key": "floors/2024-0-winter/IMG-20240128-WA0010.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-0-winter/IMG-20240128-WA0010.jpg",
+      "sizeBytes": 2677958,
+      "contentType": "image/jpeg",
+      "sha256": "1af8c6fb66d7a755dbd65dff7330183997f500d105a58f92322976f414adadef",
+      "etag": "865a0d4abb176ff79d5606d7e688e0c8"
+    },
+    {
+      "key": "floors/2024-0-winter/IMG-20240128-WA0012.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-0-winter/IMG-20240128-WA0012.jpg",
+      "sizeBytes": 2661210,
+      "contentType": "image/jpeg",
+      "sha256": "ba645885cfb11aac6f6b6d101eff1d4b1942af9bad29342b854c6e42c7abe810",
+      "etag": "52cfa5e67ce4f2652d6b0c4cc398e78a"
+    },
+    {
+      "key": "floors/2024-0-winter/IMG-20240128-WA0014.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-0-winter/IMG-20240128-WA0014.jpg",
+      "sizeBytes": 2682653,
+      "contentType": "image/jpeg",
+      "sha256": "91280ccde5e3db824da7171e38586766acb93f42b8d339d5487d7c1861bdcaa6",
+      "etag": "718c9da59e44cfe9ae5287d032d3aeb6"
+    },
+    {
+      "key": "floors/2024-0-winter/PXL_20240128_150155722.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-0-winter/PXL_20240128_150155722.jpg",
+      "sizeBytes": 1488407,
+      "contentType": "image/jpeg",
+      "sha256": "07b0de5ab06fcd16fc9edf3da8f91f4b4a65c41bf626883098f1f3c948e4435f",
+      "etag": "d2ea14ef54a16177b4b59970feb4fa93"
+    },
+    {
+      "key": "floors/2024-0-winter/VID_20231209_164640.mp4",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-0-winter/VID_20231209_164640.mp4",
       "sizeBytes": 2697613,
       "contentType": "video/mp4",
       "sha256": "d76bc8d2217ba07d92b237a2acf3394e293dbda84becd7c64f1d69497b774c10",
       "etag": "7fc2184544bf2ed396d6f3b57e322743"
     },
     {
-      "key": "Timeline 1_prob4.mp4",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/Timeline%201_prob4.mp4",
-      "sizeBytes": 31702809,
-      "contentType": "video/mp4",
-      "sha256": "6e5f739849f333f1a157b39bb4a3d369aa70e09ca09b5bb9521d932735a09097",
-      "etag": "10dcba11b9e029ba57f1c56a6cbf4dfe"
+      "key": "floors/2024-1-spring/1714232544469.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/1714232544469.jpg",
+      "sizeBytes": 4000053,
+      "contentType": "image/jpeg",
+      "sha256": "88720158026d6535a9c138f589149acd846a072fdc93e74a1253d62100990edb",
+      "etag": "fc354f173bf13b3b8e15e61a4c67c713"
     },
     {
-      "key": "WhatsApp Image 2026-10-02 at 18.44.58.jpeg",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/WhatsApp%20Image%202026-10-02%20at%2018.44.58.jpeg",
+      "key": "floors/2024-1-spring/IMG-20240316-WA0004.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/IMG-20240316-WA0004.jpg",
+      "sizeBytes": 1418057,
+      "contentType": "image/jpeg",
+      "sha256": "393a45e946e5e2d23ef88e5d04e93b515e7a2cee14ee2085dffa9ae5c82b7e63",
+      "etag": "f0c778698886df66d40be8d34cc484ef"
+    },
+    {
+      "key": "floors/2024-1-spring/IMG-20240316-WA0006.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/IMG-20240316-WA0006.jpg",
+      "sizeBytes": 1389889,
+      "contentType": "image/jpeg",
+      "sha256": "5031f9fae44531c80ee0d372512aeb742b1641b880b9365c407504710f9e748e",
+      "etag": "352b2ee2345aa4c66c26e8c39fcbc516"
+    },
+    {
+      "key": "floors/2024-1-spring/IMG-20240316-WA0008.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/IMG-20240316-WA0008.jpg",
+      "sizeBytes": 2253053,
+      "contentType": "image/jpeg",
+      "sha256": "7dee3e447d0ea1774719fb65e93c1d6a366d664309503fe9d34db79bf264e7fc",
+      "etag": "3b7aca701bbee43d6665fb97f25c0d58"
+    },
+    {
+      "key": "floors/2024-1-spring/IMG-20240316-WA0010.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/IMG-20240316-WA0010.jpg",
+      "sizeBytes": 2259409,
+      "contentType": "image/jpeg",
+      "sha256": "688b4b4cb12c6267493dacdb2efd003458870b32fb656cd00cfba7344471e444",
+      "etag": "50650d3ec590240395d8ccd3cd1737b9"
+    },
+    {
+      "key": "floors/2024-1-spring/IMG-20240316-WA0012.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/IMG-20240316-WA0012.jpg",
+      "sizeBytes": 1394876,
+      "contentType": "image/jpeg",
+      "sha256": "4a3ebb5b5faebdac84d12170d7f6bd956fbd833e22ae3a00bbce47ca671d535b",
+      "etag": "b36863313fad6f475355f7b48887683d"
+    },
+    {
+      "key": "floors/2024-1-spring/IMG-20240318-WA0002.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/IMG-20240318-WA0002.jpg",
+      "sizeBytes": 352213,
+      "contentType": "image/jpeg",
+      "sha256": "5a34f7f4e21acfc53610e119d3357bce7c4df806e0792b7417f825afa451c3f6",
+      "etag": "063ac5cb36ab3ffe806195aa6b2f72ec"
+    },
+    {
+      "key": "floors/2024-1-spring/IMG-20240511-WA0002.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/IMG-20240511-WA0002.jpg",
+      "sizeBytes": 264266,
+      "contentType": "image/jpeg",
+      "sha256": "4ad2b7e1be7ec38f1d5600b814003ede6ee0a2e761bcf3965a909c07263d23d7",
+      "etag": "594eb407b3ca4a78ea387e075719742d"
+    },
+    {
+      "key": "floors/2024-1-spring/IMG-20240511-WA0003.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/IMG-20240511-WA0003.jpg",
+      "sizeBytes": 291213,
+      "contentType": "image/jpeg",
+      "sha256": "007a4d033ba06da22bff696a9f1e2b7c48daa5372e636be8a2bec9326d07557a",
+      "etag": "fdc85b059a1e39039397896dad22453f"
+    },
+    {
+      "key": "floors/2024-1-spring/IMG-20240511-WA0004.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/IMG-20240511-WA0004.jpg",
+      "sizeBytes": 267749,
+      "contentType": "image/jpeg",
+      "sha256": "bba69e6b8856105c9d91c53e5b462951080b1f3a86c29a69fd2273b96c0de063",
+      "etag": "0dd15344239813de695375281e50caf0"
+    },
+    {
+      "key": "floors/2024-1-spring/IMG-20240511-WA0005.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/IMG-20240511-WA0005.jpg",
+      "sizeBytes": 165013,
+      "contentType": "image/jpeg",
+      "sha256": "9af55f11e267988ec2f78c6f258cb9ea382d14f901d204360034db622481f10a",
+      "etag": "4ac2bdbef7d74908cad5643bd916d47c"
+    },
+    {
+      "key": "floors/2024-1-spring/IMG-20240519-WA0001.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/IMG-20240519-WA0001.jpg",
+      "sizeBytes": 370379,
+      "contentType": "image/jpeg",
+      "sha256": "819ef389e703d34353e7bb8c233bfba05406dc44ba79e17a44b92a76360ab30e",
+      "etag": "1c51bf7015e3b1c4876a0c206310234c"
+    },
+    {
+      "key": "floors/2024-1-spring/IMG-20240519-WA0002.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/IMG-20240519-WA0002.jpg",
+      "sizeBytes": 369667,
+      "contentType": "image/jpeg",
+      "sha256": "f84bd79a97d6de9380b7e649089411c663fdc542e57d0e4dd490f9a5cf3cef24",
+      "etag": "1737bbf0c38c5c0b87de4926ff194876"
+    },
+    {
+      "key": "floors/2024-1-spring/IMG-20240519-WA0003.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/IMG-20240519-WA0003.jpg",
+      "sizeBytes": 277177,
+      "contentType": "image/jpeg",
+      "sha256": "0f14e82138e047aa3690184b328fb31a37933db1ef9edc809d870eba3cab11ed",
+      "etag": "cc8cddc1c4a6199bedc9f93fa028b99e"
+    },
+    {
+      "key": "floors/2024-1-spring/PXL_20240413_075458206.MP.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/PXL_20240413_075458206.MP.jpg",
+      "sizeBytes": 5113234,
+      "contentType": "image/jpeg",
+      "sha256": "6657cdfbb782c41c28cb3e4b8a16a61fb3449df59e69387309c8fb8043d3c72c",
+      "etag": "0b1dedbcbcfd732cabe8193241aa15c4"
+    },
+    {
+      "key": "floors/2024-1-spring/PXL_20240413_075508957.MP.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-1-spring/PXL_20240413_075508957.MP.jpg",
+      "sizeBytes": 5226661,
+      "contentType": "image/jpeg",
+      "sha256": "5caad1b67591f16a99ae24ae71ee8db5065b1505840f9b0e4d8835d9b8c04695",
+      "etag": "ae473a3736b94f81d8e0f67559ff5c48"
+    },
+    {
+      "key": "floors/2024-2-summer/IMG-20240626-WA0010.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-2-summer/IMG-20240626-WA0010.jpg",
+      "sizeBytes": 406243,
+      "contentType": "image/jpeg",
+      "sha256": "d0ca2844d5a5aeec7f476f8c99c2daa827f6d38cf0d50bce1e60fe8c709375a5",
+      "etag": "0cd732004c15e6a4fd8848b5129010a4"
+    },
+    {
+      "key": "floors/2024-2-summer/IMG-20240626-WA0012.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2024-2-summer/IMG-20240626-WA0012.jpg",
+      "sizeBytes": 540586,
+      "contentType": "image/jpeg",
+      "sha256": "4f58c9c7a3af0e892cdf86bb7919c055866408ab7d1c48ce76f884b20d964047",
+      "etag": "39e4ffa3b3f738ca83268b8d8b85f2b8"
+    },
+    {
+      "key": "floors/2026-3-autumn/WhatsApp Image 2026-10-02 at 18.44.58.jpeg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/2026-3-autumn/WhatsApp%20Image%202026-10-02%20at%2018.44.58.jpeg",
       "sizeBytes": 254179,
       "contentType": "image/jpeg",
       "sha256": "09a61229b1643e5b76cdb89bd036c5dcc5f2ff3b2198f91e5fd28cf7ba10ac4b",
       "etag": "d0bd8bec5847c3568230f68c73728eda"
     },
     {
-      "key": "WhatsApp Video 2026-10-04 at 18.22.02.mp4",
-      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/WhatsApp%20Video%202026-10-04%20at%2018.22.02.mp4",
+      "key": "floors/undated/IMG_5760.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/undated/IMG_5760.jpg",
+      "sizeBytes": 3532616,
+      "contentType": "image/jpeg",
+      "sha256": "5c44c1966d02e84b5ffde81a7625a84e032246e47a557c2512e2c0a209dbeb9a",
+      "etag": "9fd35b7345094aba38cad3cde693e10b"
+    },
+    {
+      "key": "floors/undated/IMG_5762-scaled.jpg",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/floors/undated/IMG_5762-scaled.jpg",
+      "sizeBytes": 823502,
+      "contentType": "image/jpeg",
+      "sha256": "6f8c09cbc73f71b16b8bab154e316465e1843bd93fcef24397c8ea7442117bb0",
+      "etag": "391246c3303cebd8c96a507e4b19c3cb"
+    },
+    {
+      "key": "hall-of-fame/Timeline 1_prob4.mp4",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/hall-of-fame/Timeline%201_prob4.mp4",
+      "sizeBytes": 31702809,
+      "contentType": "video/mp4",
+      "sha256": "6e5f739849f333f1a157b39bb4a3d369aa70e09ca09b5bb9521d932735a09097",
+      "etag": "10dcba11b9e029ba57f1c56a6cbf4dfe"
+    },
+    {
+      "key": "hall-of-fame/WhatsApp Video 2026-10-04 at 18.22.02.mp4",
+      "url": "https://pub-00ae264180144f48be81477925c676be.r2.dev/hall-of-fame/WhatsApp%20Video%202026-10-04%20at%2018.22.02.mp4",
       "sizeBytes": 27117205,
       "contentType": "video/mp4",
       "sha256": "8b00ad29864e32bd0ffbd6905f899dced2e9d25458fc067cf5273077b7ae473c",

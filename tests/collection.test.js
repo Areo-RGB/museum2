@@ -45,14 +45,14 @@ test('direct editor loads respect a zero video budget', async () => {
   await curator.load(frame);
 });
 
-test('hidden manifest keys are left out of the collection', async () => {
+test('hidden file names are left out of the collection, whatever folder they sit in', async () => {
   const previous = globalThis.fetch;
-  const assets = ['2014/IMG_20231209_1.jpg', '2014/VID_20231209_164640.mp4'].map(key => ({
+  const assets = ['floors/2024-0-winter/IMG_20231209_1.jpg', 'floors/2024-0-winter/VID_20231209_164640.mp4'].map(key => ({
     key, url: `https://example.test/${key}`, contentType: key.endsWith('.mp4') ? 'video/mp4' : 'image/jpeg',
   }));
   globalThis.fetch = async () => new Response(JSON.stringify({ assets }));
   try {
-    const library = await MediaLibrary.load('/manifest.json', { hidden: ['2014/VID_20231209_164640.mp4'] });
-    assert.deepEqual(library.items.map(i => i.id), ['2014/IMG_20231209_1.jpg']);
+    const library = await MediaLibrary.load('/manifest.json', { hidden: ['VID_20231209_164640.mp4'] });
+    assert.deepEqual(library.items.map(i => i.id), ['floors/2024-0-winter/IMG_20231209_1.jpg']);
   } finally { globalThis.fetch = previous; }
 });

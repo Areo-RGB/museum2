@@ -116,7 +116,7 @@ export class MediaLibrary {
       const skip = new Set(hidden);
       const items = (manifest.assets ?? []).flatMap((asset) => {
         const kind = kindOf(asset.contentType);
-        if (!kind || !asset.url || skip.has(asset.key)) return [];
+        if (!kind || !asset.url || skip.has(asset.key.split('/').pop())) return [];
         const caption = captionFor(asset.key, kind);
         return [{
           id: asset.key, kind, url: corsCacheKey(asset.url), source: 'collection', sizeBytes: asset.sizeBytes,

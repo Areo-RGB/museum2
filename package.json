@@ -8,7 +8,9 @@
     "dev": "vite --host 0.0.0.0 --port 3000",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0 --port 3000",
-    "deploy": "cf deploy"
+    "deploy": "cf deploy",
+    "r2:mirror": "node scripts/r2.mjs mirror",
+    "r2:manifest": "node scripts/r2.mjs manifest --upload"
   },
   "dependencies": {
     "idb": "^8.0.3",

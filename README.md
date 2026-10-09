@@ -134,6 +134,31 @@ Common extensions:
 (`image/*`) and videos (`video/*`) are supported; captions are derived from file names
 (e.g. `IMG_20230115_105410.jpg` → "15 January 2023 · 10:54").
 
+### Bucket layout and local mirror
+
+The bucket is filed the way the museum is built (rules in `scripts/bucket-layout.js`):
+
+```
+floors/2023-1-spring/IMG_20230415_101500.jpg   one folder per seasonal floor (December → next winter)
+floors/undated/...                              no date in the file name
+hall-of-fame/...                                curated entrance-floor videos (src/fame/programme.js)
+music/Twelve_White_Walls.mp3                    background music
+manifest.json                                   copy of public/media-manifest.json
+```
+
+`scripts/r2.mjs` keeps it that way using the `cf` login:
+
+```bash
+npm run r2:mirror                       # sync the bucket to ~/R2/<bucket> (R2_MIRROR overrides); MD5-verified, moves instead of re-downloading
+node scripts/r2.mjs organize            # dry run: where unfiled objects (e.g. new uploads at the root) would go
+node scripts/r2.mjs organize --apply    # copy them into place and verify the copies
+npm run r2:manifest                     # rebuild public/media-manifest.json (and upload it as manifest.json)
+# deploy, check the live site, then:
+node scripts/r2.mjs organize --delete-old   # remove the old keys (only those with a verified copy)
+```
+
+`CONFIG.media.hidden` lists file names, so hiding a work survives it being refiled.
+
 WebGL needs CORS to sample cross-origin media. The bucket has this CORS rule applied:
 
 ```json
