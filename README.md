@@ -192,6 +192,21 @@ Site updates still arrive live.
     android/build.sh                       # no Gradle; uses SDK build-tools
     adb install -r android/build/museum.apk
 
+For local tablet-sized testing, `android/emulator.sh` creates and launches
+`Museum_Xiaomi_Pad_7`. It matches the connected Xiaomi Pad 7's Android 16/API 36,
+landscape orientation, 2136x3200 display, 440 dpi density, eight logical CPU cores,
+and approximately 7.3 GiB of RAM. The emulator uses the x86_64 Google APIs image so
+it can use hardware virtualization on this Linux host; the tablet itself is ARM64.
+
+```bash
+android/emulator.sh --create-only  # create or refresh the local AVD
+android/emulator.sh                # launch it
+android/build.sh                   # build the APK in another terminal
+adb -e install -r android/build/museum.apk
+```
+
+The AVD is stored under `~/.android/avd/` and is intentionally not committed to git.
+
 ### Curator uploads
 
 "Upload your own image or video" in a frame's curate panel asks the Worker
