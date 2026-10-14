@@ -1,0 +1,30 @@
+{
+  "$schema": "https://t3.codes/schema/t3.json",
+  "scripts": [
+    {
+      "name": "Build APK",
+      "command": "android/build.sh",
+      "icon": "build"
+    },
+    {
+      "name": "Install on tablet",
+      "command": "adb -s 4c637b9e install -r android/build/museum.apk",
+      "icon": "debug"
+    },
+    {
+      "name": "Install on Pixel 8 Pro",
+      "command": "adb -s adb-3A280DLJG000F7-TXxTOJ._adb-tls-connect._tcp install -r android/build/museum.apk",
+      "icon": "debug"
+    },
+    {
+      "name": "Build + install on tablet",
+      "command": "android/build.sh && adb -s 4c637b9e install -r android/build/museum.apk",
+      "icon": "debug"
+    },
+    {
+      "name": "Build + install on Pixel 8 Pro",
+      "command": "android/build.sh && adb -s adb-3A280DLJG000F7-TXxTOJ._adb-tls-connect._tcp install -r android/build/museum.apk",
+      "icon": "debug"
+    }
+  ]
+}
