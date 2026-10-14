@@ -189,7 +189,13 @@ manifest to app storage in the background and serves cached media from disk,
 including Range requests for video seeking, so later visits don't need the network for media.
 Site updates still arrive live.
 
-    android/build.sh                       # no Gradle; uses SDK build-tools
+Native uploads (Kotlin, `android/src/uk/h03/gallery/upload/`): share photos/videos
+to **Museum upload** from any gallery app, or open its launcher icon to pick files.
+A foreground service streams each file to R2 as a multipart S3 upload (16 MiB parts,
+retried, progress notification); the Worker's `/api/multipart/*` endpoints check the
+upload key and presign each part, so no bucket credentials ship in the APK.
+
+    android/build.sh                       # no Gradle; SDK build-tools + kotlinc (KOTLINC=...)
     adb install -r android/build/museum.apk
 
 For local tablet-sized testing, `android/emulator.sh` creates and launches

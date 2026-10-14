@@ -32,7 +32,7 @@ fi
 set_property() {
   local key="$1"
   local value="$2"
-  local tmp="$CONFIG.tmp"
+  local tmp="$CONFIG.$BASHPID.tmp"
   awk -v key="$key" -v value="$value" '
     BEGIN { updated = 0 }
     index($0, key "=") == 1 { print key "=" value; updated = 1; next }
