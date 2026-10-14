@@ -26,7 +26,7 @@ This prototype is derived from ideas and portions of the MIT-licensed **barisulg
 npm install
 npm run dev
 ```
-
+museum2-2014-1-001/
 ## Deploy
 
 Hosted on Cloudflare Workers (static assets) at **https://gallery.h03.uk**.
@@ -180,3 +180,14 @@ Run `npm test` and `npm run build` before shipping. `CLAUDE.md` records the requ
 automatic commit, push-to-main and Cloudflare deployment workflow. Browser checks
 cover all-floor manifest coverage, repeated switching, real R2 media and controls.
 Transient media failures show a retry caption and retry after five seconds.
+
+## Tablet app (Android)
+
+`android/` is a fullscreen WebView shell around https://gallery.h03.uk (landscape,
+immersive, screen kept on, autoplay allowed). It mirrors every R2 asset in the
+manifest to app storage in the background and serves cached media from disk,
+including Range requests for video seeking, so later visits don't need the network for media.
+Site updates still arrive live.
+
+    android/build.sh                       # no Gradle; uses SDK build-tools
+    adb install -r android/build/museum.apk
