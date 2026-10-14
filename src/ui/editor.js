@@ -23,7 +23,7 @@ export class EditorPanel {
     this.fileInput.addEventListener('change', () => {
       const file = this.fileInput.files?.[0];
       this.fileInput.value = '';
-      if (file) this.run(() => handlers.onUpload(file), `Saved “${file.name}” to this frame.`);
+      if (file) this.run(() => handlers.onUpload(file), `Uploaded “${file.name}” to the museum bucket.`);
     });
     $('shuffleFrame').addEventListener('click', () => this.run(handlers.onShuffle, 'New piece hung.'));
     this.resetButton.addEventListener('click', () => this.run(handlers.onReset, 'Upload removed.'));
@@ -37,7 +37,7 @@ export class EditorPanel {
 
   open(frame) {
     this.frame = frame;
-    this.status.textContent = 'Uploads stay in this browser (IndexedDB).';
+    this.status.textContent = 'Uploads go to the museum’s R2 bucket (upload key needed).';
     this.refresh();
     this.el.classList.add('open');
   }

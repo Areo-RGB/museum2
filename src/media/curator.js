@@ -1,6 +1,7 @@
 import { createLimiter, loadMedia } from './loader.js';
 import { getSlotMedia, saveSlotMedia, deleteSlotMedia } from '../storage/db.js';
 import { kindOf } from './library.js';
+import { uploadToBucket } from './bucket.js';
 
 /**
  * Decides what hangs in each frame and keeps it in sync with storage.
@@ -38,9 +39,9 @@ export class Curator {
     if (this.disposed) return;
     this.frames.forEach((frame, i) => {
       const record = saved[i];
-      if (record?.blob) {
+      if (record?.blob || record?.url) {
         frame.setFit(record.fit);
-        frame.assign(uploadItem(frame.slot.id, record.blob, record.type, record.name));
+        frame.assign(uploadItem(frame.slot.id, record, record.type, record.name));
       } else {
         frame.assign(this.drawFor(frame));
       }
@@ -82,9 +83,12 @@ export class Curator {
   async upload(frame, file) {
     const kind = kindOf(file.type);
     if (!kind) throw new Error(`Unsupported file type: ${file.type || 'unknown'}`);
-    await saveSlotMedia({ slotId: frame.slot.id, blob: file, type: file.type, fit: frame.fit, name: file.name });
-    frame.assign(uploadItem(frame.slot.id, file, file.type, file.name));
-    return this.load(frame);
+    // The file goes to the R2 bucket; the frame keeps only its public URL.
+    const { url } = await uploadToBucket(file);
+    await saveSlotMedia({ slotId: frame.slot.id, url, type: file.type, fit: frame.fit, name: file.name });
+    frame.assign(uploadItem(frame.slot.id, { url }, file.type, file.name));
+    await this.load(frame);
+    return url;
   }
 
   /** Forget the upload and return the frame to the random collection. */
@@ -194,9 +198,10 @@ export class Curator {
   }
 }
 
-function uploadItem(slotId, blob, type, name = 'Upload') {
+/** `media` is { blob } for older device-only uploads or { url } for bucket uploads. */
+function uploadItem(slotId, { blob, url }, type, name = 'Upload') {
   return {
-    id: `upload:${slotId}`, kind: kindOf(type) ?? 'image', blob, source: 'upload',
+    id: `upload:${slotId}`, kind: kindOf(type) ?? 'image', blob, url, source: 'upload',
     title: name.replace(/\.[^.]+$/, ''), subtitle: 'From your collection',
   };
 }

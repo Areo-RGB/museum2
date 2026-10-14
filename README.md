@@ -191,3 +191,15 @@ Site updates still arrive live.
 
     android/build.sh                       # no Gradle; uses SDK build-tools
     adb install -r android/build/museum.apk
+
+### Curator uploads
+
+"Upload your own image or video" in a frame's curate panel sends the file to the
+R2 bucket via `POST /api/upload` on the Worker ([src/worker/index.js](src/worker/index.js)),
+filed under `floors/<season>/` like the rest of the collection; the frame keeps the
+public URL. Uploads need the `UPLOAD_TOKEN` Worker secret, entered once per device:
+
+    node node_modules/cf/bin/cf workers secrets update UPLOAD_TOKEN \
+      --worker personal-museum-media-gallery --type secret_text --text '<key>'
+
+Run `npm run r2:manifest` to add uploaded files to the shared collection.

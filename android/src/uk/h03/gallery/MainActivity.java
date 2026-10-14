@@ -1,6 +1,9 @@
 package uk.h03.gallery;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.webkit.ValueCallback;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowInsets;
@@ -19,6 +22,8 @@ public class MainActivity extends Activity {
 
   private WebView web;
   private MediaStore store;
+  private ValueCallback<Uri[]> pendingFiles;
+  private static final int PICK_FILE = 1;
 
   @Override protected void onCreate(Bundle saved) {
     super.onCreate(saved);
@@ -34,7 +39,20 @@ public class MainActivity extends Activity {
     s.setCacheMode(WebSettings.LOAD_DEFAULT);
     s.setOffscreenPreRaster(true);
     web.setBackgroundColor(0xFF000000);
-    web.setWebChromeClient(new WebChromeClient());
+    web.setWebChromeClient(new WebChromeClient() {
+      // The curator's "Upload your own image or video" input opens the system picker.
+      @Override public boolean onShowFileChooser(WebView v, ValueCallback<Uri[]> callback, FileChooserParams params) {
+        if (pendingFiles != null) pendingFiles.onReceiveValue(null);
+        pendingFiles = callback;
+        try {
+          startActivityForResult(params.createIntent(), PICK_FILE);
+        } catch (Exception e) {
+          pendingFiles = null;
+          return false;
+        }
+        return true;
+      }
+    });
     web.setWebViewClient(new WebViewClient() {
       @Override public WebResourceResponse shouldInterceptRequest(WebView v, WebResourceRequest req) {
         return store.intercept(req);
@@ -46,6 +64,13 @@ public class MainActivity extends Activity {
     setContentView(web);
     if (saved != null) web.restoreState(saved); else web.loadUrl(SITE);
     store.preloadAll(SITE + "media-manifest.json");
+  }
+
+  @Override protected void onActivityResult(int request, int result, Intent data) {
+    super.onActivityResult(request, result, data);
+    if (request != PICK_FILE || pendingFiles == null) return;
+    pendingFiles.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(result, data));
+    pendingFiles = null;
   }
 
   @Override public void onWindowFocusChanged(boolean focus) {
