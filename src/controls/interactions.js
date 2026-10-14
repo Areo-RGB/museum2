@@ -47,7 +47,10 @@ export class Interactions {
   /** @returns {{ target: Interactable, hit: THREE.Intersection } | null} */
   pick() {
     this.raycaster.setFromCamera(CENTER, this.camera);
-    const hit = this.raycaster.intersectObjects(this.meshes, false)[0];
+    // Hidden meshes (e.g. the video play button on non-video frames) must not
+    // intercept the ray; the nearest *visible* hit decides.
+    const hit = this.raycaster.intersectObjects(this.meshes, false)
+      .find((h) => { let o = h.object; while (o) { if (o.visible === false) return false; o = o.parent; } return true; });
     const target = hit && this.targets.get(hit.object);
     if (!target || target === OCCLUDER || hit.distance > (target.maxDistance ?? 8)) return null;
     return { target, hit };

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { CONFIG } from '../config.js';
-import { deviceProfile, pixelRatio } from './deviceProfile.js';
+import { deviceProfile, getQuality, pixelRatio } from './deviceProfile.js';
 
 /**
  * Owns the renderer, scene, camera and the frame loop.
@@ -9,8 +9,7 @@ import { deviceProfile, pixelRatio } from './deviceProfile.js';
 export class App {
   constructor(canvas) {
     this.canvas = canvas;
-    this.profile = deviceProfile({ coarsePointer: matchMedia('(pointer: coarse)').matches, width: innerWidth,
-      deviceMemory: navigator.deviceMemory, saveData: navigator.connection?.saveData });
+    this.profile = deviceProfile({ coarsePointer: matchMedia('(pointer: coarse)').matches, quality: getQuality() });
     this.renderOptions = { ...CONFIG.render, ...this.profile.render };
     this.mediaOptions = { ...CONFIG.media, ...this.profile.media };
     this.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: this.renderOptions.antialias, powerPreference: 'high-performance' });

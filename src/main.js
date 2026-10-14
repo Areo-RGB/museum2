@@ -22,6 +22,7 @@ import { CinemaPanel } from './ui/cinemaPanel.js';
 import { Overlay } from './ui/overlay.js';
 import { FloorPanel } from './ui/floorPanel.js';
 import { BackgroundMusic } from './ui/music.js';
+import { getQuality, setQuality } from './core/deviceProfile.js';
 import { $ } from './ui/dom.js';
 
 // ─── World ───────────────────────────────────────────────────────────────────
@@ -112,6 +113,16 @@ $('clearCache').addEventListener('click', async () => {
   try { $('cacheStatus').textContent = await photoCache.clear() ? 'Downloaded photos cleared.' : 'Photo cache is unavailable.'; }
   finally { button.disabled = false; }
 });
+// Quality switch: the choice persists and the page reloads so the renderer
+// (antialiasing needs a fresh GL context) and textures pick it up cleanly.
+for (const button of document.querySelectorAll('#qualitySettings [data-quality]')) {
+  button.classList.toggle('selected', button.dataset.quality === getQuality());
+  button.addEventListener('click', () => {
+    if (button.dataset.quality === getQuality()) return;
+    setQuality(button.dataset.quality);
+    location.reload();
+  });
+}
 const touch = new TouchControls(player, {
   available: app.profile.touch,
   onUse: () => { if (mode === 'explore') { const picked = interactions.pick(); picked?.target.activate(picked.hit); } },
@@ -191,10 +202,26 @@ function switchFloor(index, initial = false) {
   });
   interactions.clear();
   interactions.addOccluders(environment.walls);
-  for (const frame of frames) interactions.add(frame.hitTargets, {
-    caption: () => frame.item && { title: frame.item.title, subtitle: `${frame.item.subtitle} · click to curate` },
-    activate: () => openPanel(editor, frame),
-  });
+  for (const frame of frames) {
+    interactions.add(frame.hitTargets, {
+      caption: () => frame.item && {
+        title: frame.item.title,
+        subtitle: `${frame.item.subtitle}${frame.hasVideo && !frame.videoWanted ? ' · ▶ below plays the video' : ''} · click to curate`,
+      },
+      activate: () => openPanel(editor, frame),
+    });
+    // Dedicated opt-in playback button beside the plaque; the frame itself
+    // still opens the curation panel, and gallery videos never autoplay.
+    interactions.add([frame.playButton], {
+      caption: () => {
+        if (!frame.hasVideo) return null;
+        return frame.videoWanted
+          ? { title: 'Pause video', subtitle: 'Click to pause' }
+          : { title: 'Play video', subtitle: 'Click to play · muted · loops' };
+      },
+      activate: () => { frame.toggleVideo(); },
+    });
+  }
   lobby.registerInteractions(interactions, showFloors);
   if (layout.cinema) createCinema();
   cinemaPanel.setHall(cinema);

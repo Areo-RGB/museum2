@@ -11,6 +11,7 @@ let washMaterial; // created on first use (needs a canvas)
 const BAR = 0.075;
 const DEPTH = 0.07;
 const PLAQUE_Y = 1.45; // world height of the caption plaque (eye level when standing)
+const PLAY_SIZE = 0.14; // world size of the video play/pause button beside the plaque
 const DIMMED = 0.18;
 const FADE_SPEED = 2.5;
 
@@ -56,6 +57,18 @@ export class MediaFrame {
     this.plaque = createPlaque();
     this.plaque.mesh.position.y = PLAQUE_Y - slot.position[1];
 
+    // Opt-in video playback: a small play/pause button beside the plaque.
+    // Gallery videos never autoplay — the visitor presses play (a user
+    // gesture, so playback also satisfies browser autoplay policies).
+    this.videoWanted = false;
+    this._iconPause = null;
+    this.playButton = new THREE.Mesh(UNIT_PLANE, new THREE.MeshBasicMaterial({
+      map: getVideoIcon(false), transparent: true, toneMapped: false, depthWrite: false,
+    }));
+    this.playButton.visible = false;
+    this.playButton.renderOrder = 3;
+    this.group.add(this.playButton);
+
     // Painted-on light pool instead of a real spotlight: dozens of frames
     // would otherwise mean dozens of per-pixel lights.
     this.wash = new THREE.Mesh(UNIT_PLANE, getWashMaterial());
@@ -68,6 +81,38 @@ export class MediaFrame {
 
   /** Meshes that respond to the crosshair. */
   get hitTargets() { return [this.screen, this.matte, this.moulding]; }
+
+  /** Whether a video texture is currently hung here (button visible). */
+  get hasVideo() { return !!this.loaded?.video; }
+
+  /** Whether the hung video is currently playing. */
+  get playing() { const video = this.loaded?.video; return !!video && !video.paused; }
+
+  /**
+   * Toggle the hung video. Returns false when there is no video to toggle.
+   * Pausing clears intent; playing sets it, so walking away pauses but
+   * walking back resumes — only after the visitor has opted in once.
+   */
+  toggleVideo() {
+    const video = this.loaded?.video;
+    if (!video) return false;
+    if (video.paused) {
+      this.videoWanted = true;
+      try { video.play()?.catch?.(() => {}); } catch { /* retry in update() */ }
+    } else {
+      this.videoWanted = false;
+      video.pause();
+    }
+    this.syncPlayIcon();
+    return true;
+  }
+
+  /** Swap the button glyph when playback intent changes. */
+  syncPlayIcon() {
+    if (this._iconPause === this.videoWanted) return;
+    this._iconPause = this.videoWanted;
+    this.playButton.material.map = getVideoIcon(this.videoWanted);
+  }
 
   get aspect() {
     return this.knownAspect ?? this.slot.maxWidth / this.slot.maxHeight;
@@ -101,6 +146,11 @@ export class MediaFrame {
     this.screen.material.needsUpdate = true;
     this.brightness = 0;
     this.targetBrightness = 1;
+    // Videos start paused behind the play button — never autoplay.
+    this.videoWanted = false;
+    if (loaded.video && !loaded.video.paused) loaded.video.pause();
+    this.playButton.visible = !!loaded.video;
+    this.syncPlayIcon();
     this.layout();
     return true;
   }
@@ -119,6 +169,8 @@ export class MediaFrame {
     this.loaded?.dispose();
     this.loaded = null;
     this.state = 'idle';
+    this.videoWanted = false;
+    this.playButton.visible = false;
     this.screen.material.map = null;
     this.screen.material.needsUpdate = true;
     this.brightness = 0;
@@ -130,6 +182,7 @@ export class MediaFrame {
     this.unload();
     this.group.removeFromParent();
     this.screen.material.dispose();
+    this.playButton.material.dispose();
     this.moulding.dispose();
     // Shared geometry/materials survive floor switches; the instance buffer,
     // plaque face texture/material and screen material belong to this frame.
@@ -180,6 +233,10 @@ export class MediaFrame {
     this.plaque.mesh.position.x = outerW / 2 + 0.32;
     this.plaque.mesh.position.z = 0.006;
 
+    // Play button centred under the plaque, clear of the moulding.
+    this.playButton.scale.set(PLAY_SIZE, PLAY_SIZE, 1);
+    this.playButton.position.set(this.plaque.mesh.position.x, this.plaque.mesh.position.y - 0.24, 0.02);
+
     // Light pool slightly larger than the frame, biased upwards like a ceiling spot.
     this.wash.scale.set(outerW * 1.75, outerH * 1.7, 1);
     this.wash.position.y = outerH * 0.12;
@@ -196,11 +253,17 @@ export class MediaFrame {
 
     const video = this.loaded?.video;
     if (video) {
+      // No autoplay: playback only starts after toggleVideo() opts in.
+      // Leaving range, turning away or hiding the tab pauses (intent kept,
+      // so coming back resumes an opted-in video); pausing via the button
+      // clears intent and stays paused.
       const dx = cameraPosition.x - this.center.x, dy = cameraPosition.y - this.center.y, dz = cameraPosition.z - this.center.z;
-      const visible = !document.hidden && dx * this.normal.x + dy * this.normal.y + dz * this.normal.z > 0
+      const inRange = !document.hidden && dx * this.normal.x + dy * this.normal.y + dz * this.normal.z > 0
         && dx * dx + dy * dy + dz * dz < videoPlayDistance * videoPlayDistance;
-      if (visible && video.paused) video.play().catch(() => {});
-      else if (!visible && !video.paused) video.pause();
+      if (!inRange) { if (!video.paused) video.pause(); }
+      else if (this.videoWanted && video.paused) { try { video.play()?.catch?.(() => {}); } catch { /* retry next frame */ } }
+      else if (!this.videoWanted && !video.paused) video.pause();
+      this.syncPlayIcon();
     }
   }
 }
@@ -222,6 +285,44 @@ function getWashMaterial() {
     blending: THREE.AdditiveBlending, depthWrite: false,
   });
   return washMaterial;
+}
+
+// Shared play/pause glyphs for the video button (one texture each, reused by
+// every frame; `showingPause` selects which intent is displayed).
+let playIconTextures = null;
+function getVideoIcon(showingPause) {
+  if (!playIconTextures) {
+    playIconTextures = { play: drawVideoIcon(false), pause: drawVideoIcon(true) };
+  }
+  return showingPause ? playIconTextures.pause : playIconTextures.play;
+}
+
+function drawVideoIcon(showPause) {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 128;
+  const ctx = canvas.getContext('2d');
+  ctx.beginPath();
+  ctx.arc(64, 64, 56, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(18, 14, 10, 0.88)';
+  ctx.fill();
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = '#c9a45c';
+  ctx.stroke();
+  ctx.fillStyle = '#f3efe6';
+  if (showPause) {
+    ctx.fillRect(46, 42, 12, 44);
+    ctx.fillRect(70, 42, 12, 44);
+  } else {
+    ctx.beginPath();
+    ctx.moveTo(52, 40);
+    ctx.lineTo(88, 64);
+    ctx.lineTo(52, 88);
+    ctx.closePath();
+    ctx.fill();
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
 }
 
 function createPlaque() {

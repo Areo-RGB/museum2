@@ -38,13 +38,17 @@ const PILASTER_OFFSET = 3.1;
 export function setupAtmosphere(app) {
   const pmrem = new THREE.PMREMGenerator(app.renderer);
   app.scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  app.scene.environmentIntensity = 0.32;
+  // The hall has no real-time point lights (each one adds per-pixel cost to
+  // everything in range), so image-based lighting carries the base level.
+  // Brightness cues come from the emissive skylights, the track heads and the
+  // fake light pools painted on the walls behind each frame.
+  app.scene.environmentIntensity = 0.55;
   app.scene.background = new THREE.Color(0x151413);
   // Soft haze so the far end of a long hall recedes instead of ending in a hard edge.
   app.scene.fog = new THREE.Fog(PALETTE.haze, 35, 140);
   pmrem.dispose();
 
-  const hemisphere = new THREE.HemisphereLight(0xfff6ea, 0x6d6255, 0.75);
+  const hemisphere = new THREE.HemisphereLight(0xfff6ea, 0x6d6255, 0.9);
   app.scene.add(hemisphere);
   return { hemisphere };
 }
@@ -132,12 +136,11 @@ export function buildHall(app, layout) {
 
   if (fame) buildFameDecor(group, layout);
 
-  // Ceiling wash lights at a steady rhythm along the hall (sections vary a lot in length).
-  for (let z = hall.minZ + 13; z < hall.maxZ - 2; z += 12) {
-    const wash = new THREE.PointLight(0xfff1dc, 7, 9.5, 1.6);
-    wash.position.set(0, hall.height - 0.6, z);
-    group.add(wash);
-  }
+  // No real-time wash lights: one PointLight every ~12 m means a long hall
+  // holds many overlapping lights, and forward rendering pays for every light
+  // on every pixel in range. The hemisphere + environment lighting above keeps
+  // the architecture readable; the per-frame fake wash pools, the emissive
+  // skylight diffusers and the track heads sell the pools of light instead.
 
   return { group, walls, dispose: () => disposeTree(group) };
 }

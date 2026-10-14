@@ -2,9 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { MediaFrame } from '../src/world/frame.js';
+import { Interactions } from '../src/controls/interactions.js';
 import { PlayerController } from '../src/controls/player.js';
 import { CONFIG } from '../src/config.js';
-import { deviceProfile, pixelRatio } from '../src/core/deviceProfile.js';
+import { deviceProfile, getQuality, normalizeQuality, pixelRatio, QUALITY_PRESETS, setQuality } from '../src/core/deviceProfile.js';
 import { Curator } from '../src/media/curator.js';
 import { CinemaHall } from '../src/world/cinema.js';
 import { VideoFilm } from '../src/cinema/films.js';
@@ -56,19 +57,74 @@ test('touch movement works without pointer lock, obeys collisions and clears whe
   assert.deepEqual(camera.position.toArray(), before.toArray());
 }));
 
-test('phone and low-memory budgets constrain GPU pixels and media without changing desktop textures', () => {
-  const desktop = deviceProfile({ width: 1920, deviceMemory: 8 });
-  assert.equal(desktop.touch, false);
-  assert.equal(desktop.media.maxTextureSize, undefined);
+test('named quality presets scale GPU pixels and media, high by default', () => {
+  assert.equal(getQuality(), 'high', 'high is the default with no stored choice');
+  assert.equal(normalizeQuality('ultra'), 'high', 'unknown names fall back to high');
+  assert.equal(setQuality('balanced'), 'balanced');
+  assert.equal(setQuality('ultra'), 'high');
+  assert.equal(deviceProfile().quality, 'high');
+  assert.equal(deviceProfile({ coarsePointer: true }).touch, true);
   assert.equal(deviceProfile({ width: 390 }).touch, false, 'a narrow desktop retains pointer lock');
-  for (const input of [{ width: 390 }, { coarsePointer: true, width: 1024 }, { deviceMemory: 4 }, { saveData: true }]) {
-    const profile = deviceProfile(input);
-    assert.equal(profile.media.maxTextureSize, 1024);
-    assert.equal(profile.media.maxVideos, 2);
-    const ratio = pixelRatio(3840, 2160, 3, profile.render);
-    assert.ok(3840 * 2160 * ratio * ratio <= 1_500_001);
-  }
+  const high = deviceProfile({ quality: 'high' });
+  assert.deepEqual(high.render, QUALITY_PRESETS.high.render);
+  assert.deepEqual(high.media, QUALITY_PRESETS.high.media);
+  assert.equal(high.anisotropy, 8);
+  const balanced = deviceProfile({ quality: 'balanced' });
+  assert.equal(balanced.render.maxPixelRatio, 1.5);
+  assert.equal(balanced.media.loadDistance, 24);
+  const perf = deviceProfile({ quality: 'performance' });
+  assert.equal(perf.media.maxTextureSize, 1024);
+  assert.equal(perf.anisotropy, 4);
+  assert.equal(perf.render.antialias, false);
+  const ratio = pixelRatio(3840, 2160, 3, perf.render);
+  assert.ok(3840 * 2160 * ratio * ratio <= 1_500_001);
 });
+
+test('gallery videos wait for the visitor to press play', () => withDocument(() => {
+  const frame = new MediaFrame({ position: [0, 2.3, 10], rotationY: Math.PI, maxWidth: 3.1, maxHeight: 2.15 });
+  try {
+    let playing = false;
+    const video = {
+      get paused() { return !playing; },
+      play() { playing = true; return Promise.resolve(); },
+      pause() { playing = false; },
+    };
+    frame.item = { kind: 'video', title: 'Clip', subtitle: 'Sub' };
+    const token = frame.beginLoad();
+    const loaded = { video, texture: { repeat: { set() {} }, offset: { set() {} } }, width: 640, height: 480, dispose() {} };
+    assert.equal(frame.finishLoad(token, loaded), true);
+    const near = new THREE.Vector3(0, 1.65, 6);
+    frame.update(0.016, near, { videoPlayDistance: 13 });
+    assert.equal(playing, false, 'no autoplay near a video');
+    assert.equal(frame.toggleVideo(), true);
+    assert.equal(playing, true, 'the play button starts playback');
+    frame.update(0.016, new THREE.Vector3(0, 1.65, 60), { videoPlayDistance: 13 });
+    assert.equal(playing, false, 'pauses when the visitor walks away');
+    frame.update(0.016, near, { videoPlayDistance: 13 });
+    assert.equal(playing, true, 'an opted-in video resumes on return');
+    frame.toggleVideo();
+    frame.update(0.016, near, { videoPlayDistance: 13 });
+    assert.equal(playing, false, 'an explicit pause sticks');
+  } finally { frame.dispose(); }
+}));
+
+test('hidden video buttons do not block the crosshair', () => withDocument(() => {
+  const frame = new MediaFrame({ position: [0, 2.3, 10], rotationY: Math.PI, maxWidth: 3.1, maxHeight: 2.15 });
+  try {
+    frame.playButton.visible = true;
+    frame.group.updateMatrixWorld(true);
+    const camera = new THREE.PerspectiveCamera();
+    camera.position.set(0, 1.65, 6);
+    camera.lookAt(frame.playButton.getWorldPosition(new THREE.Vector3()));
+    camera.updateMatrixWorld(true);
+    const interactions = new Interactions(camera);
+    interactions.add([frame.playButton], { caption: () => ({ title: 'Play', subtitle: 'x' }), activate() {} });
+    frame.playButton.visible = false;
+    assert.equal(interactions.pick(), null, 'a hidden button never intercepts the ray');
+    frame.playButton.visible = true;
+    assert.ok(interactions.pick(), 'the visible button is clickable');
+  } finally { frame.dispose(); }
+}));
 
 test('streaming polls less often while fades keep updating and hidden videos pause', () => {
   let distances = 0, updates = 0, pauses = 0;
