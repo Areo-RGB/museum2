@@ -2,6 +2,11 @@
   "$schema": "https://t3.codes/schema/t3.json",
   "scripts": [
     {
+      "name": "Deploy",
+      "command": "npm run deploy",
+      "icon": "play"
+    },
+    {
       "name": "Build APK",
       "command": "android/build.sh",
       "icon": "build"
