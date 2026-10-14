@@ -194,10 +194,14 @@ Site updates still arrive live.
 
 ### Curator uploads
 
-"Upload your own image or video" in a frame's curate panel sends the file to the
-R2 bucket via `POST /api/upload` on the Worker ([src/worker/index.js](src/worker/index.js)),
-filed under `floors/<season>/` like the rest of the collection; the frame keeps the
-public URL. Uploads need the `UPLOAD_TOKEN` Worker secret, entered once per device:
+"Upload your own image or video" in a frame's curate panel asks the Worker
+(`POST /api/upload`, [src/worker/index.js](src/worker/index.js)) for a presigned R2
+S3 PUT URL, then the browser uploads straight to the bucket (up to 5 GB, with
+progress), filed under `floors/<season>/` like the rest of the collection; the frame
+keeps the public URL. The Worker signs with the `R2_ACCESS_KEY_ID` /
+`R2_SECRET_ACCESS_KEY` secrets (an R2 token scoped to write this bucket), and the bucket's CORS
+allows `PUT` from gallery.h03.uk. Uploads need the `UPLOAD_TOKEN` Worker secret,
+entered once per device:
 
     node node_modules/cf/bin/cf workers secrets update UPLOAD_TOKEN \
       --worker personal-museum-media-gallery --type secret_text --text '<key>'

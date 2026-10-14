@@ -13,6 +13,7 @@
     "r2:manifest": "node scripts/r2.mjs manifest --upload"
   },
   "dependencies": {
+    "aws4fetch": "^1.0.20",
     "idb": "^8.0.3",
     "three": "^0.183.0"
   },

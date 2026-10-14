@@ -80,11 +80,11 @@ export class Curator {
     return this.load(frame);
   }
 
-  async upload(frame, file) {
+  async upload(frame, file, onProgress) {
     const kind = kindOf(file.type);
     if (!kind) throw new Error(`Unsupported file type: ${file.type || 'unknown'}`);
     // The file goes to the R2 bucket; the frame keeps only its public URL.
-    const { url } = await uploadToBucket(file);
+    const { url } = await uploadToBucket(file, { onProgress });
     await saveSlotMedia({ slotId: frame.slot.id, url, type: file.type, fit: frame.fit, name: file.name });
     frame.assign(uploadItem(frame.slot.id, { url }, file.type, file.name));
     await this.load(frame);

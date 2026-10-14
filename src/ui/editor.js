@@ -33,6 +33,8 @@ export class EditorPanel {
     $('closeEditor').addEventListener('click', () => handlers.onClose());
   }
 
+  setStatus(text) { this.status.textContent = text; }
+
   get isOpen() { return this.el.classList.contains('open'); }
 
   open(frame) {

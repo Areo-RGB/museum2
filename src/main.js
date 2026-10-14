@@ -76,7 +76,7 @@ const overlay = new Overlay({
 });
 
 const editor = new EditorPanel({
-  onUpload: (file) => curator.upload(editor.frame, file),
+  onUpload: (file) => curator.upload(editor.frame, file, (p) => editor.setStatus(`Uploading… ${Math.round(p * 100)}%`)),
   onShuffle: () => curator.shuffle(editor.frame),
   onReset: () => curator.reset(editor.frame),
   onFit: (fit) => curator.setFit(editor.frame, fit),
