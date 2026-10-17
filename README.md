@@ -195,8 +195,7 @@ A foreground service streams each file to R2 as a multipart S3 upload (16 MiB pa
 retried, progress notification); the Worker's `/api/multipart/*` endpoints check the
 upload key and presign each part, so no bucket credentials ship in the APK.
 
-    android/build.sh                       # no Gradle; SDK build-tools + kotlinc (KOTLINC=...)
-    adb install -r android/build/museum.apk
+    node scripts/android-debug.js          # no Gradle; SDK build-tools + kotlinc (KOTLINC=...), installs + launches on every adb device
 
 For local tablet-sized testing, `android/emulator.sh` creates and launches
 `Museum_Xiaomi_Pad_7`. It matches the connected Xiaomi Pad 7's Android 16/API 36,
@@ -207,8 +206,7 @@ it can use hardware virtualization on this Linux host; the tablet itself is ARM6
 ```bash
 android/emulator.sh --create-only  # create or refresh the local AVD
 android/emulator.sh                # launch it
-android/build.sh                   # build the APK in another terminal
-adb -e install -r android/build/museum.apk
+ANDROID_SERIAL=emulator-5554 node scripts/android-debug.js  # build, install and launch on the emulator
 ```
 
 The AVD is stored under `~/.android/avd/` and is intentionally not committed to git.
